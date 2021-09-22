@@ -66,7 +66,7 @@ public class AlojamientoRest {
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Alojamiento a, BindingResult br) {
-
+    //Comentario
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
