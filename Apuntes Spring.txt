@@ -1,0 +1,97 @@
+Puntos a tener en cuenta
+
+ 1. Implementar autowired para instanciación automatica de la implementación de una interface (todo sucede mediante de beans que generan obj). En caso de dos o más clases que implementen la misma interface, usar Qualifier.
+
+Definir iny dep
+
+POJO: Un POJO es una instancia de una clase que no extiende ni implementa nada en especial. Para los programadores Java sirve para enfatizar el uso de clases simples y que no dependen de un framework en especial. Este concepto surge en oposición al modelo planteado por los estándares EJB anteriores al 3.0, en los que los Enterprise JavaBeans (EJB) debían implementar interfaces especiales.
+
+
+* Modelo --> modelado de datos, una abstracción del mundo real, patrón de diseño: DTO(Data transfer Object) [Create entity from database]
+
+* Dao(interface) --> acceso a la base de datos,
+	extends de la interface JpaRepository<Clase, clase del tipo de dato NO primitivo de la llave primaria>(ES MÁS COMPLETO Y RECOMENDADO) o CrudRepository
+	
+* Controlador (rest) --> 
+	Controller: Recibir datos o inputs del cliente(formularios, etc)
+	ControllerRest: 
+		-> Recibe peticiones utilizando el protocolo http(get, post,put/patch y delete); retornando así un .JSON(List<T> -> JSON, Optional<T> -> JSON, ResponseEntity -> Devolver codigos de estado [404] y JSON)
+		-> Permitir las peticiones.
+	http://localhost:8080 -> Tomcat(embebido en SpringBoot).
+	http://localhost:4200 -> angular.
+	
+	@CrossOrigins -> Permite recibir peticiones de cualquier cliente
+	@CrossOrigins(origins="http://localhost:4200") -> Permite que el servidor de angular realice 	peticiones
+	
+	@RestController
+	@RequestMapping("/persona") //http://localhost:8080/persona
+	public class PersonaRest(){
+		
+		@Autowired
+		PersonaService pser;
+		
+		@GetMapping()
+		@PostMapping()
+		@DeleteMapping()
+		@PutMapping()
+		@PatchMapping()
+		
+		@CrossOrigins(origins="http://localhost:4200")
+		public ResponseEntity<List<Persona>> listar(){
+		
+		}
+		
+		public ResponseEntity<List<Persona>> listar(){
+		
+		}
+	
+	}
+	
+	- URI(Siempre es fija)  OJO investigar
+	- URL(Muy cambiante)
+	
+* Servicios(interface) -->  Implementación de la interface donde nos comunicaremos con el dao(interface). Así definiendo unos métodos estanderizados dependiendo de la entidad(Ej: País, no modificar nombre)
+
+
+VALIDACIONES
+
+Importar las dependencias de Spring y Javax validation
+
+ <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+    @NotNull
+    @NotEmpty
+    @NotBlank ""," ", " ",""
+
+@NotBlank can be applied only to text values and validates that the property is not null or whitespace.
+@NotEmpty validates that the property is not null or empty; can be applied to String, Collection, Map or Array values.
+@NotNull validates that the annotated property value is not null.
+
+
+All of the annotations used in the example are standard JSR annotations:
+
+@NotNull validates that the annotated property value is not null.
+@AssertTrue validates that the annotated property value is true.
+@Size validates that the annotated property value has a size between the attributes min and max; can be applied to String, Collection, Map, and array properties.
+@Min validates that the annotated property has a value no smaller than the value attribute.
+@Max validates that the annotated property has a value no larger than the value attribute.
+@Email validates that the annotated property is a valid email address.
+Some annotations accept additional attributes, but the message attribute is common to all of them. This is the message that will usually be rendered when the value of the respective property fails validation.
+
+And some additional annotations that can be found in the JSR:
+
+@NotEmpty validates that the property is not null or empty; can be applied to String, Collection, Map or Array values.
+@NotBlank can be applied only to text values and validates that the property is not null or whitespace.
+@Positive and @PositiveOrZero apply to numeric values and validate that they are strictly positive, or positive including 0.
+@Negative and @NegativeOrZero apply to numeric values and validate that they are strictly negative, or negative including 0.
+@Past and @PastOrPresent validate that a date value is in the past or the past including the present; can be applied to date types including those added in Java 8.
+@Future and @FutureOrPresent validate that a date value is in the future, or in the future including the present.

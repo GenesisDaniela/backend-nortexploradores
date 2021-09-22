@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.example_demo_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.example.demo.model.Empresa</class>
+    <class>com.example.demo.model.Ruta</class>
+    <class>com.example.demo.model.Rol</class>
+    <class>com.example.demo.model.Municipio</class>
+    <class>com.example.demo.model.Transaccion</class>
+    <class>com.example.demo.model.Paquete</class>
+    <class>com.example.demo.model.Pasajero</class>
+    <class>com.example.demo.model.Departamento</class>
+    <class>com.example.demo.model.Tour</class>
+    <class>com.example.demo.model.TipoIdentificacion</class>
+    <class>com.example.demo.model.Usuario</class>
+    <class>com.example.demo.model.Compra</class>
+    <class>com.example.demo.model.DetalleCompra</class>
+    <class>com.example.demo.model.Transporte</class>
+    <class>com.example.demo.model.Seguro</class>
+    <class>com.example.demo.model.Rol_1</class>
+    <class>com.example.demo.model.Usuario_1</class>
+    <class>com.example.demo.model.Cargo</class>
+    <class>com.example.demo.model.Alojamiento</class>
+    <class>com.example.demo.model.Evento</class>
+    <class>com.example.demo.model.Empleado</class>
+    <class>com.example.demo.model.Persona</class>
+    <class>com.example.demo.model.Descuento</class>
+    <class>com.example.demo.model.Calificacion</class>
+    <class>com.example.demo.model.Persona_1</class>
+    <class>com.example.demo.model.Cargo_1</class>
+    <class>com.example.demo.model.Pasajero_1</class>
+    <class>com.example.demo.model.TipoIdentificacion_1</class>
+    <class>com.example.demo.security.entity.Rol</class>
+    <class>com.example.demo.security.entity.Usuario</class>
+    <class>com.example.demo.security.entity.UsuarioRol</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/nortexploradores?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+    </properties>
+  </persistence-unit>
+</persistence>
