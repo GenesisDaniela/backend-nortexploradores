@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:4200/")
 @Slf4j
 public class AlojamientoRest {
-//Ola eso estodo o k
+//Ola eso estodo o k, n0 también kiero decirte q...
     @Autowired
     AlojamientoService aser;
 
