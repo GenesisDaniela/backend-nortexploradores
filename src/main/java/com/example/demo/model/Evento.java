@@ -92,7 +92,7 @@ public class Evento implements Serializable {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Instant fecha) {
         this.fecha = fecha;
     }
 

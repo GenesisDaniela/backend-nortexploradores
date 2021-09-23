@@ -131,6 +131,14 @@ public class Compra implements Serializable {
         this.detalleCompraCollection = detalleCompraCollection;
     }
 
+    public Instant getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Instant fecha) {
+        this.fecha = fecha;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

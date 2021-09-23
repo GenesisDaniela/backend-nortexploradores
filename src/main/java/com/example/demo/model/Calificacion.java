@@ -7,6 +7,7 @@ package com.example.demo.model;
 
 import com.example.demo.security.entity.Usuario;
 import java.io.Serializable;
+import java.time.Instant;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
