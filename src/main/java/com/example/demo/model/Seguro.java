@@ -34,15 +34,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Seguro.findByNombre", query = "SELECT s FROM Seguro s WHERE s.nombre = :nombre")})
 public class Seguro implements Serializable {
 
+    @Size(max = 25)
+    @Column(name = "nombre")
+    private String nombre;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_seguro")
     private Integer idSeguro;
-    @Size(max = 25)
-    @Column(name = "nombre")
-    private String nombre;
     @JoinColumn(name = "id_seguro", referencedColumnName = "id_empresa", insertable = false, updatable = false)
     @OneToOne(optional = false)
     private Empresa empresa;
@@ -64,13 +65,6 @@ public class Seguro implements Serializable {
         this.idSeguro = idSeguro;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public Empresa empresa() {
         return empresa;
@@ -111,6 +105,14 @@ public class Seguro implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Seguro[ idSeguro=" + idSeguro + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
 }

@@ -7,6 +7,7 @@ package com.example.demo.model;
 
 import com.example.demo.security.entity.Usuario;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -45,6 +46,9 @@ public class Compra implements Serializable {
     private Integer cantidadPasajeros;
     @Column(name = "total_compra")
     private Integer totalCompra;
+
+    @Column(name = "fecha")
+    private Instant fecha;
     @JoinColumn(name = "descuento", referencedColumnName = "id_descuento")
     @ManyToOne
     private Descuento descuento;

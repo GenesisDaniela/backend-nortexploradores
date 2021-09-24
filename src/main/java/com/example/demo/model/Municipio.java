@@ -34,16 +34,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Municipio.findByIdMuni", query = "SELECT m FROM Municipio m WHERE m.idMuni = :idMuni")})
 public class Municipio implements Serializable {
 
+    @Lob
+    @Size(max = 2147483647)
+    @Column(name = "nombre")
+    private String nombre;
+    @Size(max = 250)
+    @Column(name = "url_imagen")
+    private String urlImagen;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_muni")
     private Integer idMuni;
-    @Lob
-    @Size(max = 2147483647)
-    @Column(name = "nombre")
-    private String nombre;
     @OneToMany(mappedBy = "idMun")
     private Collection<Ruta> rutaCollection;
     @JoinColumn(name = "id_depto", referencedColumnName = "id_depto")
@@ -67,13 +71,6 @@ public class Municipio implements Serializable {
         this.idMuni = idMuni;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public Collection<Ruta> rutaCollection() {
         return rutaCollection;
@@ -122,6 +119,22 @@ public class Municipio implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Municipio[ idMuni=" + idMuni + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
     
 }

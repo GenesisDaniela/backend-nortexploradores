@@ -32,16 +32,17 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Departamento.findByIdDepto", query = "SELECT d FROM Departamento d WHERE d.idDepto = :idDepto")})
 public class Departamento implements Serializable {
 
+    @Lob
+    @Size(max = 2147483647)
+    @Column(name = "nombre")
+    private String nombre;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_depto")
     private Integer idDepto;
-    @Lob
-    @Size(max = 2147483647)
-    @Column(name = "nombre")
-    private String nombre;
     @OneToMany(mappedBy = "idDepto")
     private Collection<Municipio> municipioCollection;
 
@@ -60,13 +61,6 @@ public class Departamento implements Serializable {
         this.idDepto = idDepto;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
 
     public Collection<Municipio> municipioCollection() {
         return municipioCollection;
@@ -99,6 +93,14 @@ public class Departamento implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Departamento[ idDepto=" + idDepto + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
     
 }

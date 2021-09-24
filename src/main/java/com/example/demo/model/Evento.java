@@ -6,6 +6,7 @@
 package com.example.demo.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -51,8 +52,7 @@ public class Evento implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private Instant fecha;
     @JoinColumn(name = "municipio", referencedColumnName = "id_muni")
     @ManyToOne
     private Municipio municipio;
@@ -88,7 +88,7 @@ public class Evento implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Date getFecha() {
+    public Instant getFecha() {
         return fecha;
     }
 

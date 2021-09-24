@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,6 +41,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Tour.findByMinCupos", query = "SELECT t FROM Tour t WHERE t.minCupos = :minCupos"),
     @NamedQuery(name = "Tour.findByMaxCupos", query = "SELECT t FROM Tour t WHERE t.maxCupos = :maxCupos")})
 public class Tour implements Serializable {
+
+    @Size(max = 250)
+    @Column(name = "url_imagen")
+    private String urlImagen;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -170,6 +175,14 @@ public class Tour implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Tour[ idTour=" + idTour + " ]";
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
     
 }

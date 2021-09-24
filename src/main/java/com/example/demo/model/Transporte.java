@@ -37,13 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Transporte.findByColor", query = "SELECT t FROM Transporte t WHERE t.color = :color")})
 public class Transporte implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 6)
-    @Column(name = "id_transporte")
-    private String idTransporte;
     @Basic(optional = false)
     @NotNull
     @Column(name = "puestos")
@@ -58,6 +51,14 @@ public class Transporte implements Serializable {
     @Size(min = 1, max = 25)
     @Column(name = "color")
     private String color;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 6)
+    @Column(name = "id_transporte")
+    private String idTransporte;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transporte")
     private Collection<Ruta> rutaCollection;
     @JoinColumn(name = "empresa", referencedColumnName = "id_empresa")
@@ -86,29 +87,6 @@ public class Transporte implements Serializable {
         this.idTransporte = idTransporte;
     }
 
-    public short getPuestos() {
-        return puestos;
-    }
-
-    public void setPuestos(short puestos) {
-        this.puestos = puestos;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
 
     public Collection<Ruta> rutaCollection() {
         return rutaCollection;
@@ -149,6 +127,30 @@ public class Transporte implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Transporte[ idTransporte=" + idTransporte + " ]";
+    }
+
+    public short getPuestos() {
+        return puestos;
+    }
+
+    public void setPuestos(short puestos) {
+        this.puestos = puestos;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
     
 }

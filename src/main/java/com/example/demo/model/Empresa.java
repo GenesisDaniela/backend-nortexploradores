@@ -36,12 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Empresa.findByDireccion", query = "SELECT e FROM Empresa e WHERE e.direccion = :direccion")})
 public class Empresa implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id_empresa")
-    private Integer idEmpresa;
     @Size(max = 25)
     @Column(name = "nombre")
     private String nombre;
@@ -51,6 +45,16 @@ public class Empresa implements Serializable {
     @Size(max = 25)
     @Column(name = "direccion")
     private String direccion;
+    @Size(max = 250)
+    @Column(name = "url_imagen")
+    private String urlImagen;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id_empresa")
+    private Integer idEmpresa;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "empresa")
     private Seguro seguro;
     @OneToMany(mappedBy = "empresa")
@@ -71,29 +75,6 @@ public class Empresa implements Serializable {
         this.idEmpresa = idEmpresa;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
 
     public Seguro seguro() {
         return seguro;
@@ -134,6 +115,38 @@ public class Empresa implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Empresa[ idEmpresa=" + idEmpresa + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
     
 }
