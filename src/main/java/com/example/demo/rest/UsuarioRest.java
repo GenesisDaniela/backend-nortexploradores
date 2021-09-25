@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "*")
 @Slf4j
 public class UsuarioRest {
 
@@ -54,18 +54,17 @@ public class UsuarioRest {
     }
     
     
-   /* @GetMapping(path = "/{id}/pasajeros")
+    @GetMapping(path = "/{id}/pasajeros")
     public ResponseEntity<List<Pasajero>> pasajerosPorUsuario(@PathVariable int id){
         return ResponseEntity.ok((List)user.encontrar(id).get().pasajeroCollection());
-    } */
-    
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> encontrarUsuario(@PathVariable int id) {
 
         Usuario u = user.encontrar(id).orElse(null);
 
         if (u == null) {
-
             //return new ResponseEntity<String>("El usuario con id: " + id + " no existe", HttpStatus.NOT_FOUND);
             return new ResponseEntity<ObjectError>(new ObjectError("id","No existe el id"), HttpStatus.NOT_FOUND);
         }

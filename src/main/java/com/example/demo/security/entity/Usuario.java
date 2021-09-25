@@ -5,7 +5,9 @@
  */
 package com.example.demo.security.entity;
 
+import com.example.demo.model.Compra;
 import com.example.demo.model.Pasajero;
+import com.example.demo.model.Reserva;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,6 +29,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -42,21 +45,30 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
 public class Usuario implements Serializable {
 
+    @Size(max = 25)
+    @Column(name = "username")
+    private String username;
+    @Size(max = 255)
+    @Column(name = "password")
+    private String password;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "email")
+    private String email;
+    @OneToMany(mappedBy = "usuario")
+    private Collection<Compra> compraCollection;
+    @OneToMany(mappedBy = "usuario")
+    private Collection<Reserva> reservaCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_usuario")
     private Integer idUsuario;
-    @Size(max = 25)
-    @Column(name = "username")
-    private String username;
-    @Size(max = 50)
-    @Column(name = "email")
-    private String email;
-    @Size(max = 25)
-    @Column(name = "password")
-    private String password;
     @OneToMany(mappedBy = "usuario")
     private Collection<Pasajero> pasajeroCollection;
 
@@ -87,29 +99,6 @@ public class Usuario implements Serializable {
         this.idUsuario = idUsuario;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public Set<Rol> getRoles() {
         return roles;
@@ -150,6 +139,49 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.security.entity.Usuario[ idUsuario=" + idUsuario + " ]";
+    }
+
+
+    @XmlTransient
+    public Collection<Reserva> getReservaCollection() {
+        return reservaCollection;
+    }
+
+    public void setReservaCollection(Collection<Reserva> reservaCollection) {
+        this.reservaCollection = reservaCollection;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @XmlTransient
+    public Collection<Compra> getCompraCollection() {
+        return compraCollection;
+    }
+
+    public void setCompraCollection(Collection<Compra> compraCollection) {
+        this.compraCollection = compraCollection;
     }
 
 }

@@ -36,12 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Alojamiento.findByPrecio", query = "SELECT a FROM Alojamiento a WHERE a.precio = :precio")})
 public class Alojamiento implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_alojamiento")
-    private Integer idAlojamiento;
     @Size(max = 25)
     @Column(name = "nombre")
     private String nombre;
@@ -51,6 +45,13 @@ public class Alojamiento implements Serializable {
     @Size(max = 50)
     @Column(name = "descripcion")
     private String descripcion;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_alojamiento")
+    private Integer idAlojamiento;
     @Column(name = "precio")
     private Integer precio;
     @OneToMany(mappedBy = "alojamiento")
@@ -71,29 +72,6 @@ public class Alojamiento implements Serializable {
         this.idAlojamiento = idAlojamiento;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDir() {
-        return dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public Integer getPrecio() {
         return precio;
@@ -134,6 +112,30 @@ public class Alojamiento implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Alojamiento[ idAlojamiento=" + idAlojamiento + " ]";
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDir() {
+        return dir;
+    }
+
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
     
 }

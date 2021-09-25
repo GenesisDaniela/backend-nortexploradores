@@ -36,6 +36,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Compra.findByTotalCompra", query = "SELECT c FROM Compra c WHERE c.totalCompra = :totalCompra")})
 public class Compra implements Serializable {
 
+    @JoinColumn(name = "reserva", referencedColumnName = "id_reserva")
+    @ManyToOne(optional = false)
+    private Reserva reserva;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -46,9 +50,6 @@ public class Compra implements Serializable {
     private Integer cantidadPasajeros;
     @Column(name = "total_compra")
     private Integer totalCompra;
-
-    @Column(name = "fecha")
-    private Instant fecha;
     @JoinColumn(name = "descuento", referencedColumnName = "id_descuento")
     @ManyToOne
     private Descuento descuento;
@@ -135,13 +136,6 @@ public class Compra implements Serializable {
         this.detalleCompraCollection = detalleCompraCollection;
     }
 
-    public Instant getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Instant fecha) {
-        this.fecha = fecha;
-    }
 
     @Override
     public int hashCode() {
@@ -166,6 +160,14 @@ public class Compra implements Serializable {
     @Override
     public String toString() {
         return "com.example.demo.model.Compra[ idCompra=" + idCompra + " ]";
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
     }
     
 }
