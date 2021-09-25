@@ -180,8 +180,7 @@ public class Paquete implements Serializable {
         this.urlImagen = urlImagen;
     }
 
-    @XmlTransient
-    public List<Complemento> getComplementoList() {
+    public List<Complemento> complementoList() {
         return complementoList;
     }
 

@@ -5,14 +5,19 @@
  */
 package com.example.demo.rest;
 
+import com.example.demo.dao.ComplementoDAO;
+import com.example.demo.model.Complemento;
 import com.example.demo.model.Empleado;
+import com.example.demo.service.ComplementoService;
 import com.example.demo.service.EmpleadoService;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,6 +78,35 @@ public class EmpleadoRest {
         eser.guardar(e);
         return ResponseEntity.ok(e);
     }
-    
-    
+
+
+    public static class ComplementoServiceImp implements ComplementoService {
+
+        @Autowired
+        ComplementoDAO complementoDAO;
+
+        @Override
+        @Transactional
+        public void guardar(Complemento complementoService) {
+        complementoDAO.save(complementoService);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Optional<Complemento> encontrar(int id) {
+        return complementoDAO.findById(id);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public List<Complemento> listar() {
+        return complementoDAO.findAll();
+        }
+
+        @Override
+        @Transactional
+        public void eliminar(int id) {
+        complementoDAO.deleteById(id);
+        }
+    }
 }
