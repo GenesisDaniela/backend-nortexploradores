@@ -44,6 +44,7 @@ public class DetalleCompra implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
+
     @JoinColumn(name = "id_compra", referencedColumnName = "id_compra")
     @ManyToOne
     private Compra idCompra;
