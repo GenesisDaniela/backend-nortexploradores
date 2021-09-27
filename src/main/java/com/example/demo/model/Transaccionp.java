@@ -7,15 +7,7 @@ package com.example.demo.model;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -110,8 +102,9 @@ public class Transaccionp implements Serializable {
     @Size(max = 25)
     @Column(name = "response_message_pol")
     private String responseMessagePol;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaccion")
-    private Collection<Compra> compraCollection;
+    @JoinColumn(name = "compra", referencedColumnName = "id_compra")
+    @ManyToOne
+    private Compra compra;
 
     public Transaccionp() {
     }
@@ -281,12 +274,12 @@ public class Transaccionp implements Serializable {
         this.responseMessagePol = responseMessagePol;
     }
 
-    public Collection<Compra> compraCollection() {
-        return compraCollection;
+    public Compra compra() {
+        return compra;
     }
 
-    public void setCompraCollection(Collection<Compra> compraCollection) {
-        this.compraCollection = compraCollection;
+    public void setCompraCollection(Compra compra) {
+        this.compra = compra;
     }
 
     @Override

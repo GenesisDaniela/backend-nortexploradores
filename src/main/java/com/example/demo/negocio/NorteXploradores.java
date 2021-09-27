@@ -1,21 +1,27 @@
 package com.example.demo.negocio;
 
 import com.example.demo.model.Compra;
-import com.example.demo.model.Paquete;
+import com.example.demo.model.Transaccionp;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NorteXploradores {
 
-    public List<Compra> paquetesComprados(List<Compra> paquetes){
+    public List<Compra> paquetesComprados(List<Compra> compras){
         List<Compra> comprados = new ArrayList<>();
-
-        for(Compra c: paquetes){
-            if(c.reserva()!=null){
-                if(c.reserva().getEstado().equals("PAGADO") && c.transaccion()!=null)
-                    comprados.add(c);
+        int pago=0;
+        for(Compra c: compras){
+            for(Transaccionp t: c.transaccion()){
+                if (t.getResponseMessagePol().equals("APPROVED")){
+                    pago+=t.getValue();
+                }
             }
+
+            if(pago == c.getTotalCompra()){
+                comprados.add(c);
+            }
+
         }
         return comprados;
     }

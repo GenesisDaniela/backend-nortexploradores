@@ -56,9 +56,8 @@ public class Compra implements Serializable {
     @JoinColumn(name = "paquete", referencedColumnName = "id_paq")
     @ManyToOne
     private Paquete paquete;
-    @JoinColumn(name = "transaccion", referencedColumnName = "transaction_id")
-    @ManyToOne
-    private Transaccionp transaccion;
+    @OneToMany(mappedBy = "compra")
+    private Collection<Transaccionp> transaccionpCollection;
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario usuario;
@@ -112,12 +111,12 @@ public class Compra implements Serializable {
         this.paquete = paquete;
     }
 
-    public Transaccionp transaccion() {
-        return transaccion;
+    public Collection<Transaccionp>  transaccion() {
+        return transaccionpCollection;
     }
 
-    public void setTransaccion(Transaccionp transaccion) {
-        this.transaccion = transaccion;
+    public void setTransaccion(Collection<Transaccionp> transaccionpCollection) {
+        this.transaccionpCollection = transaccionpCollection;
     }
 
     public Usuario usuario() {
