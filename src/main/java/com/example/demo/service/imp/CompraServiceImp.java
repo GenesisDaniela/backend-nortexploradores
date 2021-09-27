@@ -8,6 +8,7 @@ package com.example.demo.service.imp;
 import com.example.demo.dao.CompraDAO;
 import com.example.demo.model.Compra;
 import com.example.demo.model.Compra;
+import com.example.demo.model.Paquete;
 import com.example.demo.service.CompraService;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,12 @@ public class CompraServiceImp implements CompraService {
     @Transactional(readOnly = true)
     public List<Compra> listar() {
         return cDAO.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Paquete paqueteDeReserva(Integer id){
+       return cDAO.reservaPaquete(id);
     }
     
 }

@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Compra implements Serializable {
 
     @JoinColumn(name = "reserva", referencedColumnName = "id_reserva")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Reserva reserva;
 
     private static final long serialVersionUID = 1L;
@@ -56,7 +56,7 @@ public class Compra implements Serializable {
     @JoinColumn(name = "paquete", referencedColumnName = "id_paq")
     @ManyToOne
     private Paquete paquete;
-    @JoinColumn(name = "transaccion", referencedColumnName = "reference_sale")
+    @JoinColumn(name = "transaccion", referencedColumnName = "transaction_id")
     @ManyToOne
     private Transaccionp transaccion;
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
@@ -104,7 +104,7 @@ public class Compra implements Serializable {
         this.descuento = descuento;
     }
 
-    public Paquete paquete() {
+    public Paquete getPaquete() {
         return paquete;
     }
 
@@ -162,7 +162,7 @@ public class Compra implements Serializable {
         return "com.example.demo.model.Compra[ idCompra=" + idCompra + " ]";
     }
 
-    public Reserva getReserva() {
+    public Reserva reserva() {
         return reserva;
     }
 

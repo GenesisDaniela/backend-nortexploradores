@@ -142,8 +142,7 @@ public class Usuario implements Serializable {
     }
 
 
-    @XmlTransient
-    public Collection<Reserva> getReservaCollection() {
+    public Collection<Reserva> reservaCollection() {
         return reservaCollection;
     }
 
@@ -175,8 +174,7 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
-    @XmlTransient
-    public Collection<Compra> getCompraCollection() {
+    public Collection<Compra> compraCollection() {
         return compraCollection;
     }
 

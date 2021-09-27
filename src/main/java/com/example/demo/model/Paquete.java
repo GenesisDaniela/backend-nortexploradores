@@ -40,21 +40,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Paquete.findByPrecio", query = "SELECT p FROM Paquete p WHERE p.precio = :precio"),
     @NamedQuery(name = "Paquete.findByRecomendacion", query = "SELECT p FROM Paquete p WHERE p.recomendacion = :recomendacion")})
 public class Paquete implements Serializable {
-
-    @Size(max = 255)
-    @Column(name = "descripcion")
-    private String descripcion;
-    @Size(max = 50)
-    @Column(name = "recomendacion")
-    private String recomendacion;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "url_imagen")
-    private String urlImagen;
-    @ManyToMany(mappedBy = "paqueteList")
-    private List<Complemento> complementoList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +58,21 @@ public class Paquete implements Serializable {
     @JoinColumn(name = "tour", referencedColumnName = "id_tour")
     @ManyToOne
     private Tour tour;
+    @Size(max = 255)
+    @Column(name = "descripcion")
+    private String descripcion;
+    @Size(max = 50)
+    @Column(name = "recomendacion")
+    private String recomendacion;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 250)
+    @Column(name = "url_imagen")
+    private String urlImagen;
+    @ManyToMany(mappedBy = "paqueteList")
+    private List<Complemento> complementoList;
+
+
 
     public Paquete() {
     }

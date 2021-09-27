@@ -6,6 +6,8 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Compra;
+import com.example.demo.model.Paquete;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +20,5 @@ public interface CompraService {
     public void guardar(Compra compra);
     public Optional<Compra> encontrar(int id);
     public List<Compra> listar();
+    public Paquete paqueteDeReserva(Integer id);
 }

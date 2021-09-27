@@ -5,7 +5,11 @@
  */
 package com.example.demo.rest;
 
+import com.example.demo.model.Compra;
+import com.example.demo.model.Paquete;
 import com.example.demo.model.Pasajero;
+import com.example.demo.model.Reserva;
+import com.example.demo.negocio.NorteXploradores;
 import com.example.demo.security.entity.Usuario;
 import com.example.demo.security.service.UsuarioService;
 import java.util.List;
@@ -38,6 +42,8 @@ public class UsuarioRest {
     @Autowired
     UsuarioService user;
 
+    NorteXploradores nexp = new NorteXploradores();
+
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuario() {
         return ResponseEntity.ok(user.listar());
@@ -52,8 +58,26 @@ public class UsuarioRest {
 
         return ResponseEntity.ok(u);
     }
-    
-    
+
+
+    @GetMapping(path = "/{id}/reservas")
+    public ResponseEntity<List<Reserva>> reservasPorUsuario(@PathVariable int id){
+        return ResponseEntity.ok((List)user.encontrar(id).get().reservaCollection());
+    }
+
+    @GetMapping(path = "/{id}/paquetes")
+    public ResponseEntity<List<Compra>> paquetesPorUsuario(@PathVariable int id){
+        return ResponseEntity.ok((List)user.encontrar(id).get().compraCollection());
+    }
+
+    @GetMapping(path = "/{id}/paquetesComprados")
+    public ResponseEntity<List<Compra>> paquetesCompradosPorUsuario(@PathVariable int id){
+
+        List<Compra> soloComprados = nexp.paquetesComprados((List)user.encontrar(id).get().compraCollection());
+
+        return ResponseEntity.ok(soloComprados);
+    }
+
     @GetMapping(path = "/{id}/pasajeros")
     public ResponseEntity<List<Pasajero>> pasajerosPorUsuario(@PathVariable int id){
         return ResponseEntity.ok((List)user.encontrar(id).get().pasajeroCollection());
