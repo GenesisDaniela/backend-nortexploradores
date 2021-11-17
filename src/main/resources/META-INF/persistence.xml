@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="com.example_demo_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="nexp.com_app_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>com.example.demo.model.Empresa</class>
-    <class>com.example.demo.model.Ruta</class>
-    <class>com.example.demo.model.Municipio</class>
-    <class>com.example.demo.model.Transaccionp</class>
-    <class>com.example.demo.model.Paquete</class>
-    <class>com.example.demo.model.Pasajero</class>
-    <class>com.example.demo.model.Departamento</class>
-    <class>com.example.demo.model.Tour</class>
-    <class>com.example.demo.model.TipoIdentificacion</class>
-    <class>com.example.demo.security.entity.Usuario</class>
-    <class>com.example.demo.model.Compra</class>
-    <class>com.example.demo.model.DetalleCompra</class>
-    <class>com.example.demo.model.Transporte</class>
-    <class>com.example.demo.model.Seguro</class>
-    <class>com.example.demo.security.entity.Rol</class>
-    <class>com.example.demo.model.Cargo</class>
-    <class>com.example.demo.model.Alojamiento</class>
-    <class>com.example.demo.model.Evento</class>
-    <class>com.example.demo.model.Empleado</class>
-    <class>com.example.demo.model.Persona</class>
-    <class>com.example.demo.model.Descuento</class>
-    <class>com.example.demo.model.Calificacion</class>
-    <class>com.example.demo.security.entity.Rol</class>
-    <class>com.example.demo.security.entity.Usuario</class>
-    <class>com.example.demo.model.Complemento</class>
-    <class>com.example.demo.model.Reserva</class>
+    <class>nexp.com.app.model.Actividad</class>
+    <class>nexp.com.app.model.Alojamiento</class>
+    <class>nexp.com.app.model.Cargo</class>
+    <class>nexp.com.app.model.Departamento</class>
+    <class>nexp.com.app.model.Descuento</class>
+    <class>nexp.com.app.model.DetalleCompra</class>
+    <class>nexp.com.app.model.Devolucion</class>
+    <class>nexp.com.app.model.Empleado</class>
+    <class>nexp.com.app.model.Empresa</class>
+    <class>nexp.com.app.model.Municipio</class>
+    <class>nexp.com.app.model.Paquete</class>
+    <class>nexp.com.app.model.Pasajero</class>
+    <class>nexp.com.app.model.Persona</class>
+    <class>nexp.com.app.model.Seguro</class>
+    <class>nexp.com.app.model.TipoIdentificacion</class>
+    <class>nexp.com.app.model.Tour</class>
+    <class>nexp.com.app.model.Transaccionp</class>
+    <class>nexp.com.app.model.Notificacion</class>
+    <class>nexp.com.app.model.Transporte</class>
+    <class>nexp.com.app.security.model.Rol</class>
+    <class>nexp.com.app.security.model.Usuario</class>
+    <class>nexp.com.app.model.Sugerencia</class>
+    <class>nexp.com.app.model.SolicitudTour</class>
+    <class>nexp.com.app.model.Compra</class>
+    <class>nexp.com.app.model.Calificacion</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/nortexploradores?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://vestacp.ingsistemasufps.co:3306/codexplorer_nxs?useSSL=false&amp;serverTimezone=UTC&amp;useLegacyDateTimeCode=false"/>
+      <property name="javax.persistence.jdbc.user" value="codexplorer_Adm"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.password" value="Admintebp"/>
     </properties>
   </persistence-unit>
 </persistence>

@@ -7,14 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="demo" />
+        <module name="app" />
         <module name="backend-nortexploradores" />
+        <module name="demo" />
         <module name="nortexploradores-git" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="app" options="-parameters" />
       <module name="backend-nortexploradores" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="nortexploradores-git" options="-parameters" />
