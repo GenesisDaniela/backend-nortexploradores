@@ -210,7 +210,7 @@ public class TourRest {
         Tour tour = tser.encontrar(idTour).orElse(null);
         List<TransporteTour> tours=(List) tour.transporteTourCollection();
 
-        return ResponseEntity.ok(tours.get(0).getTransporte());
+        return ResponseEntity.ok(tours.get(tours.size()-1).getTransporte());
     }
 
     @PostMapping(path = "/{idTour}/{idTransporte}")
