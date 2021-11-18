@@ -20,9 +20,9 @@ import nexp.com.app.security.model.Usuario;
 @Table(name = "pasajero")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Pasajero.findAll", query = "SELECT p FROM Pasajero p"),
-    @NamedQuery(name = "Pasajero.findByIdPasajero", query = "SELECT p FROM Pasajero p WHERE p.idPasajero = :idPasajero"),
-    @NamedQuery(name = "Pasajero.findByEsCotizante", query = "SELECT p FROM Pasajero p WHERE p.esCotizante = :esCotizante")})
+        @NamedQuery(name = "Pasajero.findAll", query = "SELECT p FROM Pasajero p"),
+        @NamedQuery(name = "Pasajero.findByIdPasajero", query = "SELECT p FROM Pasajero p WHERE p.idPasajero = :idPasajero"),
+        @NamedQuery(name = "Pasajero.findByEsCotizante", query = "SELECT p FROM Pasajero p WHERE p.esCotizante = :esCotizante")})
 public class Pasajero implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,12 +36,10 @@ public class Pasajero implements Serializable {
     @JoinColumn(name = "persona", referencedColumnName = "id_persona")
     @OneToOne(optional = false)
     private Persona persona;
-    @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
-    @ManyToOne
-    private Usuario usuario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
     private Collection<DetalleCompra> detalleCompraCollection;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPasajero")
+    private Collection<ClientePasajero> clientePasajeroCollection;
     public Pasajero() {
     }
 
@@ -59,6 +57,14 @@ public class Pasajero implements Serializable {
 
     public Boolean getEsCotizante() {
         return esCotizante;
+    }
+
+    public Collection<ClientePasajero> clientePasajeroCollection() {
+        return clientePasajeroCollection;
+    }
+
+    public void setClientePasajeroCollection(Collection<ClientePasajero> clientePasajeroCollection) {
+        this.clientePasajeroCollection = clientePasajeroCollection;
     }
 
     public void setEsCotizante(Boolean esCotizante) {
@@ -79,14 +85,6 @@ public class Pasajero implements Serializable {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     @Override
@@ -113,5 +111,5 @@ public class Pasajero implements Serializable {
     public String toString() {
         return "nexp.com.app.model.Pasajero[ idPasajero=" + idPasajero + " ]";
     }
-    
+
 }

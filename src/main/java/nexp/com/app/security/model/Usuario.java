@@ -38,11 +38,8 @@ public class Usuario {
     private String password;
     @OneToMany(mappedBy = "usuario")
     private Collection<Notificacion> notificacionCollection;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
     private Collection<ClientePasajero> clientePasajeroCollection;
-    @OneToMany(mappedBy = "usuario")
-    private Collection<Pasajero> pasajeroCollection;
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"),
@@ -142,14 +139,6 @@ public class Usuario {
 
     public void setNotificacionCollection(Collection<Notificacion> notificacionCollection) {
         this.notificacionCollection = notificacionCollection;
-    }
-
-    public Collection<Pasajero> pasajeroCollection() {
-        return pasajeroCollection;
-    }
-
-    public void setPasajeroCollection(Collection<Pasajero> pasajeroCollection) {
-        this.pasajeroCollection = pasajeroCollection;
     }
 
     public Collection<Compra> compraCollection() {

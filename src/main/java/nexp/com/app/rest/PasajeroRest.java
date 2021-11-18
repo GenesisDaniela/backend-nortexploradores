@@ -5,12 +5,14 @@
  */
 package nexp.com.app.rest;
 
+import nexp.com.app.model.ClientePasajero;
 import nexp.com.app.model.Pasajero;
 import nexp.com.app.model.Persona;
 import nexp.com.app.model.Tour;
 import nexp.com.app.negocio.NorteXploradores;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
+import nexp.com.app.service.ClientePasajeroService;
 import nexp.com.app.service.PasajeroService;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import javax.validation.Valid;
 @RequestMapping("/pasajero")
 @CrossOrigin(origins = "*")
 public class PasajeroRest {
-    
+
     @Autowired
     PasajeroService pser;
 
@@ -44,8 +46,11 @@ public class PasajeroRest {
     @Autowired
     PersonaService perser;
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody @Valid Pasajero p, BindingResult br) {
+    @Autowired
+    ClientePasajeroService clientePasajeroService;
+
+    @PostMapping(path = "/{idUsuario}")
+    public ResponseEntity<?> guardar(@RequestBody @Valid Pasajero p, BindingResult br, @PathVariable int idUsuario) {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -60,12 +65,13 @@ public class PasajeroRest {
         if (persona == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "La persona no existe"), HttpStatus.NOT_FOUND);
         }
+
         p.setPersona(persona);
-        Usuario usuario = user.encontrar(p.getUsuario().getId_Usuario()).orElse(null);
+        Usuario usuario = user.encontrar(idUsuario).orElse(null);
         if (usuario == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El usuario no existe"), HttpStatus.NOT_FOUND);
         }
-        p.setUsuario(usuario);
+//        p.setUsuario(usuario);
         pser.guardar(p);
         return ResponseEntity.ok(p);
     }

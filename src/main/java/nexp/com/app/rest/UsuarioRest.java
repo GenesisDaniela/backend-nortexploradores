@@ -5,10 +5,7 @@
  */
 package nexp.com.app.rest;
 
-import nexp.com.app.model.Compra;
-import nexp.com.app.model.Paquete;
-import nexp.com.app.model.Pasajero;
-import nexp.com.app.model.Persona;
+import nexp.com.app.model.*;
 import nexp.com.app.negocio.NorteXploradores;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
@@ -75,7 +72,7 @@ public class UsuarioRest {
         Usuario u = user.getByNombreUsuario(username).orElse(null);
 
         if(u==null){
-           return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }
 
         return ResponseEntity.ok(u);
@@ -106,20 +103,20 @@ public class UsuarioRest {
 
         for(Pasajero p: pasajeros){
             log.info(p.getIdPasajero()+"================================================");
-                if(!nexp.existePersona(personas, p.getPersona())){
-                    personaService.guardar(p.getPersona());
-                    p.setUsuario(us);
+            if(!nexp.existePersona(personas, p.getPersona())){
+                personaService.guardar(p.getPersona());
+//                    p.setUsuario(us);
+                pasajerosAdd.add(pasajeroService.guardar(p));
+            }else{
+
+                if(p.getIdPasajero()==null ){
+//                        p.setUsuario(us);
                     pasajerosAdd.add(pasajeroService.guardar(p));
-                }else{
-
-                    if(p.getIdPasajero()==null ){
-                        p.setUsuario(us);
-                        pasajerosAdd.add(pasajeroService.guardar(p));
-                    }
-
-
-
                 }
+
+
+
+            }
         }
         return ResponseEntity.ok(pasajerosAdd);
     }
@@ -127,15 +124,19 @@ public class UsuarioRest {
 
     @GetMapping(path = "/{id}/pasajeros")
     public ResponseEntity<List<Pasajero>> pasajerosPorUsuario(@PathVariable int id){
-        return ResponseEntity.ok((List)user.encontrar(id).get().pasajeroCollection());
+        List<Pasajero> pasajeros = new ArrayList<>();
+        for(ClientePasajero p: user.encontrar(id).get().clientePasajeroCollection()){
+            pasajeros.add(p.getIdPasajero());
+        }
+        return ResponseEntity.ok((pasajeros));
     }
 
     @GetMapping(path = "/{id}/pasajerospersonas")
     public ResponseEntity<List<Persona>> pasajerosPersonaPorUsuario(@PathVariable int id){
-            List<Persona> personas = new ArrayList<>();
-            for(Pasajero p: user.encontrar(id).get().pasajeroCollection()){
-                personas.add(p.getPersona());
-            }
+        List<Persona> personas = new ArrayList<>();
+        for(ClientePasajero p: user.encontrar(id).get().clientePasajeroCollection()){
+            personas.add(p.getIdPasajero().getPersona());
+        }
 
         return ResponseEntity.ok(personas);
     }

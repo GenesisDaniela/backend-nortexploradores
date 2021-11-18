@@ -1,4 +1,7 @@
 package nexp.com.app.dao;
 
-public interface ClientePasajeroDAO {
+import nexp.com.app.model.ClientePasajero;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ClientePasajeroDAO extends JpaRepository<ClientePasajero, Integer> {
 }
