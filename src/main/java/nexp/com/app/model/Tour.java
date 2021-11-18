@@ -49,8 +49,6 @@ public class Tour implements Serializable {
     private Date fechaSalida;
     @Column(name = "cant_cupos")
     private Integer cantCupos;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "estado")
     private String estado;
     @JoinColumn(name = "empleado", referencedColumnName = "id_empleado")
