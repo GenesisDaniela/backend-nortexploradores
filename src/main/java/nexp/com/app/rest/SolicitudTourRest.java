@@ -77,6 +77,7 @@ public class SolicitudTourRest {
         notificacion.setUsuario(usuario);
         notificacion.setEstado((short)0);
         notificacion.setFecha(solicitudTour.getFecha());
+        notificacion.setSolicitudTour(solicitudTour);
 
         nser.guardar(notificacion);
         return ResponseEntity.ok(solicitudTour);

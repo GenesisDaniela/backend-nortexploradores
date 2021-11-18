@@ -56,6 +56,9 @@ public class SugerenciaRest {
         notificacion.setUsuario(usuario);
         notificacion.setEstado((short)0);
         notificacion.setFecha(s.getFecha());
+        notificacion.setSugerencia(s);
+        notificacion.setSugerencia(s);
+
         nser.guardar(notificacion);
         return ResponseEntity.ok(s);
     }

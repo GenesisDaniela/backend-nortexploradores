@@ -60,7 +60,12 @@ public class Notificacion implements Serializable {
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario usuario;
-
+    @JoinColumn(name = "solicitudTour", referencedColumnName = "id_solicitud")
+    @ManyToOne
+    private SolicitudTour solicitudTour;
+    @JoinColumn(name = "sugerencia", referencedColumnName = "id_sug")
+    @ManyToOne
+    private Sugerencia sugerencia;
     public Notificacion() {
     }
 
@@ -71,6 +76,22 @@ public class Notificacion implements Serializable {
     public Notificacion(Integer idNotificacion, short estado) {
         this.idNotificacion = idNotificacion;
         this.estado = estado;
+    }
+
+    public SolicitudTour getSolicitudTour() {
+        return solicitudTour;
+    }
+
+    public void setSolicitudTour(SolicitudTour solicitudTour) {
+        this.solicitudTour = solicitudTour;
+    }
+
+    public Sugerencia getSugerencia() {
+        return sugerencia;
+    }
+
+    public void setSugerencia(Sugerencia sugerencia) {
+        this.sugerencia = sugerencia;
     }
 
     public Integer getIdNotificacion() {
