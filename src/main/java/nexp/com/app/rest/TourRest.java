@@ -206,6 +206,14 @@ public class TourRest {
         return ResponseEntity.ok(pasajeros);
     }
 
+    @GetMapping(path = "/{idTour}/transporte")
+    public ResponseEntity<?>transporteDeTour(@PathVariable int idTour){
+        Tour tour = tser.encontrar(idTour).orElse(null);
+        List<TransporteTour> tours=(List) tour.transporteTourCollection();
+
+        return ResponseEntity.ok(tours.get(tours.size()-1).getTransporte());
+    }
+
     @PostMapping(path = "/{idTour}/{idTransporte}")
     public ResponseEntity<?> guardarTransporteTour(@PathVariable int idTour, @PathVariable String idTransporte) {
         Tour tour = tourService.encontrar(idTour).orElse(null);
