@@ -80,8 +80,8 @@ public class TransporteRest {
     }
 
     @GetMapping(path = "/{idTransporte}/deshabilitar")
-    public ResponseEntity<?> deshabilitarTransporte(@PathVariable String idtransporte) {
-        Transporte transporte= tser.encontrar(idtransporte).orElse(null);
+    public ResponseEntity<?> deshabilitarTransporte(@PathVariable String idTransporte) {
+        Transporte transporte= tser.encontrar(idTransporte).orElse(null);
         if (transporte == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","El transporte no existe"), HttpStatus.NOT_FOUND);
         }
@@ -91,8 +91,8 @@ public class TransporteRest {
     }
 
     @GetMapping(path = "/{idTransporte}/habilitar")
-    public ResponseEntity<?> habilitarTransporte(@PathVariable String idtransporte) {
-        Transporte transporte= tser.encontrar(idtransporte).orElse(null);
+    public ResponseEntity<?> habilitarTransporte(@PathVariable String idTransporte) {
+        Transporte transporte= tser.encontrar(idTransporte).orElse(null);
         if (transporte == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","El transporte no existe"), HttpStatus.NOT_FOUND);
         }

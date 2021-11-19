@@ -118,7 +118,8 @@ public class TourRest {
         return ResponseEntity.ok(this.tser.listarActivos());
     }
 
-    @GetMapping(path = "/{idTour}/deshabilitar")
+    @GetMapping(path = "/{idTour}/" +
+            "")
     public ResponseEntity<?> deshabilitarTour(@PathVariable int idTour) {
         Tour tour = tser.encontrar(idTour).orElse(null);
         if (tour == null) {
