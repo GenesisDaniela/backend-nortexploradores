@@ -6,10 +6,7 @@ import nexp.com.app.security.model.Usuario;
 import nexp.com.app.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 
@@ -123,4 +120,13 @@ public class NorteXploradores {
     }
 
 
+    public boolean existeUsuario(Collection<ClientePasajero> clientePasajeroCollection, Usuario us) {
+        boolean flag = false;
+        for(ClientePasajero usuario: clientePasajeroCollection){
+            if(usuario.getIdUsuario().getId_Usuario() == (us.getId_Usuario())){
+                return true;
+            }
+        }
+        return flag;
+    }
 }
