@@ -78,7 +78,7 @@ public class TransaccionRest {
         long idCompra = Long.parseLong(body.get("reference_sale"));
         Compra compra = compraService.encontrar(idCompra).orElse(null);
         if(compra == null){
-            compra = compraService.encontrar(idCompra-1).orElse(null);
+            compra = compraService.encontrar(idCompra+1).orElse(null);
         }
         pay.setReferenceSale(compra);
         pay.setResponseMessagePol(body.get("response_message_pol"));
