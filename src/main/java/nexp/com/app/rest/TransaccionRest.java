@@ -7,12 +7,17 @@ package nexp.com.app.rest;
 
 
 import nexp.com.app.model.Compra;
+import nexp.com.app.model.Notificacion;
+import nexp.com.app.model.Tour;
 import nexp.com.app.model.Transaccionp;
 import nexp.com.app.negocio.NorteXploradores;
-//import nexp.com.app.security.service.UsuarioService;
+
+import java.util.Date;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.service.CompraService;
+import nexp.com.app.service.NotificacionService;
+import nexp.com.app.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +50,13 @@ public class TransaccionRest {
     public TransaccionService pser;
 
     @Autowired
+    public TourService tourService;
+
+    @Autowired
     public CompraService compraService;
+
+    @Autowired
+    public NotificacionService notificacionService;
 //    @Autowired
 //    public UsuarioService user;
 
@@ -64,9 +75,11 @@ public class TransaccionRest {
 
         pay.setDate(nexp.convertirFecha(body.get("date"),"\\."));
         pay.setDescription(body.get("description")+"");
-        Long idCompra = Long.parseLong(body.get("reference_sale"));
+        long idCompra = Long.parseLong(body.get("reference_sale"));
         Compra compra = compraService.encontrar(idCompra).orElse(null);
-
+        if(compra == null){
+            compra = compraService.encontrar(idCompra-1).orElse(null);
+        }
         pay.setReferenceSale(compra);
         pay.setResponseMessagePol(body.get("response_message_pol"));
         pay.setTransactionId(body.get("transaction_id"));
@@ -98,6 +111,13 @@ public class TransaccionRest {
             }
             if(estaAprobada){
                 compra.setEstado("PAGADO");
+                Tour t = compra.getTour();
+                t.setCantCupos(t.getCantCupos()-1);
+                Notificacion notificacion = new Notificacion();
+                notificacion.setFecha(new Date());
+                notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
+                tourService.guardar(t);
+                notificacionService.guardar(notificacion);
             }else{
                 compra.setEstado("PAGO_PARCIAL");
             }
