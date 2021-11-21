@@ -55,7 +55,6 @@ public class NorteXploradores {
     }
 
     public Date convertirFecha(String date, String separador){
-
         String fecha = date.split(" ")[0];
         String horaC = date.split(" ")[1];
 

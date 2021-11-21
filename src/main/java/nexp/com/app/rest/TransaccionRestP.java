@@ -41,6 +41,6 @@ public class TransaccionRestP {
         if (transaccionp == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "No existe el id"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(transaccionService.listar(), HttpStatus.OK);
+        return new ResponseEntity(transaccionp, HttpStatus.OK);
     }
 }

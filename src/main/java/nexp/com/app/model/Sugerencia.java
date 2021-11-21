@@ -6,20 +6,9 @@
 package nexp.com.app.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nexp.com.app.security.model.Usuario;
@@ -53,6 +42,8 @@ public class Sugerencia implements Serializable {
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario usuario;
+    @OneToMany(mappedBy = "sugerencia")
+    private Collection<Notificacion> notificacionCollection;
 
     public Sugerencia() {
     }
@@ -91,6 +82,14 @@ public class Sugerencia implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Collection<Notificacion> notificacionCollection() {
+        return notificacionCollection;
+    }
+
+    public void setNotificacionCollection(Collection<Notificacion> notificacionCollection) {
+        this.notificacionCollection = notificacionCollection;
     }
 
     @Override

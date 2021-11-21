@@ -72,12 +72,6 @@ public class TransaccionRest {
         pay.setTransactionId(body.get("transaction_id"));
         pay.setValue(Long.parseLong(body.get("value").split("\\.")[0]));
 
-        if(pay!=null){
-            pser.guardar(pay);
-            return  new ResponseEntity<>(body, HttpStatus.OK);
-        }
-
-
 //      Compra Fallida
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
             pser.guardar(pay);
