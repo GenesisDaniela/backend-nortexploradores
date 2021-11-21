@@ -107,7 +107,7 @@ public class TransaccionRest {
 
 
         if (pay.getResponseMessagePol().equals("APPROVED")){ //SIGUE EN DUDA ESTE METODO
-            compra.setEstado("PAGADO PARCIALMENTE");
+            compra.setEstado("PAGO_PARCIAL");
         }
 
         pser.guardar(pay);
