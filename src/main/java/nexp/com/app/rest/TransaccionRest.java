@@ -98,9 +98,11 @@ public class TransaccionRest {
             }
             if(estaAprobada){
                 compra.setEstado("PAGADO");
-                pser.guardar(pay);
-                return new ResponseEntity<>(body, HttpStatus.OK);
+            }else{
+                compra.setEstado("PAGO_PARCIAL");
             }
+            pser.guardar(pay);
+            return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
 

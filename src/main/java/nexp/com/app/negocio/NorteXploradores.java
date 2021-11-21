@@ -30,7 +30,7 @@ public class NorteXploradores {
         List<Compra> reservados = new ArrayList<>();
         for(Compra c: compras){
             log.info(c.getEstado());
-            if(c.getEstado().equals("PENDIENTE")){
+            if(c.getEstado().equals("PAGO_PARCIAL")){
                 reservados.add(c);
             }
         }

@@ -31,8 +31,8 @@ public class TareasSpring {
 
     NorteXploradores norteXploradores = new NorteXploradores();
 
-    @Scheduled(fixedRate = 100000)
-//    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(fixedRate = 100000)
+    @Scheduled(cron = "0 0 0 * * ?")
     public void revisarTiempoReserva() {
         log.info("Ejecutanto labores de tiempos de reserva...");
         for (Compra c : compraService.listar()) {
