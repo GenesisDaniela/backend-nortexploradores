@@ -37,6 +37,17 @@ public class NorteXploradores {
         return reservados;
     }
 
+    public List<Tour> tourComprados(List<Compra> compras){
+        List<Tour> reservados = new ArrayList<>();
+        for(Compra c: compras){
+            log.info(c.getEstado());
+            if(c.getEstado().equals("PAGADO")){
+                reservados.add(c.getTour());
+            }
+        }
+        return reservados;
+    }
+
     public List<Compra> comprasCanceladas(List<Compra> paquetes){
         List<Compra> comprados = new ArrayList<>();
 

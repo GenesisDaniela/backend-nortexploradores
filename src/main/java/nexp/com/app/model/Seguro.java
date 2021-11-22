@@ -30,8 +30,8 @@ public class Seguro implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id_seguro")
     private Integer idSeguro;
     @Size(max = 25)

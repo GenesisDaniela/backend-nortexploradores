@@ -211,4 +211,11 @@ public class UsuarioRest {
         }
         return ResponseEntity.ok(paquetesReservado);
     }
-}
+
+    @GetMapping(path = "/{idUsuario}/tourscomprados")
+    public ResponseEntity<?> tourComprado(@PathVariable int idUsuario){
+        Usuario u = user.encontrar(idUsuario).get();
+        List<Tour> tourComprados = nexp.tourComprados((List)u.compraCollection());
+        return ResponseEntity.ok(tourComprados);
+    }
+    }
