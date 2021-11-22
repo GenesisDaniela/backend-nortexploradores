@@ -114,9 +114,8 @@ public class TransaccionRest {
             log.info("es una compra actual y tiene reservas"+transaccionps.size()+"+++++++++++++++++++++++++++");
             for (Transaccionp transaccionp : transaccionps) { //Recorro todas las transacciones, y si alguna esta aprobada entonces se que ya tiene una segunda transaccion aprobada
                 log.info(transaccionp.getResponseMessagePol()+"+++++++++++++++++++++++++++++++++++++++++++++++++");
-                if (transaccionp.getResponseMessagePol().equals("APROVED")) {
+                if (transaccionp.getResponseMessagePol().equals("APPROVED")) {
                     log.info("tiene una transaccion aprobada "+transaccionp.getTransactionId());
-
                     estaAprobada = true;
                     break;
                 }
