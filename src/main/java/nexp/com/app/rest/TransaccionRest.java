@@ -72,14 +72,12 @@ public class TransaccionRest {
     public ResponseEntity<?> pago(@RequestParam Map<String, String> body) {
 
         Transaccionp pay = new Transaccionp();
-
+        log.info(body.toString());
         pay.setDate(nexp.convertirFecha(body.get("date"),"\\."));
         pay.setDescription(body.get("description")+"");
-        long idCompra = Long.parseLong(body.get("reference_sale"));
+
+        long idCompra = Long.parseLong(body.get("extra1"));
         Compra compra = compraService.encontrar(idCompra).orElse(null);
-        if(compra == null){
-            compra = compraService.encontrar(idCompra+1).orElse(null);
-        }
         pay.setReferenceSale(compra);
         pay.setResponseMessagePol(body.get("response_message_pol"));
         pay.setTransactionId(body.get("transaction_id"));
