@@ -46,7 +46,6 @@ public class Alojamiento implements Serializable {
     @Size(max = 25)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 25)
     @Column(name = "dir")
     private String dir;
     @Lob
