@@ -123,7 +123,7 @@ public class TransaccionRest {
             if(estaAprobada){
                 compra.setEstado("PAGADO");
                 Tour t = compra.getTour();
-                t.setCantCupos(t.getCantCupos()-1);
+                t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
                 Notificacion notificacion = new Notificacion();
                 notificacion.setFecha(new Date());
                 notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
