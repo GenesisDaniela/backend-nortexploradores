@@ -5,6 +5,7 @@
  */
 package nexp.com.app.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.DetalleCompra;
 import nexp.com.app.model.Paquete;
@@ -33,6 +34,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/detcompra")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class DetalleCompraRest {
 
     @Autowired
@@ -57,7 +59,6 @@ public class DetalleCompraRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-
         for(DetalleCompra det: detalleCompra){
             Compra c =compraService.encontrar(det.getCompra().getIdCompra()).orElse(null);
             Pasajero pasajero = det.getPasajero();

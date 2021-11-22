@@ -91,18 +91,28 @@ public class TransaccionRest {
 
 //      Es una compra o pago total 100%
         if(pay.getResponseMessagePol().equals("APPROVED") && pay.getValue() == (long)compra.getTotalCompra()){ //Se pagó el total y fue aprobada
+            compra.setEstado("PAGADO");
+            Tour t = compra.getTour();
+            t.setCantCupos(t.getCantCupos()-1);
+            Notificacion notificacion = new Notificacion();
+            notificacion.setFecha(new Date());
+            notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
+            tourService.guardar(t);
+            notificacionService.guardar(notificacion);
             pser.guardar(pay);
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
 //      Es una reserva;
 //      Si la compra actual está aprobada y la transaccion anterior fue aprobada
-
+        log.info("entra");
         boolean estaAprobada =false;
         if(compra.transaccionpCollection().size()>0 && pay.getResponseMessagePol().equals("APPROVED")){
-
+            log.info("es una compra actual y tiene reservas");
             for (Transaccionp transaccionp : compra.transaccionpCollection()) { //Recorro todas las transacciones, y si alguna esta aprobada entonces se que ya tiene una segunda transaccion aprobada
                 if (transaccionp.getResponseMessagePol().equals("APROVED")) {
+                    log.info("tiene una transaccion aprobada "+transaccionp.getTransactionId());
+
                     estaAprobada = true;
                     break;
                 }
