@@ -107,9 +107,13 @@ public class TransaccionRest {
 //      Si la compra actual está aprobada y la transaccion anterior fue aprobada
         log.info("entra");
         boolean estaAprobada =false;
-        if(compra.transaccionpCollection().size()>0 && pay.getResponseMessagePol().equals("APPROVED")){
-            log.info("es una compra actual y tiene reservas");
-            for (Transaccionp transaccionp : compra.transaccionpCollection()) { //Recorro todas las transacciones, y si alguna esta aprobada entonces se que ya tiene una segunda transaccion aprobada
+
+        List<Transaccionp> transaccionps =(List)compra.transaccionpCollection();
+
+        if(transaccionps.size()>0 && pay.getResponseMessagePol().equals("APPROVED")){
+            log.info("es una compra actual y tiene reservas"+transaccionps.size()+"+++++++++++++++++++++++++++");
+            for (Transaccionp transaccionp : transaccionps) { //Recorro todas las transacciones, y si alguna esta aprobada entonces se que ya tiene una segunda transaccion aprobada
+                log.info(transaccionp.getResponseMessagePol()+"+++++++++++++++++++++++++++++++++++++++++++++++++");
                 if (transaccionp.getResponseMessagePol().equals("APROVED")) {
                     log.info("tiene una transaccion aprobada "+transaccionp.getTransactionId());
 
