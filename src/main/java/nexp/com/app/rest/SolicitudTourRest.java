@@ -53,7 +53,7 @@ public class SolicitudTourRest {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El usuario no existe"), HttpStatus.NOT_FOUND);
         }
         solicitudTour.setUsuario(usuario);
-        Tour tour = tourService.encontrar(solicitudTour.getTour().getIdTour()).orElse(null);
+        Tour tour = solicitudTour.getTour();
         if (tour == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
         }
