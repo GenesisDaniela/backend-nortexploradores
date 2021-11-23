@@ -58,17 +58,17 @@ public class SolicitudTourRest {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
         }
         tour.setEstado("PENDIENTE");
-        tourService.guardar(tour);
+
 
         Paquete paquete = new Paquete();
         paquete.setEstado("PENDIENTE");
         paquete.setMunicipio(municipio);
 
         pser.guardar(paquete);
+        tour.setPaquete(paquete);
+        tourService.guardar(tour);
 
         solicitudTour.setFecha(new Date());
-        solicitudTour.setTour(tour);
-        solicitudTour.setUsuario(usuario);
 
         spaqser.guardar(solicitudTour);
 
