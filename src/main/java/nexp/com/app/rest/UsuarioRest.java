@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import nexp.com.app.service.ClientePasajeroService;
 import nexp.com.app.service.CompraService;
 import nexp.com.app.service.PasajeroService;
 import nexp.com.app.service.PersonaService;
@@ -46,6 +47,9 @@ public class UsuarioRest {
 
     @Autowired
     PersonaService personaService;
+
+    @Autowired
+    ClientePasajeroService clientePasajeroService;
 
     NorteXploradores nexp = new NorteXploradores();
 
@@ -103,15 +107,38 @@ public class UsuarioRest {
 
         for(Pasajero p: pasajeros){
             log.info(p.getIdPasajero()+"================================================");
-            if(!nexp.existePersona(personas, p.getPersona())){
-                personaService.guardar(p.getPersona());
-//                    p.setUsuario(us);
-                pasajerosAdd.add(pasajeroService.guardar(p));
-            }else{
+            Persona personaP = personaService.encontrar(p.getPersona().getIdPersona()).orElse(null);
+            if(personaP==null){
+                personaService.guardar(p.getPersona()); // guardo a la persona no existente
+                pasajerosAdd.add(pasajeroService.guardar(p)); // guardo al pasasajero tampoco existente
 
-                if(p.getIdPasajero()==null ){
-//                        p.setUsuario(us);
+                ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
+                clientePasajero.setIdPasajero(p);
+                clientePasajero.setIdUsuario(us);
+                clientePasajeroService.guardar(clientePasajero);
+            }else{
+                Pasajero pasajeroAsociadoAPersona = personaP.pasajero();
+                if(p.getIdPasajero()==null && pasajeroAsociadoAPersona==null){
                     pasajerosAdd.add(pasajeroService.guardar(p));
+                    ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
+                    clientePasajero.setIdPasajero(p);
+                    clientePasajero.setIdUsuario(us);
+                    clientePasajeroService.guardar(clientePasajero);
+
+                }else{
+                    if(p.getIdPasajero()==null){
+                        p = pasajeroService.encontrar(pasajeroAsociadoAPersona.getIdPasajero()).get();
+                        List<ClientePasajero> pc =(List) p.clientePasajeroCollection();
+                            if(!nexp.existeUsuario(pc, us)){ //esta asociado a otro cliente
+                                ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
+                                clientePasajero.setIdPasajero(p);
+                                clientePasajero.setIdUsuario(us);
+                                clientePasajeroService.guardar(clientePasajero);
+                                pasajerosAdd.add(p);
+                            }
+                    }
+
+
                 }
 
 
@@ -184,4 +211,11 @@ public class UsuarioRest {
         }
         return ResponseEntity.ok(paquetesReservado);
     }
-}
+
+    @GetMapping(path = "/{idUsuario}/tourscomprados")
+    public ResponseEntity<?> tourComprado(@PathVariable int idUsuario){
+        Usuario u = user.encontrar(idUsuario).get();
+        List<Tour> tourComprados = nexp.tourComprados((List)u.compraCollection());
+        return ResponseEntity.ok(tourComprados);
+    }
+    }

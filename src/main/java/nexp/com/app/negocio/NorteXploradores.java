@@ -6,10 +6,7 @@ import nexp.com.app.security.model.Usuario;
 import nexp.com.app.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 
@@ -33,8 +30,19 @@ public class NorteXploradores {
         List<Compra> reservados = new ArrayList<>();
         for(Compra c: compras){
             log.info(c.getEstado());
-            if(c.getEstado().equals("PENDIENTE")){
+            if(c.getEstado().equals("PAGO_PARCIAL")){
                 reservados.add(c);
+            }
+        }
+        return reservados;
+    }
+
+    public List<Tour> tourComprados(List<Compra> compras){
+        List<Tour> reservados = new ArrayList<>();
+        for(Compra c: compras){
+            log.info(c.getEstado());
+            if(c.getEstado().equals("PAGADO")){
+                reservados.add(c.getTour());
             }
         }
         return reservados;
@@ -58,7 +66,6 @@ public class NorteXploradores {
     }
 
     public Date convertirFecha(String date, String separador){
-
         String fecha = date.split(" ")[0];
         String horaC = date.split(" ")[1];
 
@@ -123,4 +130,13 @@ public class NorteXploradores {
     }
 
 
+    public boolean existeUsuario(Collection<ClientePasajero> clientePasajeroCollection, Usuario us) {
+        boolean flag = false;
+        for(ClientePasajero usuario: clientePasajeroCollection){
+            if(usuario.getIdUsuario().getId_Usuario() == (us.getId_Usuario())){
+                return true;
+            }
+        }
+        return flag;
+    }
 }

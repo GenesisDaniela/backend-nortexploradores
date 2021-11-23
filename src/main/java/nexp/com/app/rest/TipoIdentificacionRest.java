@@ -31,6 +31,7 @@ public class TipoIdentificacionRest {
     public ResponseEntity<List<TipoIdentificacion>> getTipoIdentificacion() {
         return ResponseEntity.ok(tiSer.listar());
     }
+
     
    
 }
