@@ -48,11 +48,7 @@ public class SolicitudTourRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Usuario usuario = user.encontrar(solicitudTour.getUsuario().getId_Usuario()).orElse(null);
-        if (usuario == null) {
-            return new ResponseEntity<ObjectError>(new ObjectError("id", "El usuario no existe"), HttpStatus.NOT_FOUND);
-        }
-        solicitudTour.setUsuario(usuario);
+
         Tour tour = solicitudTour.getTour();
         if (tour == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
@@ -61,6 +57,7 @@ public class SolicitudTourRest {
 
 
         Paquete paquete = new Paquete();
+        paquete.setNombre("Paquete "+municipio.getNombre());
         paquete.setEstado("PENDIENTE");
         paquete.setMunicipio(municipio);
 
@@ -69,17 +66,16 @@ public class SolicitudTourRest {
         tourService.guardar(tour);
 
         solicitudTour.setFecha(new Date());
-
         spaqser.guardar(solicitudTour);
 
         Notificacion notificacion = new Notificacion();
-        notificacion.setDescripcion("Has recibo una solicitud de paquete personalizado de: " + usuario.getUsername());
-        notificacion.setUsuario(usuario);
+        notificacion.setDescripcion("Has recibo una solicitud de paquete personalizado de: " + solicitudTour.getUsuario().getUsername());
+        notificacion.setUsuario(solicitudTour.getUsuario());
         notificacion.setEstado((short)0);
         notificacion.setFecha(solicitudTour.getFecha());
         notificacion.setSolicitudTour(solicitudTour);
-
         nser.guardar(notificacion);
+        
         return ResponseEntity.ok(solicitudTour);
     }
 
