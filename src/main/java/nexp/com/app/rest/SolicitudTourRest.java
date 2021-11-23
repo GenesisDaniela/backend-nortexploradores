@@ -40,6 +40,20 @@ public class SolicitudTourRest {
     @Autowired
     MunicipioService municipioService;
 
+
+    @GetMapping(path = "/total")
+    public ResponseEntity<Integer> cantidadSolicitudes() {
+        int total = 0;
+      for(SolicitudTour solicitudTour: spaqser.listar()) {
+          if(!solicitudTour.getTour().getPaquete().getEstado().equals("ACEPTADO") && !solicitudTour.getTour().getPaquete().getEstado().equals("RECHAZADO")){
+              total++;
+          }
+
+      }
+      return ResponseEntity.ok(total);
+    }
+
+
     @PostMapping(path = "/{idMunicipio}")
     public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br, @PathVariable int idMunicipio){
 
@@ -75,7 +89,7 @@ public class SolicitudTourRest {
         notificacion.setFecha(solicitudTour.getFecha());
         notificacion.setSolicitudTour(solicitudTour);
         nser.guardar(notificacion);
-        
+
         return ResponseEntity.ok(solicitudTour);
     }
 
