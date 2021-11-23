@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import nexp.com.app.security.model.Usuario;
 
 /**
  *
@@ -38,7 +36,7 @@ public class Pasajero implements Serializable {
     private Persona persona;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
     private Collection<DetalleCompra> detalleCompraCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPasajero")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pasajero")
     private Collection<ClientePasajero> clientePasajeroCollection;
     public Pasajero() {
     }

@@ -40,12 +40,12 @@ public class ClientePasajero implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_clientepasajero")
     private Integer idClientepasajero;
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
-    private Usuario idUsuario;
-    @JoinColumn(name = "id_pasajero", referencedColumnName = "id_pasajero")
+    private Usuario usuario;
+    @JoinColumn(name = "pasajero", referencedColumnName = "id_pasajero")
     @ManyToOne(optional = false)
-    private Pasajero idPasajero;
+    private Pasajero pasajero;
 
     public ClientePasajero() {
     }
@@ -62,20 +62,20 @@ public class ClientePasajero implements Serializable {
         this.idClientepasajero = idClientepasajero;
     }
 
-    public Usuario getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario idUsuario) {
+        this.usuario = idUsuario;
     }
 
-    public Pasajero getIdPasajero() {
-        return idPasajero;
+    public Pasajero getPasajero() {
+        return pasajero;
     }
 
-    public void setIdPasajero(Pasajero idPasajero) {
-        this.idPasajero = idPasajero;
+    public void setPasajero(Pasajero idPasajero) {
+        this.pasajero = idPasajero;
     }
 
     @Override

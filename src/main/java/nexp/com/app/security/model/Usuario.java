@@ -38,7 +38,7 @@ public class Usuario {
     private String password;
     @OneToMany(mappedBy = "usuario")
     private Collection<Notificacion> notificacionCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<ClientePasajero> clientePasajeroCollection;
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)

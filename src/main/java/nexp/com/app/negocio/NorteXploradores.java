@@ -133,7 +133,7 @@ public class NorteXploradores {
     public boolean existeUsuario(Collection<ClientePasajero> clientePasajeroCollection, Usuario us) {
         boolean flag = false;
         for(ClientePasajero usuario: clientePasajeroCollection){
-            if(usuario.getIdUsuario().getId_Usuario() == (us.getId_Usuario())){
+            if(usuario.getUsuario().getId_Usuario() == (us.getId_Usuario())){
                 return true;
             }
         }

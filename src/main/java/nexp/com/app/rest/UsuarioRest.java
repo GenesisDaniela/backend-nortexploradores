@@ -21,7 +21,6 @@ import nexp.com.app.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -113,16 +112,16 @@ public class UsuarioRest {
                 pasajerosAdd.add(pasajeroService.guardar(p)); // guardo al pasasajero tampoco existente
 
                 ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
-                clientePasajero.setIdPasajero(p);
-                clientePasajero.setIdUsuario(us);
+                clientePasajero.setPasajero(p);
+                clientePasajero.setUsuario(us);
                 clientePasajeroService.guardar(clientePasajero);
             }else{
                 Pasajero pasajeroAsociadoAPersona = personaP.pasajero();
                 if(p.getIdPasajero()==null && pasajeroAsociadoAPersona==null){
                     pasajerosAdd.add(pasajeroService.guardar(p));
                     ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
-                    clientePasajero.setIdPasajero(p);
-                    clientePasajero.setIdUsuario(us);
+                    clientePasajero.setPasajero(p);
+                    clientePasajero.setUsuario(us);
                     clientePasajeroService.guardar(clientePasajero);
 
                 }else{
@@ -131,8 +130,8 @@ public class UsuarioRest {
                         List<ClientePasajero> pc =(List) p.clientePasajeroCollection();
                             if(!nexp.existeUsuario(pc, us)){ //esta asociado a otro cliente
                                 ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
-                                clientePasajero.setIdPasajero(p);
-                                clientePasajero.setIdUsuario(us);
+                                clientePasajero.setPasajero(p);
+                                clientePasajero.setUsuario(us);
                                 clientePasajeroService.guardar(clientePasajero);
                                 pasajerosAdd.add(p);
                             }
@@ -153,7 +152,7 @@ public class UsuarioRest {
     public ResponseEntity<List<Pasajero>> pasajerosPorUsuario(@PathVariable int id){
         List<Pasajero> pasajeros = new ArrayList<>();
         for(ClientePasajero p: user.encontrar(id).get().clientePasajeroCollection()){
-            pasajeros.add(p.getIdPasajero());
+            pasajeros.add(p.getPasajero());
         }
         return ResponseEntity.ok((pasajeros));
     }
@@ -162,7 +161,7 @@ public class UsuarioRest {
     public ResponseEntity<List<Persona>> pasajerosPersonaPorUsuario(@PathVariable int id){
         List<Persona> personas = new ArrayList<>();
         for(ClientePasajero p: user.encontrar(id).get().clientePasajeroCollection()){
-            personas.add(p.getIdPasajero().getPersona());
+            personas.add(p.getPasajero().getPersona());
         }
 
         return ResponseEntity.ok(personas);

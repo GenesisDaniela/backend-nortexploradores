@@ -40,6 +40,9 @@ public class SolicitudTourRest {
     @Autowired
     MunicipioService municipioService;
 
+    @Autowired
+    PaqueteService paqueteService;
+
 
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> cantidadSolicitudes() {
@@ -96,6 +99,17 @@ public class SolicitudTourRest {
     @GetMapping
     public ResponseEntity<List<SolicitudTour>> getSolicitudPaquete() {
         return ResponseEntity.ok(spaqser.listar());
+    }
+
+    @GetMapping(path = "/{id}/rechazar")
+    public ResponseEntity<?> rechazarSolicitud(@PathVariable int id) {
+        SolicitudTour s = spaqser.encontrar(id).orElse(null);
+        Tour t = s.getTour();
+        spaqser.eliminar(s.getIdSolicitud());
+        paqueteService.eliminar(t.getPaquete().getIdPaq());
+        tourService.eliminar(t.getIdTour());
+
+        return ResponseEntity.ok("");
     }
 
     @PutMapping()
