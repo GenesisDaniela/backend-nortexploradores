@@ -5,6 +5,7 @@
  */
 package nexp.com.app.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.ClientePasajero;
 import nexp.com.app.model.Pasajero;
 import nexp.com.app.model.Persona;
@@ -35,6 +36,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/pasajero")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class PasajeroRest {
 
     @Autowired
@@ -55,24 +57,15 @@ public class PasajeroRest {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
 
-        Persona validarP = p.getPersona();
-
-        if(validarP.getApellido()!=null){
-            perser.guardar(validarP);
-        }
-
-        Persona persona = perser.encontrar(p.getPersona().getIdPersona()).orElse(null);
-        if (persona == null) {
-            return new ResponseEntity<ObjectError>(new ObjectError("id", "La persona no existe"), HttpStatus.NOT_FOUND);
-        }
-
-        p.setPersona(persona);
         Usuario usuario = user.encontrar(idUsuario).orElse(null);
         if (usuario == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El usuario no existe"), HttpStatus.NOT_FOUND);
         }
-//        p.setUsuario(usuario);
         pser.guardar(p);
+        ClientePasajero clientePasajero =  new ClientePasajero();
+        clientePasajero.setPasajero(p);
+        clientePasajero.setUsuario(usuario);
+        clientePasajeroService.guardar(clientePasajero);
         return ResponseEntity.ok(p);
     }
 

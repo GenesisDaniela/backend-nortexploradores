@@ -66,16 +66,16 @@ public class ClientePasajero implements Serializable {
         return usuario;
     }
 
-    public void setUsuario(Usuario idUsuario) {
-        this.usuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Pasajero getPasajero() {
         return pasajero;
     }
 
-    public void setPasajero(Pasajero idPasajero) {
-        this.pasajero = idPasajero;
+    public void setPasajero(Pasajero pasajero) {
+        this.pasajero = pasajero;
     }
 
     @Override

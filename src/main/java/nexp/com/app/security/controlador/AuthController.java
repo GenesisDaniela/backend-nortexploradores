@@ -75,7 +75,8 @@ public class AuthController {
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
         usuario.setRoles(roles);
         usuarioService.guardar(usuario);
-        return new ResponseEntity(("usuario guardado"), HttpStatus.CREATED);
+
+        return ResponseEntity.ok(usuario);
     }
 
     @PostMapping("/login")
