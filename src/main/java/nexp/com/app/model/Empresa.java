@@ -82,7 +82,7 @@ public class Empresa implements Serializable {
     private Boolean estado;
     @Column(name = "telefono")
     @Size(min = 7, max = 10)
-    private Integer telefono;
+    private Long telefono;
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
@@ -169,11 +169,11 @@ public class Empresa implements Serializable {
         this.correo = correo;
     }
 
-    public Integer getTelefono() {
+    public Long getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Integer telefono) {
+    public void setTelefono(Long telefono) {
         this.telefono = telefono;
     }
 
