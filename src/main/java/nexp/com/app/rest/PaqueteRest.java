@@ -158,6 +158,7 @@ public class PaqueteRest {
     public ResponseEntity<?> actividadesPorPaquete(@PathVariable int idPaquete, @RequestBody List<Actividad> actividades) {
         Paquete paquete = pser.encontrar(idPaquete).orElse(null);
         for(Actividad a: actividades){
+            a.setEstado(true);
             a.setPaquete(paquete);
             actividadService.guardar(a);
         }
