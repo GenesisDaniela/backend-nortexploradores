@@ -167,8 +167,14 @@ public class UsuarioRest {
         return ResponseEntity.ok(personas);
     }
 
+//    @GetMapping(path = "/{idPasajero}/deshabilitar")
+//    public ResponseEntity<?> deshabilitarCliente(@PathVariable int id) {
+//        ClientePasajero clientePasajero = new ClientePasajero();
+//
+//    }
 
-    @GetMapping(path = "/{id}")
+
+        @GetMapping(path = "/{id}")
     public ResponseEntity<?> encontrarUsuario(@PathVariable int id) {
         Usuario u = user.encontrar(id).orElse(null);
         if (u == null) {
