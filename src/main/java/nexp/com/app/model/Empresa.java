@@ -50,7 +50,7 @@ public class Empresa implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_empresa")
-    private Integer idEmpresa;
+    private Long idEmpresa;
     @Size(max = 25)
     @Column(name = "nombre")
     private String nombre;
@@ -94,22 +94,22 @@ public class Empresa implements Serializable {
     public Empresa() {
     }
 
-    public Empresa(Integer idEmpresa) {
+    public Empresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 
-    public Empresa(Integer idEmpresa, String mision, String vision, String correo) {
+    public Empresa(Long idEmpresa, String mision, String vision, String correo) {
         this.idEmpresa = idEmpresa;
         this.mision = mision;
         this.vision = vision;
         this.correo = correo;
     }
 
-    public Integer getIdEmpresa() {
+    public Long getIdEmpresa() {
         return idEmpresa;
     }
 
-    public void setIdEmpresa(Integer idEmpresa) {
+    public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 

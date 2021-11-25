@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
-public interface EmpresaDAO extends JpaRepository<Empresa, Integer>{
+public interface EmpresaDAO extends JpaRepository<Empresa, Long>{
     
 }

@@ -32,7 +32,7 @@ public class EmpresaServiceImp implements EmpresaService {
 
     @Override
     @Transactional(readOnly = true )
-    public Optional<Empresa> encontrar(int id) {
+    public Optional<Empresa> encontrar(long id) {
         return eDAO.findById(id);
     }
 
@@ -43,7 +43,7 @@ public class EmpresaServiceImp implements EmpresaService {
     }
 
     @Override
-    public void eliminar(int id) {
+    public void eliminar(long id) {
         eDAO.deleteById(id);
     }
     

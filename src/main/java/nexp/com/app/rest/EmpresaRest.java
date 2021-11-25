@@ -21,7 +21,7 @@ import javax.validation.Valid;
 
 /**
  *
- * @author Santi & Dani
+ * @author GenesisDanielaVJ
  */
 @RestController
 @RequestMapping("/empresa")
@@ -69,7 +69,7 @@ public class EmpresaRest {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<?> encontrarEmpresa(@PathVariable int id) {
+    public ResponseEntity<?> encontrarEmpresa(@PathVariable Long id) {
         Empresa e = eser.encontrar(id).orElse(null);
         if (e == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id","No existe la empresa"), HttpStatus.NOT_FOUND);

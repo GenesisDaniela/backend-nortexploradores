@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface EmpresaService {
         
     public void guardar(Empresa empresa);
-    public Optional<Empresa> encontrar(int id);
+    public Optional<Empresa> encontrar(long id);
     public List<Empresa> listar();
-    public void eliminar(int id);
+    public void eliminar(long id);
 }
