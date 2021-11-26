@@ -81,6 +81,28 @@ public class UsuarioRest {
         return ResponseEntity.ok(u);
     }
 
+    @GetMapping(path = "/{idUsuario}/deshabilitar")
+    public ResponseEntity<?> deshabilitarUsuario(@PathVariable int idUsuario) {
+        Usuario usuario= user.encontrar(idUsuario).orElse(null);
+        if (usuario == null){
+            return new ResponseEntity<ObjectError>(new ObjectError("id","El empleado no existe"), HttpStatus.NOT_FOUND);
+        }
+        usuario.setEstado(false);
+        user.guardar(usuario);
+        return ResponseEntity.ok(usuario);
+    }
+
+    @GetMapping(path = "/{idUsuario}/habilitar")
+    public ResponseEntity<?> habilitarUsuario(@PathVariable int idUsuario) {
+        Usuario usuario= user.encontrar(idUsuario).orElse(null);
+        if (usuario == null){
+            return new ResponseEntity<ObjectError>(new ObjectError("id","El empleado no existe"), HttpStatus.NOT_FOUND);
+        }
+        usuario.setEstado(true);
+        user.guardar(usuario);
+        return ResponseEntity.ok(usuario);
+    }
+
 
     @GetMapping(path = "/{id}/paquetes")
     public ResponseEntity<List<Compra>> paquetesPorUsuario(@PathVariable int id){

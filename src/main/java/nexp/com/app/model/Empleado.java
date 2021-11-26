@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -68,6 +69,12 @@ public class Empleado implements Serializable {
 
     public Empleado(Integer idEmpleado) {
         this.idEmpleado = idEmpleado;
+    }
+
+    public Empleado(Date fechaContratacion, Cargo cargo, Persona persona) {
+        this.fechaContratacion = fechaContratacion;
+        this.cargo = cargo;
+        this.persona = persona;
     }
 
     public Integer getIdEmpleado() {

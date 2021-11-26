@@ -46,7 +46,6 @@ public class Actividad implements Serializable {
     @NotNull
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "estado")
@@ -65,10 +64,9 @@ public class Actividad implements Serializable {
         this.idActividad = idActividad;
     }
 
-    public Actividad(Integer idActividad, String nombre, String descripcion) {
-        this.idActividad = idActividad;
+    public Actividad(String nombre, Paquete paquete) {
         this.nombre = nombre;
-        this.descripcion = descripcion;
+        this.paquete = paquete;
     }
 
     public Integer getIdActividad() {

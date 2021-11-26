@@ -31,9 +31,10 @@ public class Usuario {
     @Size(min = 7, max = 50)
     @Column(name = "email")
     private String email;
-    @Size(min = 1, max = 25)
     @Column(name = "img_url")
     private String imgUrl;
+    @Column(name = "estado")
+    private Boolean estado;
     @NotNull
     private String password;
     @OneToMany(mappedBy = "usuario")
@@ -116,7 +117,15 @@ public class Usuario {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
-    
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
     public Set<Rol> getRoles() {
         return roles;
     }

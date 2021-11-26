@@ -27,8 +27,9 @@ public class EmpleadoServiceImp implements EmpleadoService {
     
     @Override
     @Transactional
-    public void guardar(Empleado empleado) {
-        eDAO.save(empleado);
+    public Empleado guardar(Empleado empleado) {
+        Empleado emp = eDAO.save(empleado);
+        return emp;
     }
 
     @Override

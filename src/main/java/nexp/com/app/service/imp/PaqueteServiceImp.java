@@ -27,8 +27,9 @@ public class PaqueteServiceImp implements PaqueteService {
     
     @Override
     @Transactional
-    public void guardar(Paquete paquete) {
-        pDAO.save(paquete);
+    public Paquete guardar(Paquete paquete) {
+        Paquete paq = pDAO.save(paquete);
+        return paq;
     }
 
     @Override

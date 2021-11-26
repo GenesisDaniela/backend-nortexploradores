@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface PasajeroService {
         

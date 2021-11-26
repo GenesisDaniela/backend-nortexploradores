@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @Service
 public class CompraServiceImp implements CompraService {
@@ -28,8 +28,9 @@ public class CompraServiceImp implements CompraService {
     
     @Override
     @Transactional
-    public void guardar(Compra compra) {
-        cDAO.save(compra);
+    public Compra guardar(Compra compra) {
+        Compra comp = cDAO.save(compra);
+        return comp;
     }
 
     @Override

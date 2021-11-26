@@ -16,8 +16,9 @@ public class ActividadServiceImp implements ActividadService {
     ActividadDAO actividadDAO;
 
     @Override
-    public void guardar(Actividad actividad) {
-        actividadDAO.save(actividad);
+    public Actividad guardar(Actividad actividad) {
+        Actividad act = actividadDAO.save(actividad);
+        return act;
     }
 
     @Override

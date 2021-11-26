@@ -30,6 +30,7 @@ public class Pasajero implements Serializable {
     @Column(name = "id_pasajero")
     private Integer idPasajero;
     @Column(name = "es_cotizante")
+    @Basic(optional = false)
     private Boolean esCotizante;
     @JoinColumn(name = "persona", referencedColumnName = "id_persona")
     @OneToOne(optional = false)
@@ -43,6 +44,11 @@ public class Pasajero implements Serializable {
 
     public Pasajero(Integer idPasajero) {
         this.idPasajero = idPasajero;
+    }
+
+    public Pasajero(Boolean esCotizante, Persona persona) {
+        this.esCotizante = esCotizante;
+        this.persona = persona;
     }
 
     public Integer getIdPasajero() {

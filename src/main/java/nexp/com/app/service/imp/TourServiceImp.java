@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @Service
 public class TourServiceImp implements TourService {
@@ -27,8 +27,9 @@ public class TourServiceImp implements TourService {
     
     @Override
     @Transactional
-    public void guardar(Tour tour) {
-        tDAO.save(tour);
+    public Tour guardar(Tour tour) {
+        Tour t = tDAO.save(tour);
+        return t;
     }
 
     @Override

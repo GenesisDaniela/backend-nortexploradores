@@ -94,6 +94,12 @@ public class Paquete implements Serializable {
         this.nombre = nombre;
     }
 
+    public Paquete(Integer precio, String nombre, Municipio municipio) {
+        this.precio = precio;
+        this.nombre = nombre;
+        this.municipio = municipio;
+    }
+
     public Municipio getMunicipio() {
         return municipio;
     }

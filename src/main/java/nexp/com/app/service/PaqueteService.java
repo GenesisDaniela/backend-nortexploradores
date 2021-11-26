@@ -11,11 +11,11 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface PaqueteService {
         
-    public void guardar(Paquete paquete);
+    public Paquete guardar(Paquete paquete);
     public void eliminar(int id);
     public Optional<Paquete> encontrar(int id);
     public List<Paquete> listar();

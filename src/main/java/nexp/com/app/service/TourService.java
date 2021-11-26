@@ -11,11 +11,11 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface TourService {
     
-    public void guardar(Tour tour);
+    public Tour guardar(Tour tour);
     public void eliminar(int id);
     public Optional<Tour> encontrar(int id);
     public List<Tour> listar();

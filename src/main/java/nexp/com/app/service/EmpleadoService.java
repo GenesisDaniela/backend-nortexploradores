@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public interface EmpleadoService {
     
-    public void guardar(Empleado empleado);
+    public Empleado guardar(Empleado empleado);
     public Optional<Empleado> encontrar(int id);
     public List<Empleado> listar();
     public void eliminar(int id);

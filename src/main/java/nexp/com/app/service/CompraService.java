@@ -13,11 +13,11 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface CompraService {
     
-    public void guardar(Compra compra);
+    public Compra guardar(Compra compra);
     public Optional<Compra> encontrar(Long id);
     public List<Compra> listar();
     public Paquete paqueteDeReserva(Integer id);

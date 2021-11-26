@@ -66,12 +66,12 @@ public class Persona implements Serializable {
     @Size(max = 10)
     @Column(name = "cel")
     private String cel;
-    @Basic(optional = false)
     @NotNull
     @Size(min = 7, max = 50)
     @Column(name = "correo")
     private String correo;
     @Column(name = "estado")
+    @NotNull
     private Short estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "persona")
     private Collection<Empleado> empleadoCollection;
@@ -86,6 +86,14 @@ public class Persona implements Serializable {
 
     public Persona(Integer idPersona) {
         this.idPersona = idPersona;
+    }
+
+    public Persona(Integer idPersona,String nombre, String apellido, Date fechaNac, TipoIdentificacion idTipo) {
+        this.idPersona = idPersona;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fechaNac = fechaNac;
+        this.idTipo = idTipo;
     }
 
     public Integer getIdPersona() {

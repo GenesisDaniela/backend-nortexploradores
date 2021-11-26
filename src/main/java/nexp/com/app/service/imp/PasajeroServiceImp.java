@@ -28,7 +28,8 @@ public class PasajeroServiceImp implements PasajeroService {
     @Override
     @Transactional
     public Pasajero guardar(Pasajero pasajero) {
-        return pDAO.save(pasajero);
+        Pasajero pas = pDAO.save(pasajero);
+        return pas;
     }
 
     @Override

@@ -11,12 +11,13 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface PersonaService {
         
-    public void guardar(Persona persona);
+    public Persona guardar(Persona persona);
     public void eliminar(int id);
     public Optional<Persona> encontrar(int id);
     public List<Persona> listar();
+//    public Persona editar(Persona persona);
 }

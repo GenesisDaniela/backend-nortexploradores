@@ -27,8 +27,9 @@ public class PersonaServiceImp implements PersonaService {
     
     @Override
     @Transactional
-    public void guardar(Persona persona) {
-        pDAO.save(persona);
+    public Persona guardar(Persona persona) {
+        Persona per = pDAO.save(persona);
+        return per;
     }
 
     @Override
@@ -47,5 +48,7 @@ public class PersonaServiceImp implements PersonaService {
     public void eliminar(int id) {
         pDAO.deleteById(id);
     }
+
+
     
 }
