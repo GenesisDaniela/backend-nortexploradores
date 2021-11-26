@@ -9,5 +9,6 @@ public interface NotificacionService {
     public void guardar(Notificacion notificacion);
     public Optional<Notificacion> encontrar(int id);
     public List<Notificacion> listar();
+    public List<Notificacion> listarActivos();
     public void eliminar(int id);
 }

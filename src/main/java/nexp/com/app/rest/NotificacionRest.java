@@ -29,6 +29,19 @@ public class NotificacionRest {
     @Autowired
     NotificacionService nser;
 
+    @GetMapping(path = "/activas")
+    public ResponseEntity<List<Notificacion>> getNotificacionActivas() {
+        return ResponseEntity.ok(nser.listarActivos());
+    }
+
+    @GetMapping(path = "/{idNotificacion}/desactivar")
+    public ResponseEntity<?> desactivarNoti(@PathVariable int idNotificacion) {
+        Notificacion n = nser.encontrar(idNotificacion).get();
+        n.setEstado((short)1);
+        nser.guardar(n);
+        return ResponseEntity.ok(n);
+    }
+
     @GetMapping
     public ResponseEntity<List<Notificacion>> getNotificacion() {
         return ResponseEntity.ok(nser.listar());

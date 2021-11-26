@@ -44,6 +44,11 @@ public class NotificacionServiceImp implements NotificacionService {
     }
 
     @Override
+    public List<Notificacion> listarActivos() {
+        return nDAO.findAllNotificacionActiva();
+    }
+
+    @Override
     public void eliminar(int id) {
         nDAO.deleteById(id);
     }
