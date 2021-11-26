@@ -21,5 +21,8 @@ import java.util.List;
 public interface NotificacionDAO extends JpaRepository<Notificacion, Integer> {
     @Query("SELECT u FROM Notificacion u WHERE u.estado = 0 ORDER BY u.fecha DESC")
     List<Notificacion> findAllNotificacionActiva();
+
+    @Query("SELECT u FROM Notificacion u ORDER BY u.fecha DESC")
+    List<Notificacion> findAllNotificacion();
     
 }

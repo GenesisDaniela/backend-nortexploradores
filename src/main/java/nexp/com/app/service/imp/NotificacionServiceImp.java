@@ -40,7 +40,7 @@ public class NotificacionServiceImp implements NotificacionService {
     @Override
     @Transactional(readOnly = true)
     public List<Notificacion> listar() {
-        return nDAO.findAll();
+        return nDAO.findAllNotificacion();
     }
 
     @Override
