@@ -48,6 +48,8 @@ public class Municipio implements Serializable {
     @Size(max = 250)
     @Column(name = "url_imagen")
     private String urlImagen;
+    @Column(name = "estado")
+    private Boolean estado;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -99,6 +101,10 @@ public class Municipio implements Serializable {
     public void setUrlImagen(String urlImagen) {
         this.urlImagen = urlImagen;
     }
+
+    public Boolean getEstado() {return estado;}
+
+    public void setEstado(Boolean estado) {this.estado = estado;}
 
     public String getDescripcion() {
         return descripcion;

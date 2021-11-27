@@ -46,6 +46,8 @@ public class SugerenciaRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        Date fecha = new Date();
+        s.setFecha(fecha);
         Usuario usuario = usuarioService.encontrar(s.getUsuario().getId_Usuario()).orElse(null);
         if (usuario == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "La empresa no existe"), HttpStatus.NOT_FOUND);

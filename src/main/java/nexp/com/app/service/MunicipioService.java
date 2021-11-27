@@ -11,9 +11,10 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface MunicipioService {
-     public Optional<Municipio> encontrar(int id);
+//     public Municipio guardar();
+    public Optional<Municipio> encontrar(int id);
     public List<Municipio> listar();
 }

@@ -6,6 +6,7 @@
 package nexp.com.app.rest;
 
 import nexp.com.app.model.Municipio;
+import nexp.com.app.model.Paquete;
 import nexp.com.app.service.MunicipioService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @RestController
 @RequestMapping("/municipio")
@@ -43,6 +44,17 @@ public class MunicipioRest {
         }
         return ResponseEntity.ok(m);
     }
+
+//    @GetMapping(path = "/{idPaquete}/deshabilitar")
+//    public ResponseEntity<?> deshabilitarMunicipio(@PathVariable int idMunicipio) {
+//        Municipio municipio= mser.encontrar(idMunicipio).orElse(null);
+//        if (municipio == null){
+//            return new ResponseEntity<ObjectError>(new ObjectError("id","El empleado no existe"), HttpStatus.NOT_FOUND);
+//        }
+//        municipio.setEstado(false);
+//        mser.guardar(municipio);
+//        return ResponseEntity.ok(municipio);
+//    }
 
     
 

@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesiDanielaVJ
  */
 @Service
 public class MunicipioServiceImp implements MunicipioService {
 
     @Autowired
     MunicipioDAO mDao;
-
 
     @Override
     @Transactional(readOnly = true )
@@ -36,5 +35,12 @@ public class MunicipioServiceImp implements MunicipioService {
     public List<Municipio> listar() {
         return mDao.findAll();
     }
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Municipio guardar(Muni) {
+//        Municipio muni = mDao.save();
+//        return muni;
+//    }
     
 }
