@@ -68,6 +68,8 @@ public class PaqueteRest {
             }
             if (m.getEstado()) {
                 p.setMunicipio(m);
+                m.setEstado(false);
+                mser.guardar(m);
                 pser.guardar(p);
             } else {
                 return new ResponseEntity<ObjectError>(new ObjectError("id",
