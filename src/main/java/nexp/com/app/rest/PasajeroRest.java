@@ -8,8 +8,6 @@ package nexp.com.app.rest;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.ClientePasajero;
 import nexp.com.app.model.Pasajero;
-import nexp.com.app.model.Persona;
-import nexp.com.app.model.Tour;
 import nexp.com.app.negocio.NorteXploradores;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
@@ -31,7 +29,7 @@ import javax.validation.Valid;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @RestController
 @RequestMapping("/pasajero")
@@ -56,7 +54,6 @@ public class PasajeroRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-
         Usuario usuario = user.encontrar(idUsuario).orElse(null);
         if (usuario == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El usuario no existe"), HttpStatus.NOT_FOUND);
@@ -101,26 +98,9 @@ public class PasajeroRest {
                u.setEstado(false);
                user.guardar(u);
                 return ResponseEntity.ok(u);
-
             }
         }
         return (ResponseEntity<?>) ResponseEntity.notFound();
 
     }
-
-    @PutMapping
-    public ResponseEntity<?> editar(@RequestBody @Valid Pasajero p, BindingResult br){
-        if (br.hasErrors()) {
-            return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        Pasajero pasajero = pser.encontrar(p.getIdPasajero()).orElse(null);
-        if(pasajero == null){
-            return new ResponseEntity("La persona no existe",HttpStatus.NOT_FOUND);
-        }
-        pser.guardar(pasajero);
-        return ResponseEntity.ok(pser.encontrar(p.getIdPasajero()));
-    }
-
-
-
 }

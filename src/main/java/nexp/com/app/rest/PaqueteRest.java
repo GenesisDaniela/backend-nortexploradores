@@ -64,7 +64,7 @@ public class PaqueteRest {
         if (p.getMunicipio() != null) {
             Municipio m = mser.encontrar(p.getMunicipio().getIdMuni()).orElse(null);
             if (m == null) {
-                return new ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
+                return new   ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
             }
             if (m.getEstado()) {
                 p.setMunicipio(m);

@@ -44,7 +44,7 @@ public class EmpleadoRest {
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Empleado e, BindingResult br) {
-        if (br.hasErrors()) {
+        if(br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
         Cargo cargo = cser.encontrar(e.getCargo().getIdCargo()).orElse(null);
@@ -52,9 +52,20 @@ public class EmpleadoRest {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "el cargo no existe"), HttpStatus.NOT_FOUND);
         }
         e.setCargo(cargo);
-        Persona persona = pser.encontrar(e.getPersona().getIdPersona()).get();
-        e.setPersona(persona);
-        eser.guardar(e);
+
+        if(e.getPersona() != null){
+            Persona persona = pser.encontrar(e.getPersona().getIdPersona()).get();
+            if(persona == null){
+                return new ResponseEntity<ObjectError>(new ObjectError("id", "la persona no existe"), HttpStatus.NOT_FOUND);
+            }
+            if(persona.getEstado()){
+                e.setPersona(persona);
+                eser.guardar(e);
+            } else {
+                return new ResponseEntity<ObjectError>(new ObjectError("id",
+                        "La persona ya se encuentra registrada"), HttpStatus.BAD_REQUEST);
+            }
+        }
         return ResponseEntity.ok(e);
     }
 

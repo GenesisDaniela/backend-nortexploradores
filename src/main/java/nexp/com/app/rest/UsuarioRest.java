@@ -211,15 +211,6 @@ public class UsuarioRest {
         return ResponseEntity.ok(u);
     }
 
-    @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody @Valid Usuario u, BindingResult br) {
-        if (br.hasErrors()) {
-            return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        user.guardar(u);
-        return ResponseEntity.ok(u);
-    }
-
     @PutMapping
     public ResponseEntity<?> editar(@RequestBody @Valid Usuario u, BindingResult br){
         if (br.hasErrors()) {

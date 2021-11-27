@@ -66,13 +66,11 @@ public class Persona implements Serializable {
     @Size(max = 10)
     @Column(name = "cel")
     private String cel;
-    @NotNull
     @Size(min = 7, max = 50)
     @Column(name = "correo")
     private String correo;
     @Column(name = "estado")
-    @NotNull
-    private Short estado;
+    private Boolean estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "persona")
     private Collection<Empleado> empleadoCollection;
     @JoinColumn(name = "id_tipo", referencedColumnName = "id_tipo")
@@ -152,11 +150,11 @@ public class Persona implements Serializable {
         this.correo = correo;
     }
 
-    public Short getEstado() {
+    public Boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(Short estado) {
+    public void setEstado(Boolean estado) {
         this.estado = estado;
     }
 
