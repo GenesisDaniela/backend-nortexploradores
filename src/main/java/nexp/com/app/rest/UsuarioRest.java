@@ -147,7 +147,9 @@ public class UsuarioRest {
                     clientePasajeroService.guardar(clientePasajero);
 
                 }else{
+
                     if(p.getIdPasajero()==null){
+
                         p = pasajeroService.encontrar(pasajeroAsociadoAPersona.getIdPasajero()).get();
                         List<ClientePasajero> pc =(List) p.clientePasajeroCollection();
                             if(!nexp.existeUsuario(pc, us)){ //esta asociado a otro cliente

@@ -19,6 +19,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class SugerenciaRest {
         notificacion.setDescripcion("Has recibo una sugerencia de: " + usuario.getUsername());
         notificacion.setUsuario(usuario);
         notificacion.setEstado((short)0);
-        notificacion.setFecha(s.getFecha());
+        notificacion.setFecha(new Date());
         notificacion.setSugerencia(s);
         notificacion.setSugerencia(s);
 
