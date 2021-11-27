@@ -125,13 +125,22 @@ public class UsuarioRest {
         Usuario us = user.encontrar(idUsuario).get();
         List<Persona> personas = personaService.listar();
         List<Pasajero> pasajerosAdd = new ArrayList<>();
+        List<Pasajero> pasajerosAgregados = new ArrayList<>();
 
         for(Pasajero p: pasajeros){
+
+            if(p.getIdPasajero()!=null){
+                pasajerosAgregados.add(p);
+            }
+
             log.info(p.getIdPasajero()+"================================================");
             Persona personaP = personaService.encontrar(p.getPersona().getIdPersona()).orElse(null);
             if(personaP==null){
                 personaService.guardar(p.getPersona()); // guardo a la persona no existente
-                pasajerosAdd.add(pasajeroService.guardar(p)); // guardo al pasasajero tampoco existente
+                Pasajero pasajero = pasajeroService.guardar(p);
+                pasajerosAdd.add(pasajero); // guardo al pasasajero tampoco existente
+                pasajerosAgregados.add(pasajero);
+
 
                 ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
                 clientePasajero.setPasajero(p);
@@ -140,16 +149,15 @@ public class UsuarioRest {
             }else{
                 Pasajero pasajeroAsociadoAPersona = personaP.pasajero();
                 if(p.getIdPasajero()==null && pasajeroAsociadoAPersona==null){
-                    pasajerosAdd.add(pasajeroService.guardar(p));
+                    Pasajero pasajero = pasajeroService.guardar(p);
+                    pasajerosAdd.add(pasajero);
+                    pasajerosAgregados.add(pasajero);
                     ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
                     clientePasajero.setPasajero(p);
                     clientePasajero.setUsuario(us);
                     clientePasajeroService.guardar(clientePasajero);
-
                 }else{
-
                     if(p.getIdPasajero()==null){
-
                         p = pasajeroService.encontrar(pasajeroAsociadoAPersona.getIdPasajero()).get();
                         List<ClientePasajero> pc =(List) p.clientePasajeroCollection();
                             if(!nexp.existeUsuario(pc, us)){ //esta asociado a otro cliente
@@ -157,18 +165,13 @@ public class UsuarioRest {
                                 clientePasajero.setPasajero(p);
                                 clientePasajero.setUsuario(us);
                                 clientePasajeroService.guardar(clientePasajero);
-                                pasajerosAdd.add(p);
+                                pasajerosAgregados.add(p);
                             }
                     }
-
-
                 }
-
-
-
             }
         }
-        return ResponseEntity.ok(pasajerosAdd);
+        return ResponseEntity.ok(pasajerosAgregados);
     }
 
 
