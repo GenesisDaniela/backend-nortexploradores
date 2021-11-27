@@ -55,7 +55,7 @@ public class DetalleCompra implements Serializable {
     private Compra compra;
 
     @JoinColumn(name = "pasajero", referencedColumnName = "id_pasajero")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Pasajero pasajero;
 
     public DetalleCompra() {
