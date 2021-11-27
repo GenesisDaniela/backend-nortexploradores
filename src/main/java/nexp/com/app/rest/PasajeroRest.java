@@ -92,6 +92,22 @@ public class PasajeroRest {
         return ResponseEntity.ok(pser.encontrar(idPasajero).orElse(null));
     }
 
+    @GetMapping(path = "/{idPasajero}/deshabilitar")
+    public ResponseEntity<?> deshabilitar(@PathVariable int idPasajero) {
+        Pasajero pasajero = pser.encontrar(idPasajero).orElse(null);
+        for(ClientePasajero clientePasajero:pasajero.clientePasajeroCollection()){
+            if(idPasajero == clientePasajero.getPasajero().getIdPasajero()){
+               Usuario u= clientePasajero.getUsuario();
+               u.setEstado(false);
+               user.guardar(u);
+                return ResponseEntity.ok(u);
+
+            }
+        }
+        return (ResponseEntity<?>) ResponseEntity.notFound();
+
+    }
+
     @PutMapping
     public ResponseEntity<?> editar(@RequestBody @Valid Pasajero p, BindingResult br){
         if (br.hasErrors()) {

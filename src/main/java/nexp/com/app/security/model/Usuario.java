@@ -54,8 +54,6 @@ public class Usuario {
     private Collection<Sugerencia> sugerenciaCollection;
     @OneToMany(mappedBy = "usuario")
     private Collection<SolicitudTour> solicitudTourCollection;
-
-
     public Usuario() {
     }
 
