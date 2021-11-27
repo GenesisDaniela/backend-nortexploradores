@@ -37,7 +37,7 @@ public class MunicipioRest {
     public ResponseEntity<List<Municipio>> getMunicipio() {
         List<Municipio> municipiosActivos = new ArrayList<>();
         for(Municipio muni: mser.listar()){
-            if(muni.getEstado() == true)
+            if(muni.getEstado() == false)
                 municipiosActivos.add(muni);
         }
         return ResponseEntity.ok(municipiosActivos);
