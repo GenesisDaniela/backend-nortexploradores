@@ -8,6 +8,8 @@ package nexp.com.app.rest;
 import nexp.com.app.model.Municipio;
 import nexp.com.app.model.Paquete;
 import nexp.com.app.service.MunicipioService;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,12 @@ public class MunicipioRest {
 
     @GetMapping
     public ResponseEntity<List<Municipio>> getMunicipio() {
-        return ResponseEntity.ok(mser.listar());
+        List<Municipio> municipiosActivos = new ArrayList<>();
+        for(Municipio muni: mser.listar()){
+            if(muni.getEstado() == true)
+                municipiosActivos.add(muni);
+        }
+        return ResponseEntity.ok(municipiosActivos);
     }
 
     @GetMapping(path = "/{id}")

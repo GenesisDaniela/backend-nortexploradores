@@ -7,11 +7,13 @@
 package nexp.com.app.rest;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.Actividad;
 import nexp.com.app.model.Alojamiento;
+import nexp.com.app.model.Municipio;
 import nexp.com.app.service.AlojamientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,12 @@ public class AlojamientoRest {
 
     @GetMapping
     public ResponseEntity<List<Alojamiento>> getAlojamiento() {
-        return ResponseEntity.ok(aser.listar());
+        List<Alojamiento> alojamientoActivos = new ArrayList<>();
+        for(Alojamiento alojamiento: aser.listar()){
+            if(alojamiento.getEstado() == true)
+                alojamientoActivos.add(alojamiento);
+        }
+        return ResponseEntity.ok(alojamientoActivos);
     }
 
     @PutMapping

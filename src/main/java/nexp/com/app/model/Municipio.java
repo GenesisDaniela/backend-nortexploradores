@@ -50,14 +50,10 @@ public class Municipio implements Serializable {
     private String urlImagen;
     @Column(name = "estado")
     private Boolean estado;
-    @Basic(optional = false)
-    @NotNull
     @Lob
     @Size(min = 1, max = 16777215)
     @Column(name = "descripcion")
     private String descripcion;
-    @Basic(optional = false)
-    @NotNull
     @Lob
     @Size(min = 1, max = 16777215)
     @Column(name = "url_ubicacion")
