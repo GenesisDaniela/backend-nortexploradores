@@ -46,29 +46,34 @@ public class PaqueteRest {
     @Autowired
     ActividadService actividadService;
 
+    @Autowired
+    MunicipioService mser;
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Paquete p, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        if(p.getAlojamiento() != null){
+        if (p.getAlojamiento() != null) {
             Alojamiento a = aser.encontrar(p.getAlojamiento().getIdAlojamiento()).orElse(null);
             if (a == null) {
                 return new ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
             }
             p.setAlojamiento(a);
         }
-        pser.guardar(p);
-//        if(p.getEstado().equals("PENDIENTE")){
-//            Notificacion notificacion = new Notificacion();
-//            List<DetalleCompra> detCompra = (List)p.detalleCompraCollection();
-//            Usuario usuario = detCompra.get(0).getCompra().getUsuario();
-//            notificacion.setDescripcion("Has recibo una solicitud de paquete personalizado de: " + usuario.getUsername());
-//            notificacion.setUsuario(usuario);
-//            notificacion.setEstado(true);
-//            nser.guardar(notificacion);
-//        }
-
+        if (p.getMunicipio() != null) {
+            Municipio m = mser.encontrar(p.getMunicipio().getIdMuni()).orElse(null);
+            if (m == null) {
+                return new ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
+            }
+            if (m.getEstado()) {
+                p.setMunicipio(m);
+                pser.guardar(p);
+            } else {
+                return new ResponseEntity<ObjectError>(new ObjectError("id",
+                        "El municipio ya se encuentra registrado"), HttpStatus.BAD_REQUEST);
+            }
+        }
         return ResponseEntity.ok(p);
     }
 
