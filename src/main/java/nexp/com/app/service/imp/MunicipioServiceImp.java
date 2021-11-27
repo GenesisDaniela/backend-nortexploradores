@@ -36,11 +36,11 @@ public class MunicipioServiceImp implements MunicipioService {
         return mDao.findAll();
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public Municipio guardar(Muni) {
-//        Municipio muni = mDao.save();
-//        return muni;
-//    }
+    @Override
+    @Transactional()
+    public Municipio guardar(Municipio municipio) {
+        Municipio muni = mDao.save(municipio);
+        return muni;
+    }
     
 }

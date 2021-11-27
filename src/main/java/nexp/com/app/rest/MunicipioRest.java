@@ -45,16 +45,27 @@ public class MunicipioRest {
         return ResponseEntity.ok(m);
     }
 
-//    @GetMapping(path = "/{idPaquete}/deshabilitar")
-//    public ResponseEntity<?> deshabilitarMunicipio(@PathVariable int idMunicipio) {
-//        Municipio municipio= mser.encontrar(idMunicipio).orElse(null);
-//        if (municipio == null){
-//            return new ResponseEntity<ObjectError>(new ObjectError("id","El empleado no existe"), HttpStatus.NOT_FOUND);
-//        }
-//        municipio.setEstado(false);
-//        mser.guardar(municipio);
-//        return ResponseEntity.ok(municipio);
-//    }
+    @GetMapping(path = "/{idMunicipio}/deshabilitar")
+    public ResponseEntity<?> deshabilitarMunicipio(@PathVariable int idMunicipio) {
+        Municipio municipio= mser.encontrar(idMunicipio).orElse(null);
+        if (municipio == null){
+            return new ResponseEntity<ObjectError>(new ObjectError("id","El municipio no existe"), HttpStatus.NOT_FOUND);
+        }
+        municipio.setEstado(false);
+        mser.guardar(municipio);
+        return ResponseEntity.ok(municipio);
+    }
+
+    @GetMapping(path = "/{idMunicipio}/habilitar")
+    public ResponseEntity<?> habilitarMunicipio(@PathVariable int idMunicipio) {
+        Municipio municipio= mser.encontrar(idMunicipio).orElse(null);
+        if (municipio == null){
+            return new ResponseEntity<ObjectError>(new ObjectError("id","El municipio no existe"), HttpStatus.NOT_FOUND);
+        }
+        municipio.setEstado(true);
+        mser.guardar(municipio);
+        return ResponseEntity.ok(municipio);
+    }
 
     
 

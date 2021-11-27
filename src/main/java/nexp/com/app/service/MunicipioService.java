@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Santi & GenesisDanielaVJ
  */
 public interface MunicipioService {
-//     public Municipio guardar();
+     public Municipio guardar(Municipio municipio);
     public Optional<Municipio> encontrar(int id);
     public List<Municipio> listar();
 }
