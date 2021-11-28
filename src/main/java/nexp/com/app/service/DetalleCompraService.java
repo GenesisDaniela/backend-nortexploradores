@@ -11,12 +11,13 @@ import java.util.Optional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface DetalleCompraService{
     
     public void guardar(DetalleCompra detalleCompra);
     public Optional<DetalleCompra> encontrar(int id);
     public List<DetalleCompra> listar();
+    public void eliminar(int id);
 
 }

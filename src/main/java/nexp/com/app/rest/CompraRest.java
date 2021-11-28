@@ -6,13 +6,11 @@
 package nexp.com.app.rest;
 
 import nexp.com.app.model.*;
-import nexp.com.app.service.CompraService;
+import nexp.com.app.service.*;
 
 import java.util.Date;
 import java.util.List;
 
-import nexp.com.app.service.ReservaService;
-import nexp.com.app.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,7 @@ import javax.validation.Valid;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 
 @RestController
@@ -37,6 +35,12 @@ public class CompraRest {
 
     @Autowired
     ReservaService reservaService;
+
+    @Autowired
+    DetalleCompraService detalleCompraService;
+
+    @Autowired
+    TransaccionService transaccionService;
     
     @GetMapping
     public ResponseEntity<List<Compra>> getCompra() {
@@ -88,7 +92,36 @@ public class CompraRest {
 
     @GetMapping(path = "/{id}/transacciones")
     public ResponseEntity<List<Transaccionp>> transaccionPorCompra(@PathVariable Long id) {
-
         return ResponseEntity.ok((List)compraservice.encontrar(id).get().transaccionpCollection());
     }
+
+    @GetMapping(path = "/{id}/cancelarReserva")
+    public ResponseEntity<?> cancelarReserva(@PathVariable int id) {
+        Reserva reserva = reservaService.encontrar(id).get();
+        if(reserva == null){
+            return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
+        }
+        if(reserva.getEstado().equals("PENDIENTE")){
+            Compra compra = ((List<Compra>)reserva.compraCollection()).get(0);
+                for(DetalleCompra det: compra.detalleCompraCollection()) {
+                    detalleCompraService.eliminar(det.getIdDetalle());
+                }
+                for(Transaccionp t: compra.transaccionpCollection()){
+                        transaccionService.eliminar(t.getTransactionId());
+                }
+                compraservice.eliminar(compra.getIdCompra());
+            return ResponseEntity.ok(reserva);
+        }
+        Compra compra = ((List<Compra>)reserva.compraCollection()).get(0);
+        int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
+        Tour tour = compra.getTour();
+        tour.setCantCupos(cuposDisponibles);
+        reserva.setEstado("CANCELADA");
+        compra.setEstado("CANCELADO");
+        compraservice.guardar(compra);
+        tourService.guardar(tour);
+        reservaService.guardar(reserva);
+        return ResponseEntity.ok(reserva);
+    }
+
 }

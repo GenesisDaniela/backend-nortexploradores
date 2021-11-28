@@ -51,9 +51,8 @@ public class CompraServiceImp implements CompraService {
        return cDAO.reservaPaquete(id);
     }
 
-    @Override
-    public List<Compra> comprasAprobadas(List<Compra> compras) {
-        return null;
-    }
 
+    @Override
+    @Transactional
+    public void eliminar(Long id){ cDAO.deleteById(id); }
 }

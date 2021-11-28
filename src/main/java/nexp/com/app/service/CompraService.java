@@ -21,5 +21,5 @@ public interface CompraService {
     public Optional<Compra> encontrar(Long id);
     public List<Compra> listar();
     public Paquete paqueteDeReserva(Integer id);
-    public List<Compra> comprasAprobadas(List<Compra> compras);
+    public void eliminar(Long id);
 }

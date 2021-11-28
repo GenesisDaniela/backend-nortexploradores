@@ -18,15 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @Service
 public class DetalleCompraImp implements DetalleCompraService{
     
     @Autowired
     DetalleCompraDAO dcDAO;
-    
-    
+
     @Override
     @Transactional
     public void guardar(DetalleCompra detalleCompra) {
@@ -45,5 +44,10 @@ public class DetalleCompraImp implements DetalleCompraService{
         return dcDAO.findAll();
     }
 
+    @Override
+    @Transactional
+    public void eliminar(int id){
+        dcDAO.deleteById(id);
+    }
 
 }
