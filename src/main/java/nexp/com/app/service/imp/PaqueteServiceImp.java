@@ -49,5 +49,10 @@ public class PaqueteServiceImp implements PaqueteService {
     public List<Paquete> listar() {
         return pDAO.findAll();
     }
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Paquete> findAllPaqueteActivo(){
+        return pDAO.findAllPaqueteActivo();
+    }
 }

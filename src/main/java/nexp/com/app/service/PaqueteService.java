@@ -19,4 +19,5 @@ public interface PaqueteService {
     public void eliminar(int id);
     public Optional<Paquete> encontrar(int id);
     public List<Paquete> listar();
+    public List<Paquete> findAllPaqueteActivo();
 }

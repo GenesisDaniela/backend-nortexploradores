@@ -81,7 +81,7 @@ public class PaqueteRest {
 
     @GetMapping
     public ResponseEntity<List<Paquete>> getPaquete() {
-        return ResponseEntity.ok(pser.listar());
+        return ResponseEntity.ok(pser.findAllPaqueteActivo());
     }
 
     @PutMapping

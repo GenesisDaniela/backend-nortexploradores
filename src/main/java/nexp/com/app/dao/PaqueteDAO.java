@@ -5,13 +5,19 @@
  */
 package nexp.com.app.dao;
 
+import nexp.com.app.model.Notificacion;
 import nexp.com.app.model.Paquete;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface PaqueteDAO extends JpaRepository<Paquete, Integer> {
-    
+    @Query("SELECT p FROM Paquete p WHERE p.estado = 'ACTIVO'")
+    List<Paquete> findAllPaqueteActivo();
+
 }

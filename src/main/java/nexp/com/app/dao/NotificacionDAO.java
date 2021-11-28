@@ -16,7 +16,7 @@ import java.util.List;
 /**
  *
 
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 public interface NotificacionDAO extends JpaRepository<Notificacion, Integer> {
     @Query("SELECT u FROM Notificacion u WHERE u.estado = 0 ORDER BY u.fecha DESC")
