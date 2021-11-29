@@ -101,6 +101,19 @@ public class PasajeroRest {
             }
         }
         return (ResponseEntity<?>) ResponseEntity.notFound();
+    }
 
+    @GetMapping(path = "/{idPasajero}/habilitar")
+    public ResponseEntity<?> habilitar(@PathVariable int idPasajero) {
+        Pasajero pasajero = pser.encontrar(idPasajero).orElse(null);
+        for(ClientePasajero clientePasajero:pasajero.clientePasajeroCollection()){
+            if(idPasajero == clientePasajero.getPasajero().getIdPasajero()){
+                Usuario u= clientePasajero.getUsuario();
+                u.setEstado(true);
+                user.guardar(u);
+                return ResponseEntity.ok(u);
+            }
+        }
+        return (ResponseEntity<?>) ResponseEntity.notFound();
     }
 }
