@@ -42,7 +42,10 @@ public class MunicipioRest {
         }
         return ResponseEntity.ok(municipiosActivos);
     }
-
+    @GetMapping(path= "/listar")
+    public ResponseEntity<List<Municipio>> getMunicipioTot() {
+        return ResponseEntity.ok(mser.listar());
+    }
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> encontrarMunicipio(@PathVariable int id) {
         Municipio m = mser.encontrar(id).orElse(null);
