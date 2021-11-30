@@ -46,6 +46,9 @@ public class SolicitudTourRest {
     @Autowired
     AlojamientoService alojamientoService;
 
+    @Autowired
+    NotificacionService notificacionService;
+
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> cantidadSolicitudes() {
         int total = 0;
@@ -110,10 +113,11 @@ public class SolicitudTourRest {
     public ResponseEntity<?> rechazarSolicitud(@PathVariable int id) {
         SolicitudTour s = spaqser.encontrar(id).orElse(null);
         Tour t = s.getTour();
+        List<Notificacion> notificacions =(List) s.notificacionCollection();
+        notificacionService.eliminar(notificacions.get(0).getIdNotificacion());
         spaqser.eliminar(s.getIdSolicitud());
-
         tourService.eliminar(t.getIdTour());
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok("Solicitud eliminada");
     }
 
     @PutMapping()
