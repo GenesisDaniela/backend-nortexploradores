@@ -66,16 +66,9 @@ public class PaqueteRest {
             if (m == null) {
                 return new   ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
             }
-            if (m.getEstado()) {
-                p.setMunicipio(m);
-                m.setEstado(false);
-                mser.guardar(m);
-                pser.guardar(p);
-            } else {
-                return new ResponseEntity<ObjectError>(new ObjectError("id",
-                        "El municipio ya se encuentra registrado"), HttpStatus.BAD_REQUEST);
-            }
+            p.setMunicipio(m);
         }
+        pser.guardar(p);
         return ResponseEntity.ok(p);
     }
 
