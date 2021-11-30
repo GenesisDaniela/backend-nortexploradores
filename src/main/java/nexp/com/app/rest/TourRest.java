@@ -68,10 +68,10 @@ public class TourRest {
         }
         t.setEmpleado(e);
         Paquete p = pser.encontrar(t.getPaquete().getIdPaq()).orElse(null);
-        if (p == null) {
-            return new ResponseEntity<ObjectError>(new ObjectError("id", "El paquete no existe"), HttpStatus.NOT_FOUND);
+        if(p!=null){
+            t.setPaquete(p);
         }
-        t.setPaquete(p);
+
         tser.guardar(t);
         return ResponseEntity.ok(t);
     }
