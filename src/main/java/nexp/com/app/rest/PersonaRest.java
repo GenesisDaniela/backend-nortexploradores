@@ -42,6 +42,12 @@ public class PersonaRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        Persona persona = pser.encontrar(p.getIdPersona()).orElse(null);
+
+        if(persona!=null){
+
+        }
+
         TipoIdentificacion TId = tser.encontrar(p.getIdTipo().getIdTipo()).orElse(null);
         if (TId == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tipo de identificacion no existe"), HttpStatus.NOT_FOUND);

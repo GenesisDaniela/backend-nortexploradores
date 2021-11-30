@@ -114,11 +114,8 @@ class AppApplicationTests {
 		tourEsperado.setSeguro(seguroService.encontrar(1).get());
 		tourEsperado.setFechaLlegada(new Date());
 		tourEsperado.setFechaSalida(new Date());
-
 		Tour tourValidar = tourDAO.save(tourEsperado);
-
 		assertEquals(tourEsperado,tourValidar);
-
 	}
 
 	@Test
@@ -150,7 +147,7 @@ class AppApplicationTests {
 		fecha.setYear(2002);
 		fecha.setDate(15);
 		TipoIdentificacion tId = tIdservice.encontrar(1).get();
-		Persona personaEsperada = new Persona(1192123425,"Genesis", "Vargas", fecha, tId);
+		Persona personaEsperada = new Persona(1192344523,"Genesis", "Vargas", fecha, tId);
 
 		Persona personaValidada = personaService.guardar(personaEsperada);
 
@@ -159,7 +156,7 @@ class AppApplicationTests {
 
 	@Test
 	void agregarEmpleado(){
-		Persona persona = personaService.encontrar(1192123425).get();
+		Persona persona = personaService.encontrar(1192344523).get();
 		Cargo cargo = cargoService.encontrar(1).get();
 		Date fecha = new Date();
 		Empleado empleadoEsperado = new Empleado(fecha, cargo, persona);
@@ -171,7 +168,7 @@ class AppApplicationTests {
 
 	@Test
 	void agregarPasajero(){
-		Persona persona = personaService.encontrar(1192123425).get();
+		Persona persona = personaService.encontrar(1192344523).get();
 		Pasajero pasajeroEsperado = new Pasajero(false, persona);
 
 		Pasajero pasajeroValidado = pasajeroService.guardar(pasajeroEsperado);
@@ -229,33 +226,6 @@ class AppApplicationTests {
 		assertEquals(detalleCompra.getValorUnit()+detalleCompra2.getValorUnit(),compraGuardada.getTotalCompra(),"El valor total de la compra debe ser igual a los dos totales de sus detalles compra");
 	}
 
-	@Test
-	void validarGuardar(){
-		Usuario usuario =
-				new Usuario("Santiago1234", "santiago1345@gmail.com",
-						passwordEncoder.encode("234"));
-		Set<Rol> roles = new HashSet<>();
-		roles.add(rolService.getByRolNombre(Rol.RolNombre.ROLE_USER).get());
-		usuario.setRoles(roles);
-		usuarioService.guardar(usuario);
-
-		assertEquals(usuario.getEmail(),usuarioService.findByEmail(usuario.getEmail()).getEmail());
-
-	}
-	@Test
-	void validarContraseñaYUsuario(){
-		String username = "Santiago123";
-		String password="234";
-
-		Authentication authentication =
-				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtProvider.generateToken(authentication);
-		UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-		JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());
-		assertNotNull(jwtDto);
-	}
 
 	@Test
 	void editarPersona(){
@@ -330,9 +300,7 @@ class AppApplicationTests {
 	void cancelarCompra(){
 		Compra compraEsperada = compraService.encontrar((long)2245667).get();
 		compraEsperada.setEstado("CANCELADO");
-
 		Compra compra = compraService.guardar(compraEsperada);
-
 		assertEquals("CANCELADO", compraEsperada.getEstado());
 	}
 

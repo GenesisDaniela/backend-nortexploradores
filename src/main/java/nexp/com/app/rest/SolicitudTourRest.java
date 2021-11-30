@@ -111,8 +111,8 @@ public class SolicitudTourRest {
         SolicitudTour s = spaqser.encontrar(id).orElse(null);
         Tour t = s.getTour();
         spaqser.eliminar(s.getIdSolicitud());
-        tourService.eliminar(t.getIdTour());
 
+        tourService.eliminar(t.getIdTour());
         return ResponseEntity.ok("");
     }
 
