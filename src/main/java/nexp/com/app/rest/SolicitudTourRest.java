@@ -53,7 +53,7 @@ public class SolicitudTourRest {
     public ResponseEntity<Integer> cantidadSolicitudes() {
         int total = 0;
       for(SolicitudTour solicitudTour: spaqser.listar()) {
-          if(!solicitudTour.getTour().getPaquete().getEstado().equals("ACEPTADO") && !solicitudTour.getTour().getPaquete().getEstado().equals("RECHAZADO")){
+          if(!solicitudTour.getEstado().equals("ACEPTADO") && !solicitudTour.getEstado().equals("RECHAZADO")){
               total++;
           }
 
