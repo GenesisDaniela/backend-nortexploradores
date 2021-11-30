@@ -67,12 +67,13 @@ public class TourRest {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El empleado no existe"), HttpStatus.NOT_FOUND);
         }
         t.setEmpleado(e);
-
-        Paquete p = pser.encontrar(t.getPaquete().getIdPaq()).orElse(null);
-        if(p!=null){
-            t.setPaquete(p);
+        if(t.getPaquete()!=null) {
+            Paquete p = pser.encontrar(t.getPaquete().getIdPaq()).orElse(null);
+            if (p != null) {
+                t.setPaquete(p);
+            }
         }
-
+        t.setEstado("ACTIVO");
         tser.guardar(t);
         return ResponseEntity.ok(t);
     }
