@@ -60,9 +60,7 @@ public class SolicitudTourRest {
 
 
     @PostMapping()
-    public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br, @PathVariable int idMunicipio){
-
-        Municipio municipio = municipioService.encontrar(idMunicipio).orElse(null);
+    public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br){
 
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
