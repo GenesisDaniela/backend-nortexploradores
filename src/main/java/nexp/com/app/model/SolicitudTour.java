@@ -67,6 +67,8 @@ public class SolicitudTour implements Serializable {
     private Integer idSolicitud;
     @Column(name = "estado")
     private String estado;
+    @Column(name = "precio")
+    private int precio;
     @JoinColumn(name = "tour", referencedColumnName = "id_tour")
     @ManyToOne(optional = false)
     private Tour tour;
@@ -123,6 +125,14 @@ public class SolicitudTour implements Serializable {
 
     public void setNotificacionCollection(Collection<Notificacion> notificacionCollection) {
         this.notificacionCollection = notificacionCollection;
+    }
+
+    public int getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(int precio) {
+        this.precio = precio;
     }
 
     @Override
