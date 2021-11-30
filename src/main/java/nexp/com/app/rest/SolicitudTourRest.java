@@ -105,10 +105,7 @@ public class SolicitudTourRest {
     public ResponseEntity<?> rechazarSolicitud(@PathVariable int id) {
         SolicitudTour s = spaqser.encontrar(id).orElse(null);
         Tour t = s.getTour();
-        spaqser.eliminar(s.getIdSolicitud());
-        paqueteService.eliminar(t.getPaquete().getIdPaq());
         tourService.eliminar(t.getIdTour());
-
         return ResponseEntity.ok("");
     }
 
