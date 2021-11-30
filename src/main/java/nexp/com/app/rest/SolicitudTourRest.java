@@ -70,6 +70,7 @@ public class SolicitudTourRest {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
         }
         tour.setEstado("PENDIENTE");
+        tourService.guardar(tour);
 
         Alojamiento aloj = solicitudTour.getAlojamiento();
         if(aloj != null){
@@ -86,6 +87,7 @@ public class SolicitudTourRest {
         solicitudTour.setMunicipio(muni);
         solicitudTour.setFecha(new Date());
         solicitudTour.setEstado("PENDIENTE");
+        solicitudTour.setTour(tour);
         spaqser.guardar(solicitudTour);
 
         Notificacion notificacion = new Notificacion();
