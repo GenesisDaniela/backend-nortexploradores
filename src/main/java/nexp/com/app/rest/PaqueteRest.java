@@ -56,19 +56,26 @@ public class PaqueteRest {
         }
         if (p.getAlojamiento() != null) {
             Alojamiento a = aser.encontrar(p.getAlojamiento().getIdAlojamiento()).orElse(null);
-            if (a == null) {
+            if(a == null) {
                 return new ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
             }
             p.setAlojamiento(a);
         }
         if (p.getMunicipio() != null) {
             Municipio m = mser.encontrar(p.getMunicipio().getIdMuni()).orElse(null);
-            if (m == null) {
+            if(m == null) {
                 return new   ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
             }
-            p.setMunicipio(m);
+            if(m.getEstado()) {
+                p.setMunicipio(m);
+                m.setEstado(false);
+                mser.guardar(m);
+                pser.guardar(p);
+            } else {
+                return new ResponseEntity<ObjectError>(new ObjectError("id",
+                        "El municipio ya se encuentra registrado"), HttpStatus.BAD_REQUEST);
+            }
         }
-        pser.guardar(p);
         return ResponseEntity.ok(p);
     }
 

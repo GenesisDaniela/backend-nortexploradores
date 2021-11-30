@@ -43,6 +43,8 @@ public class SolicitudTourRest {
     @Autowired
     PaqueteService paqueteService;
 
+    @Autowired
+    AlojamientoService alojamientoService;
 
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> cantidadSolicitudes() {
@@ -57,7 +59,7 @@ public class SolicitudTourRest {
     }
 
 
-    @PostMapping(path = "/{idMunicipio}")
+    @PostMapping()
     public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br, @PathVariable int idMunicipio){
 
         Municipio municipio = municipioService.encontrar(idMunicipio).orElse(null);
@@ -65,24 +67,27 @@ public class SolicitudTourRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-
         Tour tour = solicitudTour.getTour();
         if (tour == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
         }
         tour.setEstado("PENDIENTE");
 
-
-        Paquete paquete = new Paquete();
-        paquete.setNombre("Paquete "+municipio.getNombre());
-        paquete.setEstado("PENDIENTE");
-        paquete.setMunicipio(municipio);
-
-        pser.guardar(paquete);
-        tour.setPaquete(paquete);
-        tourService.guardar(tour);
-
+        Alojamiento aloj = solicitudTour.getAlojamiento();
+        if(aloj != null){
+            Alojamiento alojamiento = alojamientoService.encontrar(aloj.getIdAlojamiento()).orElse(null);
+            if (alojamiento == null) {
+                return new ResponseEntity<ObjectError>(new ObjectError("id", "El alojamiento no existe"), HttpStatus.NOT_FOUND);
+            }
+            solicitudTour.setAlojamiento(alojamiento);
+        }
+        Municipio muni = solicitudTour.getMunicipio();
+        if (muni == null) {
+            return new ResponseEntity<ObjectError>(new ObjectError("id", "El municipio no existe"), HttpStatus.NOT_FOUND);
+        }
+        solicitudTour.setMunicipio(muni);
         solicitudTour.setFecha(new Date());
+        solicitudTour.setEstado("PENDIENTE");
         spaqser.guardar(solicitudTour);
 
         Notificacion notificacion = new Notificacion();
@@ -106,7 +111,6 @@ public class SolicitudTourRest {
         SolicitudTour s = spaqser.encontrar(id).orElse(null);
         Tour t = s.getTour();
         spaqser.eliminar(s.getIdSolicitud());
-        paqueteService.eliminar(t.getPaquete().getIdPaq());
         tourService.eliminar(t.getIdTour());
 
         return ResponseEntity.ok("");

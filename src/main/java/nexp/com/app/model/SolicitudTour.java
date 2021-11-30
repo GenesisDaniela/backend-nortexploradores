@@ -5,13 +5,30 @@
  */
 package nexp.com.app.model;
 
+import nexp.com.app.security.model.Usuario;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import nexp.com.app.security.model.Usuario;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -21,10 +38,26 @@ import nexp.com.app.security.model.Usuario;
 @Table(name = "solicitud_tour")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SolicitudPaquete.findAll", query = "SELECT s FROM SolicitudTour s"),
-    @NamedQuery(name = "SolicitudPaquete.findByIdSolicitud", query = "SELECT s FROM SolicitudTour s WHERE s.idSolicitud = :idSolicitud"),
-    @NamedQuery(name = "SolicitudPaquete.findByFecha", query = "SELECT s FROM SolicitudTour s WHERE s.fecha = :fecha")})
+        @NamedQuery(name = "SolicitudTour.findAll", query = "SELECT s FROM SolicitudTour s"),
+        @NamedQuery(name = "SolicitudTour.findByIdSolicitud", query = "SELECT s FROM SolicitudTour s WHERE s.idSolicitud = :idSolicitud"),
+        @NamedQuery(name = "SolicitudTour.findByFecha", query = "SELECT s FROM SolicitudTour s WHERE s.fecha = :fecha")})
 public class SolicitudTour implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
+    @Lob
+    @Size(max = 16777215)
+    @Column(name = "descripcion")
+    private String descripcion;
+    @JoinColumn(name = "alojamiento", referencedColumnName = "id_alojamiento")
+    @ManyToOne
+    private Alojamiento alojamiento;
+    @JoinColumn(name = "municipio", referencedColumnName = "id_muni")
+    @ManyToOne(optional = false)
+    private Municipio municipio;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,16 +65,13 @@ public class SolicitudTour implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_solicitud")
     private Integer idSolicitud;
-    @Column(name = "fecha")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "estado")
+    private String estado;
     @JoinColumn(name = "tour", referencedColumnName = "id_tour")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Tour tour;
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Usuario usuario;
     @OneToMany(mappedBy = "solicitudTour")
     private Collection<Notificacion> notificacionCollection;
@@ -53,20 +83,9 @@ public class SolicitudTour implements Serializable {
         this.idSolicitud = idSolicitud;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Tour getTour() {
-        return tour;
-    }
-
-    public void setTour(Tour tour) {
-        this.tour = tour;
+    public SolicitudTour(Integer idSolicitud, Date fecha) {
+        this.idSolicitud = idSolicitud;
+        this.fecha = fecha;
     }
 
     public Integer getIdSolicitud() {
@@ -77,12 +96,13 @@ public class SolicitudTour implements Serializable {
         this.idSolicitud = idSolicitud;
     }
 
-    public Date getFecha() {
-        return fecha;
+
+    public Tour getTour() {
+        return tour;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setTour(Tour tour) {
+        this.tour = tour;
     }
 
     public Usuario getUsuario() {
@@ -92,6 +112,10 @@ public class SolicitudTour implements Serializable {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public String getEstado() { return estado;}
+
+    public void setEstado(String estado) { this.estado = estado; }
 
     public Collection<Notificacion> notificacionCollection() {
         return notificacionCollection;
@@ -123,7 +147,39 @@ public class SolicitudTour implements Serializable {
 
     @Override
     public String toString() {
-        return "nexp.com.app.model.SolicitudPaquete[ idSolicitud=" + idSolicitud + " ]";
+        return "com.example.demo.modelo.SolicitudTour[ idSolicitud=" + idSolicitud + " ]";
     }
-    
+
+
+    public Alojamiento getAlojamiento() {
+        return alojamiento;
+    }
+
+    public void setAlojamiento(Alojamiento alojamiento) {
+        this.alojamiento = alojamiento;
+    }
+
+    public Municipio getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(Municipio municipio) {
+        this.municipio = municipio;
+    }
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
 }
