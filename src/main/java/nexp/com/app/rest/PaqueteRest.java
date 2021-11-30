@@ -84,6 +84,11 @@ public class PaqueteRest {
         return ResponseEntity.ok(pser.findAllPaqueteActivo());
     }
 
+    @GetMapping(path = "/listar")
+    public ResponseEntity<List<Paquete>> getListarPaquete() {
+        return ResponseEntity.ok(pser.listar());
+    }
+
     @PutMapping
     public ResponseEntity<?> editar(@RequestBody @Valid Paquete p, BindingResult br) {
         if (br.hasErrors()) {
