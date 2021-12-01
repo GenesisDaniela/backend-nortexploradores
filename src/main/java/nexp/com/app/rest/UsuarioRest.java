@@ -126,7 +126,7 @@ public class UsuarioRest {
         List<Persona> personas = personaService.listar();
         List<Pasajero> pasajerosAdd = new ArrayList<>();
         List<Pasajero> pasajerosAgregados = new ArrayList<>();
-
+        int x=0;
         for(Pasajero p: pasajeros){
             log.info(p.getIdPasajero()+"================================================");
             Persona personaP = personaService.encontrar(p.getPersona().getIdPersona()).orElse(null);
@@ -154,9 +154,12 @@ public class UsuarioRest {
                     if(p.getIdPasajero()==null){
                         p = pasajeroService.encontrar(pasajeroAsociadoAPersona.getIdPasajero()).get();
                         List<ClientePasajero> pc =(List) p.clientePasajeroCollection();
-                            if(p.getEsCotizante()){
+                            if(p.getEsCotizante() && x>0){
                                 return new ResponseEntity<ObjectError>(new ObjectError("Pasajero","No puedes llevar clientes registrados"), HttpStatus.NOT_FOUND);
                             }
+
+                            if(p.getEsCotizante()) x++;
+
                             if(!nexp.existeUsuario(pc, us)){ //esta asociado a otro cliente
                                 ClientePasajero clientePasajero = new ClientePasajero(); // lo asocio al cliente
                                 clientePasajero.setPasajero(p);

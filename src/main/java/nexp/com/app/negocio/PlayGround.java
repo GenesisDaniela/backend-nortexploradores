@@ -16,11 +16,19 @@ public class PlayGround {
     public static void main(String[] args) {
 //        NorteXploradores norteXploradores =new NorteXploradores();
 
-        List<Transporte> prueba = (List)pser.listar();
+//        List<Transporte> prueba = (List)pser.listar();
 //        Transporte prueba = pser.encontrar("VCA123").orElse(null);
 
-        System.out.println(prueba.toString());
+//        System.out.println(prueba.toString());
+        Date fechaSalida = new Date();
+        fechaSalida.setDate(4);
+        Date fechaReserva = new Date();
 
+        int milisegundospordia= 86400000;
+        System.out.println(fechaSalida);
+        System.out.println(fechaReserva);
+        int dias = (int) ((fechaReserva.getTime()-fechaSalida.getTime()) / milisegundospordia);
+        System.out.println(dias);
 //        System.out.println(norteXploradores.convertirFecha("2021-09-13 23:56:49","-"));
 //
 //        Date fechaSalida = norteXploradores.convertirFecha("2021-09-15 23:56:49","-");

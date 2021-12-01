@@ -5,7 +5,10 @@
  */
 package nexp.com.app.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
+import nexp.com.app.security.model.Usuario;
+import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
 
 import java.util.Date;
@@ -25,6 +28,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/compra")
+@Slf4j
 @CrossOrigin(origins = "*")
 public class CompraRest {
     @Autowired
@@ -41,6 +45,9 @@ public class CompraRest {
 
     @Autowired
     TransaccionService transaccionService;
+
+    @Autowired
+    UsuarioService usuarioService;
     
     @GetMapping
     public ResponseEntity<List<Compra>> getCompra() {
@@ -67,16 +74,20 @@ public class CompraRest {
 
     @PostMapping(path = "/compraReservada/{idtour}")
     public ResponseEntity<Compra> crearCompraReservada(@RequestBody @Valid Compra compra, @PathVariable int idtour){
-
         Tour t = tourService.encontrar(idtour).get();
         Date fechaSalida = t.getFechaSalida();
         Date fechaReserva = new Date();
-
         int milisegundospordia= 86400000;
-        int dias = (int) ((fechaReserva.getTime()-fechaSalida.getTime()) / milisegundospordia);
+        int dias = (int) ((fechaSalida.getTime()-fechaReserva.getTime()) / milisegundospordia);
 
         if(dias<3){
             return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
+        }
+        Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
+        for(Compra c: usuario.compraCollection()){
+            if(c.getTour().getIdTour() == t.getIdTour() && c.getEstado().equals("PAGADO")){
+                return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+            }
         }
 
         Reserva reserva = new Reserva();
