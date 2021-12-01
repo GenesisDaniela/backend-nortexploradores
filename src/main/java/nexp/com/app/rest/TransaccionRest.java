@@ -109,6 +109,7 @@ public class TransaccionRest {
         boolean estaAprobada =false;
 
         List<Transaccionp> transaccionps =(List)compra.transaccionpCollection();
+        Tour t = compra.getTour();
 
         if(transaccionps.size()>0 && pay.getResponseMessagePol().equals("APPROVED")){
             log.info("es una compra actual y tiene reservas"+transaccionps.size()+"+++++++++++++++++++++++++++");
@@ -120,9 +121,9 @@ public class TransaccionRest {
                     break;
                 }
             }
+
             if(estaAprobada){
                 compra.setEstado("PAGADO");
-                Tour t = compra.getTour();
                 t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
                 Notificacion notificacion = new Notificacion();
                 notificacion.setFecha(new Date());
@@ -130,15 +131,20 @@ public class TransaccionRest {
                 tourService.guardar(t);
                 notificacionService.guardar(notificacion);
             }else{
+                t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
                 compra.setEstado("PAGO_PARCIAL");
+                tourService.guardar(t);
+
             }
-            pser.guardar(pay);
-            return new ResponseEntity<>(body, HttpStatus.OK);
+
         }
 
 
         if (pay.getResponseMessagePol().equals("APPROVED")){ //SIGUE EN DUDA ESTE METODO
+            t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
             compra.setEstado("PAGO_PARCIAL");
+            tourService.guardar(t);
+
         }
 
         pser.guardar(pay);
