@@ -136,7 +136,8 @@ public class TransaccionRest {
                 tourService.guardar(t);
 
             }
-
+            pser.guardar(pay);
+            return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
 
