@@ -85,7 +85,7 @@ public class CompraRest {
         }
         Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
         for(Compra c: usuario.compraCollection()){
-            if(c.getTour().getIdTour() == t.getIdTour() && c.getEstado().equals("PAGADO")){
+            if(c.getTour().getIdTour() == t.getIdTour() && c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
                 return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
             }
         }
