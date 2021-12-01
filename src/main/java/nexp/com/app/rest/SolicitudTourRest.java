@@ -118,6 +118,7 @@ public class SolicitudTourRest {
         spaqser.eliminar(s.getIdSolicitud());
         tourService.eliminar(t.getIdTour());
         return ResponseEntity.ok("Solicitud eliminada");
+
     }
 
     @PutMapping()
