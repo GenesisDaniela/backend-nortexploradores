@@ -93,7 +93,7 @@ public class TransaccionRest {
         if(pay.getResponseMessagePol().equals("APPROVED") && pay.getValue() == (long)compra.getTotalCompra()){ //Se pagó el total y fue aprobada
             compra.setEstado("PAGADO");
             Tour t = compra.getTour();
-            t.setCantCupos(t.getCantCupos()-1);
+            t.setCantCupos(t.getCantCupos()-t.getCantCupos());
             Notificacion notificacion = new Notificacion();
             notificacion.setFecha(new Date());
             notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
@@ -114,7 +114,7 @@ public class TransaccionRest {
             log.info("es una compra actual y tiene reservas"+transaccionps.size()+"+++++++++++++++++++++++++++");
             for (Transaccionp transaccionp : transaccionps) { //Recorro todas las transacciones, y si alguna esta aprobada entonces se que ya tiene una segunda transaccion aprobada
                 log.info(transaccionp.getResponseMessagePol()+"+++++++++++++++++++++++++++++++++++++++++++++++++");
-                if (transaccionp.getResponseMessagePol().equals("APPROVED")) {
+                if (transaccionp.getResponseMessagePol().equals("APPROVED") && !transaccionp.getTransactionId().equals(pay.getTransactionId())) {
                     log.info("tiene una transaccion aprobada "+transaccionp.getTransactionId());
                     estaAprobada = true;
                     break;
