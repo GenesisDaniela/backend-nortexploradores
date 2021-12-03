@@ -87,7 +87,7 @@ public class AuthController {
         Usuario u = usuarioService.getByNombreUsuario(loginUsuario.getNombreUsuario()).orElse(null);
 
         if(u == null){
-            return new ResponseEntity(("Este email no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(("El nombre de usuario no existe"), HttpStatus.NOT_FOUND);
         }
 
         if(!u.getEstado()){
@@ -97,8 +97,8 @@ public class AuthController {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         String jwt = jwtProvider.generateToken(authentication);
-        log.info("si lo genera" + jwt);
         UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());
         return new ResponseEntity(jwtDto, HttpStatus.OK);
