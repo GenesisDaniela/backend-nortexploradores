@@ -83,6 +83,17 @@ public class AuthController {
     public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
         if(bindingResult.hasErrors())
             return new ResponseEntity(("campos mal puestos"), HttpStatus.BAD_REQUEST);
+
+        Usuario u = usuarioService.getByNombreUsuario(loginUsuario.getNombreUsuario()).orElse(null);
+
+        if(u == null){
+            return new ResponseEntity(("Este email no existe"), HttpStatus.NOT_FOUND);
+        }
+
+        if(!u.getEstado()){
+            return new ResponseEntity(("El usuario se encuentra deshabilitado"), HttpStatus.NOT_FOUND);
+        }
+
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
