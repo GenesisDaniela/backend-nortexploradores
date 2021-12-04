@@ -88,7 +88,7 @@ public class AuthController {
         if(bindingResult.hasErrors())
             return new ResponseEntity(("campos mal puestos"), HttpStatus.BAD_REQUEST);
 
-        Usuario u = usuarioService.getByNombreUsuario(loginUsuario.getNombreUsuario()).orElse(null);
+        Usuario u = usuarioService.getByEmail(loginUsuario.getEmail()).orElse(null);
 
         if(u == null){
             return new ResponseEntity(("El nombre de usuario no existe"), HttpStatus.NOT_FOUND);
@@ -99,7 +99,7 @@ public class AuthController {
         }
 
         Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(u.getUsername(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtProvider.generateToken(authentication);
