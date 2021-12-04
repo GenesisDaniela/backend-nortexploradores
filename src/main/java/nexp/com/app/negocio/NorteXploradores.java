@@ -19,7 +19,7 @@ public class NorteXploradores {
     public List<Compra> paquetesComprados(List<Compra> compras){
         List<Compra> comprados = new ArrayList<>();
         for(Compra c: compras){
-            if(c.getEstado().equals("PAGADO")){
+            if(c.getReserva() != null){
                 comprados.add(c);
             }
         }
