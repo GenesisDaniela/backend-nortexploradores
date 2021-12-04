@@ -19,7 +19,7 @@ public class NorteXploradores {
     public List<Compra> paquetesComprados(List<Compra> compras){
         List<Compra> comprados = new ArrayList<>();
         for(Compra c: compras){
-            if(c.getReserva() != null){
+            if(c.getEstado().equals("PAGO_PARCIAL")){
                 comprados.add(c);
             }
         }
@@ -29,8 +29,7 @@ public class NorteXploradores {
     public List<Compra> paquetesReservados(List<Compra> compras){
         List<Compra> reservados = new ArrayList<>();
         for(Compra c: compras){
-            log.info(c.getEstado());
-            if(c.getEstado().equals("PAGO_PARCIAL")){
+            if(c.getReserva() != null){
                 reservados.add(c);
             }
         }
