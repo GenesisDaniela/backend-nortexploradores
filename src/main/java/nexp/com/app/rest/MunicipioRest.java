@@ -37,15 +37,17 @@ public class MunicipioRest {
     public ResponseEntity<List<Municipio>> getMunicipio() {
         List<Municipio> municipiosActivos = new ArrayList<>();
         for(Municipio muni: mser.listar()){
-            if(muni.getEstado() == true)
+            if(muni.getEstado())
                 municipiosActivos.add(muni);
         }
         return ResponseEntity.ok(municipiosActivos);
     }
+
     @GetMapping(path= "/listar")
     public ResponseEntity<List<Municipio>> getMunicipioTot() {
         return ResponseEntity.ok(mser.listar());
     }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> encontrarMunicipio(@PathVariable int id) {
         Municipio m = mser.encontrar(id).orElse(null);

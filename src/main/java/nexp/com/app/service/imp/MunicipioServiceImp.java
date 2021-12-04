@@ -33,7 +33,12 @@ public class MunicipioServiceImp implements MunicipioService {
     @Override
     @Transactional(readOnly = true)
     public List<Municipio> listar() {
-        return mDao.findAll();
+        return mDao.listarMunicipioNS();
+    }
+
+    @Override
+    public List<Municipio> listarActivosNs() {
+        return null;
     }
 
     @Override

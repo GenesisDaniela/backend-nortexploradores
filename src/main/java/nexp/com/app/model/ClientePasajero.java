@@ -98,9 +98,13 @@ public class ClientePasajero implements Serializable {
         return true;
     }
 
+
     @Override
     public String toString() {
-        return "com.example.demo.test.ClientePasajero[ idClientepasajero=" + idClientepasajero + " ]";
+        return "ClientePasajero{" +
+                "idClientepasajero=" + idClientepasajero +
+                ", usuario=" + usuario +
+                ", pasajero=" + pasajero +
+                '}';
     }
-
 }

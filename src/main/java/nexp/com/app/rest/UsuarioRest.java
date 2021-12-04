@@ -128,7 +128,6 @@ public class UsuarioRest {
         List<Pasajero> pasajerosAgregados = new ArrayList<>();
         int x=0;
         for(Pasajero p: pasajeros){
-            log.info(p.getIdPasajero()+"================================================");
             Persona personaP = personaService.encontrar(p.getPersona().getIdPersona()).orElse(null);
             if(personaP==null){
                 personaService.guardar(p.getPersona()); // guardo a la persona no existente

@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,6 +75,9 @@ public class AuthController {
         if(nuevoUsuario.getRoles().contains("admin"))
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
         usuario.setRoles(roles);
+        usuario.setFecha(new Date());
+        usuario.setImgUrl("https://yorktonrentals.com/wp-content/uploads/2017/06/usericon.png");
+        usuario.setEstado(true);
         usuarioService.guardar(usuario);
 
         return ResponseEntity.ok(usuario);

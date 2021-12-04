@@ -14,6 +14,7 @@ import nexp.com.app.model.*;
 import java.util.Collection;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.Size;
@@ -35,6 +36,8 @@ public class Usuario {
     private String imgUrl;
     @Column(name = "estado")
     private Boolean estado;
+    @Column(name = "fecha")
+    private Date fecha;
     @NotNull
     private String password;
     @OneToMany(mappedBy = "usuario")
@@ -179,7 +182,15 @@ public class Usuario {
     public void setSolicitudPaqueteCollection(Collection<SolicitudTour> solicitudTourCollection) {
         this.solicitudTourCollection = solicitudTourCollection;
     }
-    
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     @Override
     public String toString() {
         return "nexp.com.app.security.entity.Usuario[ idUsuario=" + id_Usuario + " ]";

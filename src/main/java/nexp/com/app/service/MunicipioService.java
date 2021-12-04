@@ -17,4 +17,5 @@ public interface MunicipioService {
      public Municipio guardar(Municipio municipio);
     public Optional<Municipio> encontrar(int id);
     public List<Municipio> listar();
+    public List<Municipio> listarActivosNs();
 }

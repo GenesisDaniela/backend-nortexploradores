@@ -73,14 +73,22 @@ public class PasajeroRest {
 
     @GetMapping(path = "/clientes")
     public ResponseEntity<List<?>> getCliente() {
-        List<Pasajero> pasajerosClientes = new ArrayList<>();
-        NorteXploradores nxs = new NorteXploradores();
+        List<Pasajero> pasajero = new ArrayList<>();
+        List<Usuario> usuario = new ArrayList<>();
+        List<Object> clientesUsuario = new ArrayList<>();
+
         for(Pasajero p: pser.listar()){
-            if(p.getEsCotizante() == true ){
-                pasajerosClientes.add(p);
+            if(p.getEsCotizante()){
+                List<ClientePasajero> pasajeros = (List)p.clientePasajeroCollection();
+                if(pasajeros.size()>0){
+                    pasajero.add(p);
+                    usuario.add(pasajeros.get(0).getUsuario());
+                }
             }
         }
-        return ResponseEntity.ok(pasajerosClientes);
+        clientesUsuario.add(pasajero);
+        clientesUsuario.add(usuario);
+        return ResponseEntity.ok(clientesUsuario);
     }
 
 
@@ -92,7 +100,9 @@ public class PasajeroRest {
     @GetMapping(path = "/{idPasajero}/deshabilitar")
     public ResponseEntity<?> deshabilitar(@PathVariable int idPasajero) {
         Pasajero pasajero = pser.encontrar(idPasajero).orElse(null);
+
         for(ClientePasajero clientePasajero:pasajero.clientePasajeroCollection()){
+            log.info(clientePasajero.getUsuario().getUsername());
             if(idPasajero == clientePasajero.getPasajero().getIdPasajero()){
                Usuario u= clientePasajero.getUsuario();
                u.setEstado(false);
@@ -106,7 +116,14 @@ public class PasajeroRest {
     @GetMapping(path = "/{idPasajero}/habilitar")
     public ResponseEntity<?> habilitar(@PathVariable int idPasajero) {
         Pasajero pasajero = pser.encontrar(idPasajero).orElse(null);
-        for(ClientePasajero clientePasajero:pasajero.clientePasajeroCollection()){
+
+        List<ClientePasajero> pasajeros = clientePasajeroService.listar();
+
+        for(ClientePasajero clientePasajero : pasajeros){
+            log.info(clientePasajero.toString()+"=====================");
+            log.info(idPasajero+"=====================");
+            log.info(clientePasajero.getPasajero().getIdPasajero()+"=====================");
+
             if(idPasajero == clientePasajero.getPasajero().getIdPasajero()){
                 Usuario u= clientePasajero.getUsuario();
                 u.setEstado(true);
@@ -114,6 +131,6 @@ public class PasajeroRest {
                 return ResponseEntity.ok(u);
             }
         }
-        return (ResponseEntity<?>) ResponseEntity.notFound();
+        return new ResponseEntity("No encontrado",HttpStatus.NOT_FOUND);
     }
 }
