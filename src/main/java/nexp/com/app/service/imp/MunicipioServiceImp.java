@@ -38,7 +38,7 @@ public class MunicipioServiceImp implements MunicipioService {
 
     @Override
     public List<Municipio> listarActivosNs() {
-        return null;
+        return mDao.listarMunicipioNSActivo();
     }
 
     @Override

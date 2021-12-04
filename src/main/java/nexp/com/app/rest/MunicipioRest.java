@@ -35,12 +35,7 @@ public class MunicipioRest {
 
     @GetMapping
     public ResponseEntity<List<Municipio>> getMunicipio() {
-        List<Municipio> municipiosActivos = new ArrayList<>();
-        for(Municipio muni: mser.listar()){
-            if(muni.getEstado())
-                municipiosActivos.add(muni);
-        }
-        return ResponseEntity.ok(municipiosActivos);
+        return ResponseEntity.ok(mser.listarActivosNs());
     }
 
     @GetMapping(path= "/listar")
