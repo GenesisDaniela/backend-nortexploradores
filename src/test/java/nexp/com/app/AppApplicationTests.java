@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -97,12 +99,18 @@ class AppApplicationTests {
 	@Autowired
 	JwtProvider jwtProvider;
 
+	@Autowired
+	private JavaMailSender mailSender;
+
+
 	@Test
 	void probarEncontrarPaquete() {
 		assertEquals(paqueteService.encontrar(1), paqueteService.encontrar(1));
 	}
 
-	@Test
+
+
+		@Test
 	void guardarTour() {
 		Tour tourEsperado = new Tour();
 		tourEsperado.setCantCupos(0);

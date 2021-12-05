@@ -7,6 +7,7 @@ package nexp.com.app.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
+import nexp.com.app.negocio.EmailService;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +50,15 @@ public class CompraRest {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    NotificacionService notificacionService;
+
+    @Value("${spring.mail.username}")
+    String emailUsuarioEmisor;
+
+    @Value("${spring.mail.password}")
+    String clave;
     
     @GetMapping
     public ResponseEntity<List<Compra>> getCompra() {
@@ -127,6 +138,18 @@ public class CompraRest {
         int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
         Tour tour = compra.getTour();
         tour.setCantCupos(cuposDisponibles);
+        Notificacion notificacion = new Notificacion();
+        Usuario usuario = compra.getUsuario();
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(usuario.getEmail(), "Reserva cancelada",
+                "Hola "+usuario.getUsername()+", has cancelado la reserva del paquete destino "+tour.getPaquete().getMunicipio().getNombre()+"" +
+                        " con fecha de salida: "+tour.getFechaSalida() +" y fecha de llegada:"+tour.getFechaLlegada());
+
+        notificacion.setDescripcion("La reserva del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
+        notificacion.setUsuario(compra.getUsuario());
+        notificacion.setFecha(new Date());
+        notificacionService.guardar(notificacion);
+
         reserva.setEstado("CANCELADA");
         compra.setEstado("CANCELADO");
         compraservice.guardar(compra);

@@ -8,6 +8,7 @@ import nexp.com.app.service.PaqueteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -27,6 +28,9 @@ public class ActividadRest {
 
     @Autowired
     PaqueteService paqueteService;
+
+
+
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Actividad actividad, BindingResult br){

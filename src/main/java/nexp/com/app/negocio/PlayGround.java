@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class PlayGround {
 
@@ -18,6 +19,17 @@ public class PlayGround {
 
 //        List<Transporte> prueba = (List)pser.listar();
 //        Transporte prueba = pser.encontrar("VCA123").orElse(null);
+            String emailUsuarioEmisor="santiagopico2001@gmail.com";
+            String clave="u1232584846a.";
+            //Cambia el valor de la variable emailReceptor por el email que desee enviarle mensajes
+            Scanner teclado=new Scanner(System.in);
+            System.out.println("Digite una dirección de email:");
+            String emailReceptor=teclado.nextLine();
+            EmailService email=new EmailService(emailUsuarioEmisor, clave);
+            email.enviarEmail(emailReceptor, "Esto es un ejemplo", "Mi cuerpo del mensaje");
+            System.out.println("Se ha enviado email: "+emailReceptor);
+
+
 
 //        System.out.println(prueba.toString());
         Date fechaSalida = new Date();

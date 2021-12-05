@@ -6,19 +6,17 @@
 package nexp.com.app.rest;
 
 
-import nexp.com.app.model.Compra;
-import nexp.com.app.model.Notificacion;
-import nexp.com.app.model.Tour;
-import nexp.com.app.model.Transaccionp;
+import nexp.com.app.model.*;
+import nexp.com.app.negocio.EmailService;
 import nexp.com.app.negocio.NorteXploradores;
 
 import java.util.Date;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import nexp.com.app.service.CompraService;
-import nexp.com.app.service.NotificacionService;
-import nexp.com.app.service.TourService;
+import nexp.com.app.security.model.Usuario;
+import nexp.com.app.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import nexp.com.app.service.TransaccionService;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -57,8 +55,17 @@ public class TransaccionRest {
 
     @Autowired
     public NotificacionService notificacionService;
+
+    @Autowired
+    public ReservaService reservaService;
 //    @Autowired
 //    public UsuarioService user;
+
+    @Value("${spring.mail.username}")
+    String emailUsuarioEmisor;
+
+    @Value("${spring.mail.password}")
+    String clave;
 
     NorteXploradores nexp = new NorteXploradores();
     
@@ -82,9 +89,18 @@ public class TransaccionRest {
         pay.setResponseMessagePol(body.get("response_message_pol"));
         pay.setTransactionId(body.get("transaction_id"));
         pay.setValue(Long.parseLong(body.get("value").split("\\.")[0]));
+        Usuario usuario = compra.getUsuario();
 
 //      Compra Fallida
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
+            EmailService email=new EmailService(emailUsuarioEmisor, clave);
+            email.enviarEmail(usuario.getEmail(), "Compra fallida",
+                    "Hola "+usuario.getUsername()+"" +
+                            ", has intentado realizar el pago del paquete turistico destino " +
+                            ""+compra.getTour().getPaquete().getMunicipio().getNombre()+" " +
+                            "por un total de: "+compra.getTotalCompra()+"" +
+                            "<hr> Numero Factura: "+compra.getIdCompra()+"<br> Fecha:"+compra.getFecha());
+
             pser.guardar(pay);
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
@@ -96,6 +112,7 @@ public class TransaccionRest {
             t.setCantCupos(t.getCantCupos()-t.getCantCupos());
             Notificacion notificacion = new Notificacion();
             notificacion.setFecha(new Date());
+
             notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
             tourService.guardar(t);
             notificacionService.guardar(notificacion);
@@ -133,6 +150,16 @@ public class TransaccionRest {
             }else{
                 t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
                 compra.setEstado("PAGO_PARCIAL");
+                Reserva reserva = compra.getReserva();
+                reserva.setEstado("PAGO_PARCIAL");
+                reservaService.guardar(reserva);
+                EmailService email=new EmailService(emailUsuarioEmisor, clave);
+                email.enviarEmail(usuario.getEmail(), "Pago pendiente",
+                        "Hola "+usuario.getUsername()+"" +
+                                ", has realizado el pago parcial del paquete turistico destino " +
+                                ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", recuerda pagar el otro 50% restante" +
+                                "por un total de: "+compra.getTotalCompra()+"" +
+                                "<hr> Numero Factura: "+compra.getIdCompra()+"<br> Fecha:"+compra.getFecha());
                 tourService.guardar(t);
 
             }
@@ -143,6 +170,16 @@ public class TransaccionRest {
 
         if (pay.getResponseMessagePol().equals("APPROVED")){ //SIGUE EN DUDA ESTE METODO
             t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
+            Reserva reserva = compra.getReserva();
+            reserva.setEstado("PAGO_PARCIAL");
+            reservaService.guardar(reserva);
+            EmailService email=new EmailService(emailUsuarioEmisor, clave);
+            email.enviarEmail(usuario.getEmail(), "Pago pendiente",
+                    "Hola "+usuario.getUsername()+"" +
+                            ", has realizado el pago parcial del paquete turistico destino " +
+                            ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", recuerda pagar el otro 50% restante" +
+                            "por un total de: "+compra.getTotalCompra()+"" +
+                            "<hr> Numero Factura: "+compra.getIdCompra()+"<br> Fecha:"+compra.getFecha());
             compra.setEstado("PAGO_PARCIAL");
             tourService.guardar(t);
 
