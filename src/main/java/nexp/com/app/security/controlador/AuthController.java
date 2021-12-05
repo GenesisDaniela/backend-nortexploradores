@@ -108,18 +108,25 @@ public class AuthController {
         if(bindingResult.hasErrors())
             return new ResponseEntity(("campos mal puestos"), HttpStatus.BAD_REQUEST);
 
-        Usuario u = usuarioService.getByEmail(loginUsuario.getEmail()).orElse(null);
+        Usuario usuario = usuarioService.getByEmail(loginUsuario.getEmail()).orElse(null);
 
-        if(u == null){
+        if(usuario == null){
             return new ResponseEntity(("El nombre de usuario no existe"), HttpStatus.NOT_FOUND);
         }
 
-        if(!u.getEstado()){
+        if(!usuario.getEstado()){
             return new ResponseEntity(("El usuario se encuentra deshabilitado"), HttpStatus.NOT_FOUND);
         }
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(usuario.getEmail(), "Registro de sesión en el aplicativo web NorteXploradores", "" +
+                "<h1>Bienvenido "+usuario.getUsername()+"</h1>" +
+                "<p>te has registrado al aplicativo web NorteXploradores, estos son tus datos de ingreso de sesión:</p>" +
+                "<ul>" +
+                "<li>Usuario:"+usuario.getEmail()+"</li>" +
+                "</ul>" );
 
         Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(u.getUsername(), loginUsuario.getPassword()));
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usuario.getUsername(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtProvider.generateToken(authentication);
