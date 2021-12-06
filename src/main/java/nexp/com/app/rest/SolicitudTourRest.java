@@ -2,10 +2,12 @@ package nexp.com.app.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
+import nexp.com.app.negocio.EmailService;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -49,6 +51,14 @@ public class SolicitudTourRest {
     @Autowired
     NotificacionService notificacionService;
 
+
+
+    @Value("${spring.mail.username}")
+    String emailUsuarioEmisor;
+
+    @Value("${spring.mail.password}")
+    String clave;
+
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> cantidadSolicitudes() {
         int total = 0;
@@ -83,7 +93,7 @@ public class SolicitudTourRest {
             }
             solicitudTour.setAlojamiento(alojamiento);
         }
-        Municipio muni = solicitudTour.getMunicipio();
+        Municipio muni = municipioService.encontrar(solicitudTour.getMunicipio().getIdMuni()).orElse(null);
         if (muni == null) {
             return new ResponseEntity<ObjectError>(new ObjectError("id", "El municipio no existe"), HttpStatus.NOT_FOUND);
         }
@@ -92,6 +102,84 @@ public class SolicitudTourRest {
         solicitudTour.setEstado("PENDIENTE");
         solicitudTour.setTour(tour);
         spaqser.guardar(solicitudTour);
+
+        String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Viaje personalizado</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Has enviado un viaje personalizado, deberás esperar mientras el administrador responde tu solicitud, esta es la información que enviaste:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                "                                    <th scope=\"col\">Destino</th>\n" +
+                "                                    <th scope=\"col\">Descripción</th>\n" +
+                "                                    <th scope=\"col\">Fecha Salida</th>\n" +
+                "                                    <th scope=\"col\">Fecha llegada</th>\n" +
+                "                                    <th scope=\"col\">Cantidad pasajeros</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                "                                    <td>"+solicitudTour.getMunicipio().getNombre()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getDescripcion()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getFechaSalida()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getFechaLlegada()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getCantCupos()+"</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(solicitudTour.getUsuario().getEmail(), "Solicitud de viaje", cuerpo);
+
 
         Notificacion notificacion = new Notificacion();
         notificacion.setDescripcion("Has recibo una solicitud de paquete personalizado de: " + solicitudTour.getUsuario().getUsername());
@@ -117,6 +205,83 @@ public class SolicitudTourRest {
         notificacionService.eliminar(notificacions.get(0).getIdNotificacion());
         spaqser.eliminar(s.getIdSolicitud());
         tourService.eliminar(t.getIdTour());
+
+        String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Solicitud rechazada</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">El administrador rechazó tu solicitud de paquete personalizado, esta es la información que enviaste:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                "                                    <th scope=\"col\">Destino</th>\n" +
+                "                                    <th scope=\"col\">Descripción</th>\n" +
+                "                                    <th scope=\"col\">Fecha Salida</th>\n" +
+                "                                    <th scope=\"col\">Fecha llegada</th>\n" +
+                "                                    <th scope=\"col\">Cantidad pasajeros</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                "                                    <td>"+s.getMunicipio().getNombre()+"</td>\n" +
+                "                                    <td>"+s.getDescripcion()+"</td>\n" +
+                "                                    <td>"+s.getTour().getFechaSalida()+"</td>\n" +
+                "                                    <td>"+s.getTour().getFechaLlegada()+"</td>\n" +
+                "                                    <td>"+s.getTour().getCantCupos()+"</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(s.getUsuario().getEmail(), "Solicitud rechazada", cuerpo);
         return ResponseEntity.ok("Solicitud eliminada");
 
     }
@@ -134,23 +299,100 @@ public class SolicitudTourRest {
     return ResponseEntity.ok(spaqser.encontrar(solicitud.getIdSolicitud()));
     }
 
-    @GetMapping(path = "/{id}/aceptar")
-    public ResponseEntity<?> aceptarSolicitudTour(@PathVariable int id) {
-        SolicitudTour s = spaqser.encontrar(id).orElse(null);
-        if (s == null){
-            return new ResponseEntity<ObjectError>(new ObjectError("id","La solicitud no existe"), HttpStatus.NOT_FOUND);
-        }
-        Tour tour = tourService.encontrar(s.getTour().getIdTour()).orElse(null);
+    @PostMapping(path = "/aceptar")
+    public ResponseEntity<?> aceptarSolicitudTour(@RequestBody SolicitudTour solicitudTour) { // aqui deberia enviar la solicitud completa guardarla y aceptarla aqui mismo
+
+        Tour tour = solicitudTour.getTour();
+
         if (tour == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","El tour no existe"), HttpStatus.NOT_FOUND);
         }
-        Paquete paquete = pser.encontrar(s.getTour().getPaquete().getIdPaq()).orElse(null);
-        if (paquete == null){
-            return new ResponseEntity<ObjectError>(new ObjectError("id","El paquete no existe"), HttpStatus.NOT_FOUND);
-        }
+        Municipio municipio = municipioService.encontrar(solicitudTour.getMunicipio().getIdMuni()).get();
+        solicitudTour.setMunicipio(municipio);
         tour.setEstado("PERSONALIZADO");
-        paquete.setEstado("PERSONALIZADO");
-    return ResponseEntity.ok(s);
+
+        tourService.guardar(tour);
+        solicitudTour.setTour(tour);
+        solicitudTour.setFecha(new Date());
+        String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Solicitud Aceptada</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">El administrador aceptó tu solicitud de paquete personalizado, esta es la información que enviaste:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                "                                    <th scope=\"col\">Destino</th>\n" +
+                "                                    <th scope=\"col\">Descripción</th>\n" +
+                "                                    <th scope=\"col\">Fecha Salida</th>\n" +
+                "                                    <th scope=\"col\">Fecha llegada</th>\n" +
+                "                                    <th scope=\"col\">Cantidad pasajeros</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                "                                    <td>"+solicitudTour.getMunicipio().getNombre()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getDescripcion()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getFechaSalida()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getFechaLlegada()+"</td>\n" +
+                "                                    <td>"+solicitudTour.getTour().getCantCupos()+"</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(solicitudTour.getUsuario().getEmail(), "Solicitud aceptada", cuerpo);
+        solicitudTour.setEstado("ACEPTADO");
+        spaqser.guardar(solicitudTour);
+    return ResponseEntity.ok(solicitudTour);
     }
 
     @DeleteMapping(path = "/{id}")

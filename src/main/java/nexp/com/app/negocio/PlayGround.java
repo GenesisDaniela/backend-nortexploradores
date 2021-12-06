@@ -28,8 +28,16 @@ public class PlayGround {
             EmailService email=new EmailService(emailUsuarioEmisor, clave);
             email.enviarEmail(emailReceptor, "Esto es un ejemplo", "Mi cuerpo del mensaje");
             System.out.println("Se ha enviado email: "+emailReceptor);
-
-
+        String cuerpo = " <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" style=\"width: 100px;height: auto;display: inline;\" alt=\"\" srcset=\"\">\n" +
+                "    <h1 style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">" +
+                "Bienvenido </h1>\n" +
+                "    <p style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">\n" +
+                "        te has registrado en el aplicativo web de NorteXploradores, estos son tus datos de inicio de sesion:\n" +
+                "    </p>" +
+                "<ul>" +
+                "                \"<li>Usuario:\"+usuario.getEmail()+\"</li>\" +\n" +
+                "                \"</ul>\" );";
+        System.out.println(cuerpo);
 
 //        System.out.println(prueba.toString());
         Date fechaSalida = new Date();

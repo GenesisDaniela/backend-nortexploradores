@@ -83,7 +83,7 @@ public class TransaccionRest {
         pay.setDate(nexp.convertirFecha(body.get("date"),"\\."));
         pay.setDescription(body.get("description")+"");
 
-        long idCompra = Long.parseLong(body.get("extra1"));
+        long idCompra = Long.parseLong(body.get("phone"));
         Compra compra = compraService.encontrar(idCompra).orElse(null);
         pay.setReferenceSale(compra);
         pay.setResponseMessagePol(body.get("response_message_pol"));
@@ -93,13 +93,89 @@ public class TransaccionRest {
 
 //      Compra Fallida
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
+
             EmailService email=new EmailService(emailUsuarioEmisor, clave);
-            email.enviarEmail(usuario.getEmail(), "Compra fallida",
-                    "Hola "+usuario.getUsername()+"" +
-                            ", has intentado realizar el pago del paquete turistico destino " +
-                            ""+compra.getTour().getPaquete().getMunicipio().getNombre()+" " +
-                            "por un total de: "+compra.getTotalCompra()+"" +
-                            "<hr> Numero Factura: "+compra.getIdCompra()+"<br> Fecha:"+compra.getFecha());
+            String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                    "        <tr>\n" +
+                    "          <td align=\"center\" style=\"padding:0;\">\n" +
+                    "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                    "              <tr>\n" +
+                    "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                    "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                    "                </td>\n" +
+                    "              </tr>\n" +
+                    "              <tr>\n" +
+                    "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                    "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                    "                    <tr>\n" +
+                    "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                    "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Compra fallida</h1>\n" +
+                    "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">\n" +
+                    "                        Se ha registrado una compra fallida para el paquete turistico destino " +compra.getTour().getPaquete().getMunicipio()+
+                    "                         con fecha de salida de "+compra.getTour().getFechaSalida()+" y fecha de llegada: "+compra.getTour().getFechaLlegada()+"</p>\n" +
+                    "                        <center>\n" +
+                    "                            <img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Spec_indicator_fail.svg/1200px-Spec_indicator_fail.svg.png\" alt=\"\" style=\"display: inline;width: 160px;height: auto;\">\n" +
+                    "                        </center>\n" +
+                    "                    </td>\n" +
+                    "                    </tr>\n" +
+                    "                    <tr>\n" +
+                    "                      <td style=\"padding:0;\">\n" +
+                    "                        <table class=\"simple-style\" border='1'>\n" +
+                    "                            <thead>\n" +
+                    "                                <tr>\n" +
+                    "                                    <th scope=\"col\">#Referencia</th>\n" +
+                    "                                    <th scope=\"col\">#Transacción</th>\n" +
+                    "                                    <th scope=\"col\">Total</th>\n" +
+                    "                                    <th scope=\"col\">Estado</th>\n" +
+                    "                                </tr>\n" +
+                    "                            </thead>\n" +
+                    "                            <tbody>\n" +
+                    "                                <tr>\n" +
+                    "                                    <td>"+compra.getIdCompra()+"</td>\n" +
+                    "                                    <td>"+pay.getTransactionId()+"</td>\n" +
+                    "                                    <td>"+pay.getValue()+"</td>\n" +
+                    "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
+                    "                                    <td>English</td>\n" +
+                    "                                </tr>\n" +
+                    "                            </tbody>\n" +
+                    "                        </table>\n" +
+                    "                      </td>\n" +
+                    "                    </tr>\n" +
+                    "                  </table>\n" +
+                    "                </td>\n" +
+                    "              </tr>\n" +
+                    "              <tr>\n" +
+                    "                <td style=\"padding:30px;background:#009045;\">\n" +
+                    "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                    "                    <tr>\n" +
+                    "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                    "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                    "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                    "                        </p>\n" +
+                    "                      </td>\n" +
+                    "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                    "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                    "                          <tr>\n" +
+                    "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                    "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                    "                            </td>\n" +
+                    "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                    "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                    "                            </td>\n" +
+                    "                          </tr>\n" +
+                    "                        </table>\n" +
+                    "                      </td>\n" +
+                    "                    </tr>\n" +
+                    "                  </table>\n" +
+                    "                </td>\n" +
+                    "              </tr>\n" +
+                    "            </table>\n" +
+                    "          </td>\n" +
+                    "        </tr>\n" +
+                    "      </table>";
+
+            email.enviarEmail(usuario.getEmail(), "Compra fallida", cuerpo);
+
 
             pser.guardar(pay);
             return new ResponseEntity<>(body, HttpStatus.OK);

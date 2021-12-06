@@ -91,13 +91,82 @@ public class AuthController {
 
 
         EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(usuario.getEmail(), "Registro de sesión en el aplicativo web NorteXploradores", "" +
-                "<h1>Bienvenido "+usuario.getUsername()+"</h1>" +
-                "<p>te has registrado al aplicativo web NorteXploradores, estos son tus datos de ingreso de sesión:</p>" +
-                "<ul>" +
-                "<li>Usuario:"+usuario.getEmail()+"</li>" +
-                "<li>Contraseña:"+nuevoUsuario.getPassword()+"</li>" +
-                "</ul>" );
+
+        String cuerpo2="<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Bienvenido al aplicativo web de NorteXploradores</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Te has registrado en el aplicativo web de NorteXploradores, estos son tus datos de inicio de sesión:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;\">\n" +
+                "                        <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"width:260px;padding:0;vertical-align:top;color:#153643;\">\n" +
+                "                              <p style=\"margin:0 0 25px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\"><img src=\"https://uybor.uz/borless/uybor/img/user-images/user_no_photo_300x300.png\" alt=\"\" width=\"260\" style=\"width: 160px;height:auto;display:block;\" /></p>\n" +
+                "                              <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Usuario:</p>\n" +
+                "                              <p style=\"margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">"+usuario.getUsername()+"</p>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"width:20px;padding:0;font-size:0;line-height:0;\">&nbsp;</td>\n" +
+                "                            <td style=\"width:260px;padding:0;vertical-align:top;color:#153643;\">\n" +
+                "                              <p style=\"margin:0 0 25px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\"><img src=\"https://cdn.pixabay.com/photo/2019/10/24/08/23/lock-4573711_960_720.png\" alt=\"\" width=\"260\" style=\"width: 220px;height:auto;display:block;\" /></p>\n" +
+                "                              <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Contraseña: </p>\n" +
+                "                              <p style=\"margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">"+nuevoUsuario.getPassword()+"</p>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"https://www.facebook.com/nortexploradores/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">!Gracias por elegirnos!</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+
+
+
+        email.enviarEmail(usuario.getEmail(), "Registro de sesión en el aplicativo web NorteXploradores", cuerpo2);
 
 
         return ResponseEntity.ok(usuario);
@@ -117,13 +186,6 @@ public class AuthController {
         if(!usuario.getEstado()){
             return new ResponseEntity(("El usuario se encuentra deshabilitado"), HttpStatus.NOT_FOUND);
         }
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(usuario.getEmail(), "Registro de sesión en el aplicativo web NorteXploradores", "" +
-                "<h1>Bienvenido "+usuario.getUsername()+"</h1>" +
-                "<p>te has registrado al aplicativo web NorteXploradores, estos son tus datos de ingreso de sesión:</p>" +
-                "<ul>" +
-                "<li>Usuario:"+usuario.getEmail()+"</li>" +
-                "</ul>" );
 
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usuario.getUsername(), loginUsuario.getPassword()));
