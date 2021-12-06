@@ -21,6 +21,6 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
     @Query (value = "SELECT Paquete FROM Compra WHERE Compra.reserva = :id", nativeQuery = true)
     Paquete reservaPaquete(@Param("id") Integer id);
 
-//    @Query (value = "SELECT Compra FROM Compra WHERE Compra.reserva = :id", nativeQuery = true)
-//    List<Compra> comprasAprobadas()
+    @Query ("SELECT c FROM Compra c WHERE c.usuario.id_Usuario=:id and c.estado='PAGADO'")
+    List<Compra> comprasAprobadas(@Param("id") Integer id);
 }

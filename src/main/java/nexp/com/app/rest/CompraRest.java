@@ -82,7 +82,10 @@ public class CompraRest {
         return ResponseEntity.ok(compra);
     }
 
-
+    @GetMapping(path = "/{idUsuario}/comprasPagadas")
+    public ResponseEntity<?> compraPagada(@PathVariable int idUsuario){
+        return ResponseEntity.ok(compraservice.comprasPagadas(idUsuario));
+    }
     @PostMapping(path = "/compraReservada/{idtour}")
     public ResponseEntity<Compra> crearCompraReservada(@RequestBody @Valid Compra compra, @PathVariable int idtour){
         Tour t = tourService.encontrar(idtour).get();

@@ -22,4 +22,6 @@ public interface CompraService {
     public List<Compra> listar();
     public Paquete paqueteDeReserva(Integer id);
     public void eliminar(Long id);
+    public List<Compra> comprasPagadas(int id);
+
 }
