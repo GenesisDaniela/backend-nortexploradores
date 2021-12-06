@@ -111,7 +111,7 @@ public class TransaccionRest {
                     "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
                     "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Compra fallida</h1>\n" +
                     "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">\n" +
-                    "                        Se ha registrado una compra fallida para el paquete turistico destino " +compra.getTour().getPaquete().getMunicipio()+
+                    "                        Se ha registrado una compra fallida para el paquete turistico destino " +compra.getTour().getPaquete().getMunicipio().getNombre()+
                     "                         con fecha de salida de "+compra.getTour().getFechaSalida()+" y fecha de llegada: "+compra.getTour().getFechaLlegada()+"</p>\n" +
                     "                        <center>\n" +
                     "                            <img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Spec_indicator_fail.svg/1200px-Spec_indicator_fail.svg.png\" alt=\"\" style=\"display: inline;width: 160px;height: auto;\">\n" +
@@ -135,7 +135,6 @@ public class TransaccionRest {
                     "                                    <td>"+pay.getTransactionId()+"</td>\n" +
                     "                                    <td>"+pay.getValue()+"</td>\n" +
                     "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
-                    "                                    <td>English</td>\n" +
                     "                                </tr>\n" +
                     "                            </tbody>\n" +
                     "                        </table>\n" +
@@ -248,9 +247,7 @@ public class TransaccionRest {
                         "                               Hola "+usuario.getUsername()+
                                                         ", has realizado el pago parcial del paquete turistico destino " +
                                                         ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", recuerda pagar el otro 50% restante" +
-                                                        "por un total de: $"+compra.getTotalCompra()+", esta es la información de tu compra:" +
-                        "                            <img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Spec_indicator_fail.svg/1200px-Spec_indicator_fail.svg.png\" alt=\"\" style=\"display: inline;width: 160px;height: auto;\">\n" +
-                        "                        </center>\n" +
+                                                        " por un total de: $"+compra.getTotalCompra()+", esta es la información de tu compra:" +
                         "                    </td>\n" +
                         "                    </tr>\n" +
                         "                    <tr>\n" +
@@ -343,9 +340,7 @@ public class TransaccionRest {
                     "                               Hola "+usuario.getUsername()+
                     ", has realizado el pago parcial del paquete turistico destino " +
                     ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", recuerda pagar el otro 50% restante" +
-                    "por un total de: $"+compra.getTotalCompra()+", esta es la información de tu compra:" +
-                    "                            <img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Spec_indicator_fail.svg/1200px-Spec_indicator_fail.svg.png\" alt=\"\" style=\"display: inline;width: 160px;height: auto;\">\n" +
-                    "                        </center>\n" +
+                    " por un total de: $"+compra.getTotalCompra()+", esta es la información de tu compra:" +
                     "                    </td>\n" +
                     "                    </tr>\n" +
                     "                    <tr>\n" +
