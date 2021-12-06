@@ -83,7 +83,7 @@ public class TransaccionRest {
         pay.setDate(nexp.convertirFecha(body.get("date"),"\\."));
         pay.setDescription(body.get("description")+"");
 
-        long idCompra = Long.parseLong(body.get("phone"));
+        long idCompra = Long.parseLong(body.get("extra1"));
         Compra compra = compraService.encontrar(idCompra).orElse(null);
         pay.setReferenceSale(compra);
         pay.setResponseMessagePol(body.get("response_message_pol"));
