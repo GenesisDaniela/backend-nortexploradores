@@ -267,7 +267,6 @@ public class TransaccionRest {
                         "                                    <td>"+pay.getTransactionId()+"</td>\n" +
                         "                                    <td>"+pay.getValue()+"</td>\n" +
                         "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
-                        "                                    <td>English</td>\n" +
                         "                                </tr>\n" +
                         "                            </tbody>\n" +
                         "                        </table>\n" +
@@ -360,7 +359,6 @@ public class TransaccionRest {
                     "                                    <td>"+pay.getTransactionId()+"</td>\n" +
                     "                                    <td>"+pay.getValue()+"</td>\n" +
                     "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
-                    "                                    <td>English</td>\n" +
                     "                                </tr>\n" +
                     "                            </tbody>\n" +
                     "                        </table>\n" +
