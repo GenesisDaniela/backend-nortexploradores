@@ -17,6 +17,7 @@ public interface AlojamientoService {
     
     public void guardar(Alojamiento alojamiento);
     public Optional<Alojamiento> encontrar(int id);
+
     public List<Alojamiento> listar();
     public void eliminar(int id);
 }
