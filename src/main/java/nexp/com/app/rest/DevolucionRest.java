@@ -48,7 +48,7 @@ public class DevolucionRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Compra compra = d.getCompra();
+        Compra compra = d.compra();
         if(compra ==  null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","la compra no existe"), HttpStatus.NOT_FOUND);
         }

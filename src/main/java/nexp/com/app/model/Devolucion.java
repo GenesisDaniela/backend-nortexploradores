@@ -68,7 +68,7 @@ public class Devolucion implements Serializable {
 
     public void setFecha(Date fecha) {this.fecha = fecha;}
 
-    public Compra getCompra() {return compra;}
+    public Compra compra() {return compra;}
 
     public void setCompra(Compra compra) {
         this.compra = compra;
