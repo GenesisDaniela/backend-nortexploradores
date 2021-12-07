@@ -12,6 +12,8 @@ import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -258,4 +260,29 @@ public class CompraRest {
         return ResponseEntity.ok(cantidadTours);
     }
 
-}
+    @GetMapping(path = "/totalMeses")
+    public ResponseEntity<?> totalMeses() throws ParseException {
+        int totalMeses[] = new int[12];
+
+        for (int i = 0; i < totalMeses.length; i++) {
+            String fecha1="2021-"+(i+1)+"-01";
+            String fecha2="2021-"+(i+1)+"-31";
+
+            if(i==1)
+                fecha2="2021-"+(i+1)+"-29";
+            if(i==3 || i==5 || i==10 || i==8)
+                fecha2="2021-"+(i+1)+"-30";
+
+            Integer totalC = compraservice.comprasAprobadasFecha(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2));
+            if(totalC ==null)
+                totalC=0;
+            totalMeses[i] = totalC;
+        }
+        return ResponseEntity.ok(totalMeses);
+
+    }
+
+
+    }

@@ -62,9 +62,10 @@ public class CompraServiceImp implements CompraService {
     public List<Compra> comprasPagadas(int id) {
         return cDAO.comprasAprobadas(id);
     }
-    
+
     @Override
-    public int comprasAprobadasFecha(Date fecha1, Date fecha2) {
+    public Integer comprasAprobadasFecha(Date fecha1, Date fecha2) {
+
         return cDAO.comprasAprobadasFecha(fecha1,fecha2);
     }
 }
