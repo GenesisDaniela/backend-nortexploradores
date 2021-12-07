@@ -60,10 +60,11 @@ public class DescuentoRest {
         if(br.hasErrors()){
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Descuento dto = dser.encontrar(d.getIdDescuento()).orElse(null);
-        if(dto == null){
+        Descuento descuento = dser.encontrar(d.getIdDescuento()).orElse(null);
+        if(descuento == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","el descuento no existe"), HttpStatus.NOT_FOUND);
         }
+        dser.guardar(d);
         return ResponseEntity.ok(dser.encontrar(d.getIdDescuento()));
     }
 
