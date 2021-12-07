@@ -249,7 +249,7 @@ public class CompraRest {
         List<Compra> compras = compraservice.listar();
         Date fechaActual = new Date();
         for (Compra c: compras){
-            if( c.getDevolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
+            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
                     c.getFecha().getMonth() == fechaActual.getMonth() &&
                     c.getFecha().getYear() == fechaActual.getYear()){
                 cantidadTours++;

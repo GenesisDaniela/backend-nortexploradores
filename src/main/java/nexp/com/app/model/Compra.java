@@ -144,7 +144,7 @@ public class Compra implements Serializable {
         this.transaccionpCollection = transaccionpCollection;
     }
 
-    public Collection<Devolucion> getDevolucionCollection() {
+    public Collection<Devolucion> devolucionCollection() {
         return devolucionCollection;
     }
 

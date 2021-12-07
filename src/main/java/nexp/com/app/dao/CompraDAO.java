@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  *
- * @author Santi & Dani
+ * @author GenesisDanielaVJ
  */
 public interface CompraDAO extends JpaRepository<Compra, Long> {
     @Query (value = "SELECT Paquete FROM Compra WHERE Compra.reserva = :id", nativeQuery = true)

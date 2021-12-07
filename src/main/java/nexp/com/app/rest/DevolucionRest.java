@@ -48,7 +48,7 @@ public class DevolucionRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Compra compra = d.compra();
+        Compra compra = d.getCompra();
         if(compra ==  null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","la compra no existe"), HttpStatus.NOT_FOUND);
         }
@@ -137,6 +137,11 @@ public class DevolucionRest {
 
     @GetMapping
     public ResponseEntity<List<Devolucion>> getDevolucion() {
+        return ResponseEntity.ok(dser.listar());
+    }
+
+    @GetMapping(path ="/listar")
+    public ResponseEntity<List<Devolucion>> listarDevolucion() {
         return ResponseEntity.ok(dser.listar());
     }
 
