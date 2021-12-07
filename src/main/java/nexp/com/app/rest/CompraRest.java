@@ -12,8 +12,11 @@ import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
 
+import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +58,9 @@ public class CompraRest {
 
     @Autowired
     NotificacionService notificacionService;
+
+    @Autowired
+    PaqueteService paqueteService;
 
     @Value("${spring.mail.username}")
     String emailUsuarioEmisor;
@@ -295,8 +301,26 @@ public class CompraRest {
 
     @GetMapping(path = "/totalPaquetes")
     public ResponseEntity<?> totalPaquetes() throws ParseException {
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-01-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-12-31";
+        List<Paquete> paquetes=paqueteService.listar();
 
-        return ResponseEntity.ok();
+        List total = new ArrayList();
+
+        for(Paquete p:paquetes){
+            Integer totalC = compraservice.comprasDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+            if(totalC!=null){
+                Object x[] = new Object[2];
+                x[0] = p.getNombre();
+                x[1] = totalC;
+                total.add(x);
+            }
+        }
+
+        return ResponseEntity.ok(total);
     }
 
 
