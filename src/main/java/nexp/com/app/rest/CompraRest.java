@@ -276,13 +276,29 @@ public class CompraRest {
             Integer totalC = compraservice.comprasAprobadasFecha(
                     new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
                     new SimpleDateFormat("yyyy-MM-dd").parse(fecha2));
+
+            Integer totalD = compraservice.devolucionesFecha(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2));
+
             if(totalC ==null)
                 totalC=0;
+            else{
+                if(totalD!=null)
+                    totalC-=totalD;
+            }
             totalMeses[i] = totalC;
         }
         return ResponseEntity.ok(totalMeses);
 
     }
+
+    @GetMapping(path = "/totalPaquetes")
+    public ResponseEntity<?> totalPaquetes() throws ParseException {
+
+        return ResponseEntity.ok();
+    }
+
 
 
     }
