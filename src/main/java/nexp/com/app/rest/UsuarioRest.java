@@ -11,6 +11,7 @@ import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -240,4 +241,23 @@ public class UsuarioRest {
         List<Tour> tourComprados = nexp.tourComprados((List)u.compraCollection());
         return ResponseEntity.ok(tourComprados);
     }
+
+    //cantidad de usuarios nuevos respecto a antiguos mensualmente, modificarlo solo para
+    //el mes anterior, retorno dos valores
+    @GetMapping(path = "/usuariosnuevos")
+    public ResponseEntity<?> cantidadUsuariosN(){
+        Date fechaActual = new Date();
+        int cantidad = 0;
+        List<Usuario> usuarios = user.listar();
+        for(Usuario u: usuarios){
+            if(u.getFecha().getMonth() ==  fechaActual.getMonth() &&
+                    u.getFecha().getYear() == fechaActual.getYear()){
+                cantidad++;
+            }
+        }
+        return ResponseEntity.ok(cantidad);
     }
+
+
+
+}
