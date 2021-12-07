@@ -51,8 +51,6 @@ public class SolicitudTourRest {
     @Autowired
     NotificacionService notificacionService;
 
-
-
     @Value("${spring.mail.username}")
     String emailUsuarioEmisor;
 
