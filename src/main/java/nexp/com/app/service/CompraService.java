@@ -27,5 +27,6 @@ public interface CompraService {
     public Integer comprasAprobadasFecha(Date fecha1, Date fecha2);
     public Integer devolucionesFecha(Date fecha1, Date fecha2);
     public Integer comprasDePaquete(Date fecha1, Date fecha2, int idPaq);
+    public Integer devDePaquete(Date fecha1, Date fecha2, int idPaq);
 
 }

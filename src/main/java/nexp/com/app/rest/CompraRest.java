@@ -312,10 +312,20 @@ public class CompraRest {
                     new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
                     new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
                     p.getIdPaq());
+
+            Integer totalD = compraservice.devDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+
             if(totalC!=null){
                 Object x[] = new Object[2];
                 x[0] = p.getNombre();
-                x[1] = totalC;
+                if(totalD!=null)
+                    x[1] = totalC-totalD;
+                else{
+                    x[1] = totalC;
+                }
                 total.add(x);
             }
         }
