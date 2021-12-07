@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
 
     @Query ("SELECT c FROM Compra c WHERE c.usuario.id_Usuario=:id and c.estado='PAGADO'")
     List<Compra> comprasAprobadas(@Param("id") Integer id);
+
+    @Query ("SELECT sum(c.totalCompra) FROM Compra c WHERE c.estado='PAGADO' and c.fecha between :fecha and :fecha2")
+    int comprasAprobadasFecha(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2);
 
 //    @Query("SELECT COUNT (c.idCompra) FROM Compra c WHERE c.estado ='PAGADO' and c.fecha >= '2021/01/01' and c.fecha <= '2021/12/31'")
 //    Array[] paquetesVendidosM();

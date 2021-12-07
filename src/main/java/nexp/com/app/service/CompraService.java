@@ -8,6 +8,7 @@ package nexp.com.app.service;
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,5 +24,6 @@ public interface CompraService {
     public Paquete paqueteDeReserva(Integer id);
     public void eliminar(Long id);
     public List<Compra> comprasPagadas(int id);
+    public int comprasAprobadasFecha(Date fecha1, Date fecha2);
 
 }
