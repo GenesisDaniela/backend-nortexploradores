@@ -39,7 +39,7 @@ public class DevolucionRest {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Compra compra = d.compra();
+        Compra compra = d.getCompra();
         if(compra ==  null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","la compra no existe"), HttpStatus.NOT_FOUND);
         }
@@ -58,10 +58,11 @@ public class DevolucionRest {
         if(br.hasErrors()){
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Devolucion dto = dser.encontrar(d.getIdDevolucion()).orElse(null);
-        if(dto == null){
+        Devolucion dev = dser.encontrar(d.getIdDevolucion()).orElse(null);
+        if(dev == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","la devolucion no existe"), HttpStatus.NOT_FOUND);
         }
+        dser.guardar(d);
         return ResponseEntity.ok(dser.encontrar(d.getIdDevolucion()));
     }
 

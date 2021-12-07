@@ -5,11 +5,8 @@
  */
 package nexp.com.app.service.imp;
 
-import nexp.com.app.dao.DescuentoDAO;
 import nexp.com.app.dao.DevolucionDAO;
-import nexp.com.app.model.Descuento;
 import nexp.com.app.model.Devolucion;
-import nexp.com.app.service.DescuentoService;
 import nexp.com.app.service.DevolucionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +24,7 @@ public class DevolucionServiceImp implements DevolucionService {
 
     @Autowired
     DevolucionDAO dDAO;
-    
-    
+
     @Override
     @Transactional
     public void guardar(Devolucion devolucion) {

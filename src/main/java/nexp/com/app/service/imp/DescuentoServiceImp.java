@@ -24,8 +24,7 @@ public class DescuentoServiceImp implements DescuentoService {
 
     @Autowired
     DescuentoDAO dDAO;
-    
-    
+
     @Override
     @Transactional
     public void guardar(Descuento descuento) {
