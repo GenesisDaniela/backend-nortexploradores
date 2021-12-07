@@ -7,6 +7,7 @@ package nexp.com.app.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.Descuento;
+import nexp.com.app.model.Devolucion;
 import nexp.com.app.service.DescuentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,15 @@ public class DescuentoRest {
     @GetMapping
     public ResponseEntity<List<Descuento>> getDescuento() {
         return ResponseEntity.ok(dser.listar());
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> encontrarDescuento(@PathVariable int id) {
+        Descuento d = dser.encontrar(id).orElse(null);
+        if (d == null) {
+            return new ResponseEntity<ObjectError>(new ObjectError("id","No existe el descuento"), HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(d);
     }
 
     @PutMapping
