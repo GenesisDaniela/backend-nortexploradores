@@ -262,7 +262,7 @@ public class CompraRest {
 
     @GetMapping(path = "/totalMeses")
     public ResponseEntity<?> totalMes() throws ParseException {
-        int totalMeses[] = new int[12];
+        int[] totalMeses = new int[12];
 
         for (int i = 0; i < totalMeses.length; i++) {
             String fecha1="2021-"+(i+1)+"-01";
