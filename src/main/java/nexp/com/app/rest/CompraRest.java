@@ -261,7 +261,7 @@ public class CompraRest {
     }
 
     @GetMapping(path = "/totalMeses")
-    public ResponseEntity<?> totalMeses() throws ParseException {
+    public ResponseEntity<?> totalMes() throws ParseException {
         int totalMeses[] = new int[12];
 
         for (int i = 0; i < totalMeses.length; i++) {
