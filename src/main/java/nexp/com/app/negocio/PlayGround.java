@@ -16,39 +16,39 @@ public class PlayGround {
     public static TransporteService pser;
     public static void main(String[] args) {
 //        NorteXploradores norteXploradores =new NorteXploradores();
-
+        System.out.println();
 //        List<Transporte> prueba = (List)pser.listar();
 //        Transporte prueba = pser.encontrar("VCA123").orElse(null);
-            String emailUsuarioEmisor="santiagopico2001@gmail.com";
-            String clave="u1232584846a.";
-            //Cambia el valor de la variable emailReceptor por el email que desee enviarle mensajes
-            Scanner teclado=new Scanner(System.in);
-            System.out.println("Digite una dirección de email:");
-            String emailReceptor=teclado.nextLine();
-            EmailService email=new EmailService(emailUsuarioEmisor, clave);
-            email.enviarEmail(emailReceptor, "Esto es un ejemplo", "Mi cuerpo del mensaje");
-            System.out.println("Se ha enviado email: "+emailReceptor);
-        String cuerpo = " <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" style=\"width: 100px;height: auto;display: inline;\" alt=\"\" srcset=\"\">\n" +
-                "    <h1 style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">" +
-                "Bienvenido </h1>\n" +
-                "    <p style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">\n" +
-                "        te has registrado en el aplicativo web de NorteXploradores, estos son tus datos de inicio de sesion:\n" +
-                "    </p>" +
-                "<ul>" +
-                "                \"<li>Usuario:\"+usuario.getEmail()+\"</li>\" +\n" +
-                "                \"</ul>\" );";
-        System.out.println(cuerpo);
-
-//        System.out.println(prueba.toString());
-        Date fechaSalida = new Date();
-        fechaSalida.setDate(4);
-        Date fechaReserva = new Date();
-
-        int milisegundospordia= 86400000;
-        System.out.println(fechaSalida);
-        System.out.println(fechaReserva);
-        int dias = (int) ((fechaReserva.getTime()-fechaSalida.getTime()) / milisegundospordia);
-        System.out.println(dias);
+//            String emailUsuarioEmisor="santiagopico2001@gmail.com";
+//            String clave="u1232584846a.";
+//            //Cambia el valor de la variable emailReceptor por el email que desee enviarle mensajes
+//            Scanner teclado=new Scanner(System.in);
+//            System.out.println("Digite una dirección de email:");
+//            String emailReceptor=teclado.nextLine();
+//            EmailService email=new EmailService(emailUsuarioEmisor, clave);
+//            email.enviarEmail(emailReceptor, "Esto es un ejemplo", "Mi cuerpo del mensaje");
+//            System.out.println("Se ha enviado email: "+emailReceptor);
+//        String cuerpo = " <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" style=\"width: 100px;height: auto;display: inline;\" alt=\"\" srcset=\"\">\n" +
+//                "    <h1 style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">" +
+//                "Bienvenido </h1>\n" +
+//                "    <p style=\"font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\">\n" +
+//                "        te has registrado en el aplicativo web de NorteXploradores, estos son tus datos de inicio de sesion:\n" +
+//                "    </p>" +
+//                "<ul>" +
+//                "                \"<li>Usuario:\"+usuario.getEmail()+\"</li>\" +\n" +
+//                "                \"</ul>\" );";
+//        System.out.println(cuerpo);
+//
+////        System.out.println(prueba.toString());
+//        Date fechaSalida = new Date();
+//        fechaSalida.setDate(4);
+//        Date fechaReserva = new Date();
+//
+//        int milisegundospordia= 86400000;
+//        System.out.println(fechaSalida);
+//        System.out.println(fechaReserva);
+//        int dias = (int) ((fechaReserva.getTime()-fechaSalida.getTime()) / milisegundospordia);
+//        System.out.println(dias);
 //        System.out.println(norteXploradores.convertirFecha("2021-09-13 23:56:49","-"));
 //
 //        Date fechaSalida = norteXploradores.convertirFecha("2021-09-15 23:56:49","-");

@@ -68,8 +68,19 @@ public class CompraServiceImp implements CompraService {
 
         return cDAO.comprasAprobadasFecha(fecha1,fecha2);
     }
-//    @Override
-//    public Array[] paquetesVendidosM(Date fecha1, Date fecha2){
-//        return null;
-//    }
+
+    @Override
+    public Integer devolucionesFecha(Date fecha1, Date fecha2) {
+        return cDAO.devolucionesFecha(fecha1,fecha2);
+    }
+
+    @Override
+    public Integer comprasDePaquete(Date fecha1, Date fecha2, int idPaq) {
+        return cDAO.comprasPorPaquete(fecha1,fecha2,idPaq);
+    }
+
+    @Override
+    public Integer devDePaquete(Date fecha1, Date fecha2, int idPaq) {
+        return cDAO.devPorPaquete(fecha1,fecha2,idPaq);
+    }
 }
