@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import nexp.com.app.dao.CompraDAO;
 import nexp.com.app.service.CompraService;
+import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,6 @@ public class CompraServiceImp implements CompraService {
        return cDAO.reservaPaquete(id);
     }
 
-
     @Override
     @Transactional
     public void eliminar(Long id){ cDAO.deleteById(id); }
@@ -68,4 +68,8 @@ public class CompraServiceImp implements CompraService {
 
         return cDAO.comprasAprobadasFecha(fecha1,fecha2);
     }
+//    @Override
+//    public Array[] paquetesVendidosM(Date fecha1, Date fecha2){
+//        return null;
+//    }
 }

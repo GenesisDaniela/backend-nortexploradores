@@ -7,6 +7,7 @@ package nexp.com.app.service;
 
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
+import org.hibernate.mapping.Array;
 
 import java.util.Date;
 import java.util.List;
@@ -25,5 +26,5 @@ public interface CompraService {
     public void eliminar(Long id);
     public List<Compra> comprasPagadas(int id);
     public Integer comprasAprobadasFecha(Date fecha1, Date fecha2);
-
+//    public Array[] paquetesVendidosM(Date fecha1, Date fecha2);
 }

@@ -281,8 +281,17 @@ public class CompraRest {
             totalMeses[i] = totalC;
         }
         return ResponseEntity.ok(totalMeses);
-
     }
-
-
+    @GetMapping(path = "/cantidadpaq")
+    public ResponseEntity<?> cantidadPaquetes() {
+        List<Compra> compras = compraservice.listar();
+        int cantidadPaq [] = new int[12];
+        Date fechaActual = new Date();
+        for(Compra c: compras){
+            if(c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()){
+                cantidadPaq[c.getFecha().getMonth()] += c.getCantidadPasajeros();
+            }
+        }
+        return ResponseEntity.ok(cantidadPaq);
     }
+}
