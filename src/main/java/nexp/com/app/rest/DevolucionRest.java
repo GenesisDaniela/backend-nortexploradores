@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Descuento;
 import nexp.com.app.model.Devolucion;
+import nexp.com.app.model.Empresa;
 import nexp.com.app.service.DescuentoService;
 import nexp.com.app.service.DevolucionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,15 @@ public class DevolucionRest {
     public ResponseEntity<Devolucion> eliminarDevolucion(@PathVariable int id) {
         Devolucion d = dser.encontrar(id).orElse(null);
         dser.eliminar(id);
+        return ResponseEntity.ok(d);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> encontrarDevolucion(@PathVariable int id) {
+        Devolucion d = dser.encontrar(id).orElse(null);
+        if (d == null) {
+            return new ResponseEntity<ObjectError>(new ObjectError("id","No existe la devolucion"), HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(d);
     }
 
