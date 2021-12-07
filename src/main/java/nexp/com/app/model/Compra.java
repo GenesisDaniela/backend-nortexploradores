@@ -8,18 +8,7 @@ package nexp.com.app.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -70,6 +59,11 @@ public class Compra implements Serializable {
     @JoinColumn(name = "reserva", referencedColumnName = "id_reserva")
     @ManyToOne
     private Reserva reserva;
+    @JoinColumn(name = "descuento", referencedColumnName = "id_descuento")
+    @ManyToOne
+    private Descuento descuento;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra")
+    private Collection<Devolucion> devolucionCollection;
 
     public Compra() {
     }
