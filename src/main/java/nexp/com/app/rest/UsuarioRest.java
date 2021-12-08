@@ -289,7 +289,12 @@ public class UsuarioRest {
         }
         return ResponseEntity.ok(resultadoMensual);
     }
-
+    //TODO: Terminar este metodo, recordar que es necesario para el frontend en descuentos
+    @GetMapping(path = "/{username}/cantidadViajes/")
+    public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username){
+        Usuario u = user.getByNombreUsuario(username).get();
+        return ResponseEntity.ok(u);
+    }
 
 
 }
