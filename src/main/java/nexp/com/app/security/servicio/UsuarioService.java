@@ -31,6 +31,8 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(nombreUsuario);
     }
 
+
+
     public Optional<Usuario> getByEmail(String email){
         return usuarioRepository.findByEmail(email);
     }

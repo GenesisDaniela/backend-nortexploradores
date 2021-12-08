@@ -12,6 +12,8 @@ import nexp.com.app.security.servicio.UsuarioService;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -29,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  *
- * @author Santi & Dani
+ * @author Santi & GenesisDanielaVJ
  */
 @RestController
 @RequestMapping("/usuario")
@@ -195,13 +197,6 @@ public class UsuarioRest {
         return ResponseEntity.ok(personas);
     }
 
-//    @GetMapping(path = "/{idPasajero}/deshabilitar")
-//    public ResponseEntity<?> deshabilitarCliente(@PathVariable int id) {
-//        ClientePasajero clientePasajero = new ClientePasajero();
-//
-//    }
-
-
         @GetMapping(path = "/{id}")
     public ResponseEntity<?> encontrarUsuario(@PathVariable int id) {
         Usuario u = user.encontrar(id).orElse(null);
@@ -292,9 +287,28 @@ public class UsuarioRest {
     }
     //TODO: Terminar este metodo, recordar que es necesario para el frontend en descuentos
     @GetMapping(path = "/{username}/cantidadViajes/")
-    public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username){
+    public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username) throws ParseException {
         Usuario u = user.getByNombreUsuario(username).get();
-        return ResponseEntity.ok(u);
+        int mes = new Date().getMonth();
+        int anio = new Date().getYear()+1900;
+        int dia = 31;
+
+        if(mes==1)
+            dia=29;
+        if(mes==3 || mes==5 || mes==10 || mes==8)
+            dia=30;
+
+        String fecha1=""+anio+"-"+(mes+1)+"-01";
+        String fecha2=""+anio+"-"+(mes+1)+"-"+dia+"";
+
+        Integer total = compraService.comprasDeUsuarioFecha(
+                new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                u.getId_Usuario()
+        );
+        if(total==null)
+            total=0;
+        return ResponseEntity.ok(total);
     }
 
 
