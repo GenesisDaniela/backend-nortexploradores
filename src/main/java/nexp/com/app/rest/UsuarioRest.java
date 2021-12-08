@@ -285,12 +285,12 @@ public class UsuarioRest {
         }
         return ResponseEntity.ok(resultadoMensual);
     }
-    //TODO: Terminar este metodo, recordar que es necesario para el frontend en descuentos
+    //TODO Terminar este metodo, recordar que es necesario para el frontend en descuentos
     @GetMapping(path = "/{username}/cantidadViajes/")
     public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username) throws ParseException {
         Usuario u = user.getByNombreUsuario(username).get();
-        int mes = new Date().getMonth();
-        int anio = new Date().getYear()+1900;
+        int mes = LocalDate.now().getMonth().getValue();
+        int anio = LocalDate.now().getYear();
         int dia = 31;
 
         if(mes==1)
