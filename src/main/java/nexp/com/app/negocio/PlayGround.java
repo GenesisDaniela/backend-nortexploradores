@@ -16,7 +16,23 @@ public class PlayGround {
     public static TransporteService pser;
     public static void main(String[] args) {
 //        NorteXploradores norteXploradores =new NorteXploradores();
-        System.out.println();
+        System.out.println(new Date().getMonth());
+
+        int mes = new Date().getMonth();
+        int anio = new Date().getYear()+1900;
+        int dia = 31;
+
+        if(mes==1)
+            dia=29;
+        if(mes==3 || mes==5 || mes==10 || mes==8)
+            dia=30;
+
+        String fecha1=""+anio+"-"+(mes+1)+"-01";
+        String fecha2=""+anio+"-"+(mes+1)+"-"+dia+"";
+
+        System.out.println(fecha1);
+        System.out.println(fecha2);
+
 //        List<Transporte> prueba = (List)pser.listar();
 //        Transporte prueba = pser.encontrar("VCA123").orElse(null);
 //            String emailUsuarioEmisor="santiagopico2001@gmail.com";

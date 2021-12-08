@@ -37,4 +37,7 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
 
     @Query ("SELECT sum(d.cantidad) FROM Devolucion d WHERE d.compra.estado='PAGADO' and d.compra.tour.paquete.idPaq=:idPaq and d.compra.fecha between :fecha and :fecha2")
     Integer devPorPaquete(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2, @Param("idPaq") int idPaq);
+
+    @Query ("SELECT count(c) FROM Compra c WHERE c.estado='PAGADO' and c.usuario.id_Usuario=:idUsuario and c.fecha between :fecha and :fecha2")
+    Integer comprasAprobadasFechaUsuario(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2, @Param("idUsuario") int idUsuario);
 }

@@ -83,4 +83,9 @@ public class CompraServiceImp implements CompraService {
     public Integer devDePaquete(Date fecha1, Date fecha2, int idPaq) {
         return cDAO.devPorPaquete(fecha1,fecha2,idPaq);
     }
+
+    @Override
+    public Integer comprasDeUsuarioFecha(Date fecha1, Date fecha2, int idUsuario) {
+        return cDAO.comprasAprobadasFechaUsuario(fecha1,fecha2,idUsuario);
+    }
 }
