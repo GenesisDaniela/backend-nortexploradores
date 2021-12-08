@@ -238,21 +238,21 @@ public class UsuarioRest {
         return ResponseEntity.ok(tourComprados);
     }
 
-    //cantidad de usuarios nuevos respecto a antiguos mensualmente, modificarlo solo para
-    //el mes anterior, retorno dos valores
-    @GetMapping(path = "/usuariosnuevos")
-    public ResponseEntity<?> cantidadUsuariosN(){
-        LocalDate fechaActual = LocalDate.now();
-        int cantidad = 0;
-        List<Usuario> usuarios = user.listar();
-        for(Usuario u: usuarios){
-            if(u.getFecha().getMonth().getValue() ==  fechaActual.getMonth().getValue() &&
-                    u.getFecha().getYear() == fechaActual.getYear()){
-                cantidad++;
-            }
-        }
-        return ResponseEntity.ok(cantidad);
-    }
+//    //cantidad de usuarios nuevos respecto a antiguos mensualmente, modificarlo solo para
+//    //el mes anterior, retorno dos valores
+//    @GetMapping(path = "/usuariosnuevos")
+//    public ResponseEntity<?> cantidadUsuariosN(){
+//        LocalDate fechaActual = LocalDate.now();
+//        int cantidad = 0;
+//        List<Usuario> usuarios = user.listar();
+//        for(Usuario u: usuarios){
+//            if(u.getFecha().getMonth().getValue() ==  fechaActual.getMonth().getValue() &&
+//                    u.getFecha().getYear() == fechaActual.getYear()){
+//                cantidad++;
+//            }
+//        }
+//        return ResponseEntity.ok(cantidad);
+//    }
 
     @GetMapping(path = "/usuariosMensuales")
     public ResponseEntity<?> cantidadUsuariosM(){

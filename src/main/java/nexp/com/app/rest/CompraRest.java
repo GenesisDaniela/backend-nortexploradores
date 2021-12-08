@@ -15,6 +15,7 @@ import nexp.com.app.service.*;
 import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -133,9 +134,6 @@ public class CompraRest {
 
     @GetMapping(path = "/{id}/cancelarReserva")
     public ResponseEntity<?> cancelarReserva(@PathVariable int id) {
-
-
-
         Reserva reserva = reservaService.encontrar(id).get();
         if(reserva == null){
             return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
@@ -249,22 +247,22 @@ public class CompraRest {
         return ResponseEntity.ok(reserva);
     }
 
-    //cantidad de tours vendidos(compras de cualquier tour?)
-    // en el mes exceptuando los que devolucion != null
-    @GetMapping(path = "/cantidadToursVendidos")
-    public ResponseEntity<?> cantidadTours(){
-        int cantidadTours = 0;
-        List<Compra> compras = compraservice.listar();
-        Date fechaActual = new Date();
-        for (Compra c: compras){
-            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
-                    c.getFecha().getMonth() == fechaActual.getMonth() &&
-                    c.getFecha().getYear() == fechaActual.getYear()){
-                cantidadTours++;
-            }
-        }
-        return ResponseEntity.ok(cantidadTours);
-    }
+//    //cantidad de tours vendidos(compras de cualquier tour?)
+//    // en el mes exceptuando los que devolucion != null
+//    @GetMapping(path = "/cantidadToursVendidos")
+//    public ResponseEntity<?> cantidadTours(){
+//        int cantidadTours = 0;
+//        List<Compra> compras = compraservice.listar();
+//        LocalDate fechaActual = LocalDate.now();
+//        for (Compra c: compras){
+//            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
+//                    c.getFecha().getMonth() == fechaActual.getMonth().getValue() &&
+//                    c.getFecha().getYear() == fechaActual.getYear()){
+//                cantidadTours++;
+//            }
+//        }
+//        return ResponseEntity.ok(cantidadTours);
+//    }
 
     @GetMapping(path = "/totalMeses")
     public ResponseEntity<?> totalMes() throws ParseException {
@@ -302,7 +300,7 @@ public class CompraRest {
     public ResponseEntity<?> cantidadPaquetes() {
         List<Compra> compras = compraservice.listar();
         int cantidadPaq[] = new int[12];
-        Date fechaActual = new Date();
+        LocalDate fechaActual =LocalDate.now();
         for (Compra c : compras) {
             if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
                 cantidadPaq[c.getFecha().getMonth()] += c.getCantidadPasajeros();
@@ -341,7 +339,6 @@ public class CompraRest {
                 total.add(x);
             }
         }
-
         return ResponseEntity.ok(total);
     }
 
