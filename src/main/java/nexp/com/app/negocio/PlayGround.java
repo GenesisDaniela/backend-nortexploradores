@@ -20,7 +20,8 @@ public class PlayGround {
 //        NorteXploradores norteXploradores =new NorteXploradores();
         System.out.println(new Date().getMonth());
         ;
-        System.out.println(LocalDate.parse("2021-1-01")+"-------------");
+        System.out.println(LocalDate.now().getMonth().getValue());
+//        System.out.println(LocalDate.parse("2021-1-01")+"-------------");
         System.out.println(Calendar.getInstance().get(Calendar.YEAR));
         int mes = new Date().getMonth();
         int anio = new Date().getYear()+1900;

@@ -299,12 +299,14 @@ public class UsuarioRest {
         if(mes==3 || mes==5 || mes==10 || mes==8)
             dia=30;
 
-        String fecha1=""+anio+"-"+(mes+1)+"-01";
-        String fecha2=""+anio+"-"+(mes+1)+"-"+dia+"";
+        String fecha1=""+anio+"-"+(mes)+"-01";
+        String fecha2=""+anio+"-"+(mes)+"-"+dia+"";
+
+
 
         Integer total = compraService.comprasDeUsuarioFecha(
-                LocalDate.parse(fecha1, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                LocalDate.parse(fecha1),
+                LocalDate.parse(fecha2),
                 u.getId_Usuario()
         );
         if(total==null)
