@@ -37,7 +37,7 @@ public class TareasSpring {
     public void revisarTiempoReserva() {
         log.info("Ejecutanto labores de tiempos de reserva...");
         for (Compra c : compraService.listar()) {
-            LocalDate fechaReserva = c.getFecha().toLocalDate();
+            LocalDate fechaReserva = c.getFecha();
             Date fechaSalida = c.getTour().getFechaSalida();
             Date fechaHoy = new Date();
 

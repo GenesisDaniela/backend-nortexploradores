@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.lang.reflect.Array;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -27,17 +28,17 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
     List<Compra> comprasAprobadas(@Param("id") Integer id);
 
     @Query ("SELECT sum(c.totalCompra) FROM Compra c WHERE c.estado='PAGADO' and c.fecha between :fecha and :fecha2")
-    Integer comprasAprobadasFecha(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2);
+    Integer comprasAprobadasFecha(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
 
     @Query ("SELECT sum(d.cantidad) FROM Devolucion d WHERE d.compra.estado='PAGADO' and d.compra.fecha between :fecha and :fecha2")
-    Integer devolucionesFecha(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2);
+    Integer devolucionesFecha(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
 
     @Query ("SELECT sum(c.totalCompra) FROM Compra c WHERE c.estado='PAGADO' and c.tour.paquete.idPaq=:idPaq and c.fecha between :fecha and :fecha2")
-    Integer comprasPorPaquete(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2, @Param("idPaq") int idPaq);
+    Integer comprasPorPaquete(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2, @Param("idPaq") int idPaq);
 
     @Query ("SELECT sum(d.cantidad) FROM Devolucion d WHERE d.compra.estado='PAGADO' and d.compra.tour.paquete.idPaq=:idPaq and d.compra.fecha between :fecha and :fecha2")
-    Integer devPorPaquete(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2, @Param("idPaq") int idPaq);
+    Integer devPorPaquete(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2, @Param("idPaq") int idPaq);
 
     @Query ("SELECT count(c) FROM Compra c WHERE c.estado='PAGADO' and c.usuario.id_Usuario=:idUsuario and c.fecha between :fecha and :fecha2")
-    Integer comprasAprobadasFechaUsuario(@Param("fecha") Date fecha, @Param("fecha2") Date fecha2, @Param("idUsuario") int idUsuario);
+    Integer comprasAprobadasFechaUsuario(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2, @Param("idUsuario") int idUsuario);
 }

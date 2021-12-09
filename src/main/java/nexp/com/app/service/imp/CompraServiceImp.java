@@ -8,6 +8,7 @@ package nexp.com.app.service.imp;
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -64,28 +65,28 @@ public class CompraServiceImp implements CompraService {
     }
 
     @Override
-    public Integer comprasAprobadasFecha(Date fecha1, Date fecha2) {
+    public Integer comprasAprobadasFecha(LocalDate fecha1, LocalDate fecha2) {
 
         return cDAO.comprasAprobadasFecha(fecha1,fecha2);
     }
 
     @Override
-    public Integer devolucionesFecha(Date fecha1, Date fecha2) {
+    public Integer devolucionesFecha(LocalDate fecha1, LocalDate fecha2) {
         return cDAO.devolucionesFecha(fecha1,fecha2);
     }
 
     @Override
-    public Integer comprasDePaquete(Date fecha1, Date fecha2, int idPaq) {
+    public Integer comprasDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq) {
         return cDAO.comprasPorPaquete(fecha1,fecha2,idPaq);
     }
 
     @Override
-    public Integer devDePaquete(Date fecha1, Date fecha2, int idPaq) {
+    public Integer devDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq) {
         return cDAO.devPorPaquete(fecha1,fecha2,idPaq);
     }
 
     @Override
-    public Integer comprasDeUsuarioFecha(Date fecha1, Date fecha2, int idUsuario) {
+    public Integer comprasDeUsuarioFecha(LocalDate fecha1, LocalDate fecha2, int idUsuario) {
         return cDAO.comprasAprobadasFechaUsuario(fecha1,fecha2,idUsuario);
     }
 }

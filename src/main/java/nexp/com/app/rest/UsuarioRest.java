@@ -14,6 +14,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -302,8 +303,8 @@ public class UsuarioRest {
         String fecha2=""+anio+"-"+(mes+1)+"-"+dia+"";
 
         Integer total = compraService.comprasDeUsuarioFecha(
-                new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                LocalDate.parse(fecha1, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 u.getId_Usuario()
         );
         if(total==null)

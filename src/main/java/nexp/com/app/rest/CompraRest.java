@@ -16,7 +16,7 @@ import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -121,7 +121,7 @@ public class CompraRest {
         reserva.setFecha(LocalDate.now());
         reserva.setEstado("PENDIENTE");
         reservaService.guardar(reserva);
-        compra.setFecha(LocalDateTime.now());
+        compra.setFecha(LocalDate.now());
         compra.setReserva(reserva);
         compra.setEstado("PENDIENTE");
         compraservice.guardar(compra);
@@ -264,27 +264,30 @@ public class CompraRest {
 //        }
 //        return ResponseEntity.ok(cantidadTours);
 //    }
-
+    //pend revisar el bisiesto
     @GetMapping(path = "/totalMeses")
     public ResponseEntity<?> totalMes() throws ParseException {
         int[] totalMeses = new int[12];
 
         for (int i = 0; i < totalMeses.length; i++) {
-            String fecha1="2021-"+(i+1)+"-01";
-            String fecha2="2021-"+(i+1)+"-31";
+            String mes = "" + (i+1);
+            if(i < 9)
+                mes = "0" + (i+1);
+            String fecha1="2021-"+(mes)+"-01";
+            String fecha2="2021-"+(mes)+"-31";
 
             if(i==1)
-                fecha2="2021-"+(i+1)+"-29";
+                fecha2="2021-"+(mes)+"-28";
             if(i==3 || i==5 || i==10 || i==8)
-                fecha2="2021-"+(i+1)+"-30";
+                fecha2="2021-"+(mes)+"-30";
 
             Integer totalC = compraservice.comprasAprobadasFecha(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2));
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2));
 
             Integer totalD = compraservice.devolucionesFecha(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2));
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2));
 
             if(totalC ==null)
                 totalC=0;
@@ -304,10 +307,7 @@ public class CompraRest {
         LocalDate fechaActual = LocalDate.now();
         for (Compra c : compras) {
             if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
-                cantidadPaq[(c.getFecha().toLocalDate().getMonth().getValue())-1] += c.getCantidadPasajeros();
-            }
-            if((c.getFecha().toLocalDate().getMonth().getValue())-1 == 10){
-                log.info(c.getFecha().toLocalDate()+ " " + c.getIdCompra() + "******");
+                cantidadPaq[(c.getFecha().getMonth().getValue())-1] += c.getCantidadPasajeros();
             }
         }
         return ResponseEntity.ok(cantidadPaq);
@@ -317,19 +317,20 @@ public class CompraRest {
     public ResponseEntity<?> totalPaquetes() throws ParseException {
         String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-01-01";
         String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-12-31";
+        log.info(fecha1 + "*******" + fecha2);
         List<Paquete> paquetes=paqueteService.listar();
 
         List total = new ArrayList();
 
         for(Paquete p:paquetes){
             Integer totalC = compraservice.comprasDePaquete(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     p.getIdPaq());
 
             Integer totalD = compraservice.devDePaquete(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     p.getIdPaq());
 
             if(totalC!=null){
@@ -364,13 +365,13 @@ public class CompraRest {
 
         for(Paquete p:paquetes){
             Integer totalC = compraservice.comprasDePaquete(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     p.getIdPaq());
 
             Integer totalD = compraservice.devDePaquete(
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     p.getIdPaq());
 
             if(totalC!=null){
