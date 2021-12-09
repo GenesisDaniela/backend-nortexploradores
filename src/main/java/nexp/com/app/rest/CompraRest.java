@@ -107,14 +107,14 @@ public class CompraRest {
             return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
         }
         Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
-        for(Compra c: usuario.compraCollection()){
-            if(c.getTour().getIdTour() == idtour){
-                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
-                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
-                }
-
-            }
-        }
+//        for(Compra c: usuario.compraCollection()){
+//            if(c.getTour().getIdTour() == idtour){
+//                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+//                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+//                }
+//
+//            }
+//        }
 
         Reserva reserva = new Reserva();
         reserva.setFecha(new Date());
@@ -330,11 +330,11 @@ public class CompraRest {
 
             if(totalC!=null){
                 Object x[] = new Object[2];
-                x[0] = p.getNombre();
+                x[0] = "paquete:"+p.getNombre();
                 if(totalD!=null)
-                    x[1] = totalC-totalD;
+                    x[1] ="total:"+(totalC-totalD);
                 else{
-                    x[1] = totalC;
+                    x[1] ="total:"+ totalC;
                 }
                 total.add(x);
             }
