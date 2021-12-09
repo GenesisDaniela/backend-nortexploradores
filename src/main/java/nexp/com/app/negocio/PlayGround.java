@@ -5,6 +5,8 @@ import nexp.com.app.model.Transporte;
 import nexp.com.app.service.TransporteService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +19,9 @@ public class PlayGround {
     public static void main(String[] args) {
 //        NorteXploradores norteXploradores =new NorteXploradores();
         System.out.println(new Date().getMonth());
-
+        ;
+        System.out.println(LocalDate.parse("2021-1-01")+"-------------");
+        System.out.println(Calendar.getInstance().get(Calendar.YEAR));
         int mes = new Date().getMonth();
         int anio = new Date().getYear()+1900;
         int dia = 31;
