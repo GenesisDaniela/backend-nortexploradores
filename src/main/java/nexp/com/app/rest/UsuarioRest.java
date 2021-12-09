@@ -7,6 +7,7 @@ package nexp.com.app.rest;
 
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.NorteXploradores;
+import nexp.com.app.negocio.response.PaqueteCantidad;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 
@@ -262,6 +263,7 @@ public class UsuarioRest {
         int resultadoMensual [][] = new int[2][2];
         resultadoMensual[0][0] = fechaActual.getMonth().getValue()-1;
         resultadoMensual[1][0] = fechaActual.getMonth().getValue();
+
         for(Usuario u: usuariosReg){
 //            valido que no sea enero para no tener problema con el anio, cuento usuarios nuevos
             if(fechaActual.getMonth().getValue() > 1 && fechaActual.getMonth().getValue() == u.getFecha().getMonth().getValue()
@@ -284,8 +286,62 @@ public class UsuarioRest {
                 resultadoMensual[0][1] += 1;
             }
         }
+
+
         return ResponseEntity.ok(resultadoMensual);
     }
+
+    @GetMapping(path = "/usuariosMensualesTabla")
+    public ResponseEntity<?> cantidadUsuariosMTabla(){
+        String[] meses = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "setiembre", "octubre", "noviembre", "diciembre"};
+
+        List<Usuario> usuariosReg = user.listar();
+        LocalDate fechaActual = LocalDate.now();
+        int resultadoMensual [][] = new int[2][2];
+        resultadoMensual[0][0] = fechaActual.getMonth().getValue()-1;
+        resultadoMensual[1][0] = fechaActual.getMonth().getValue();
+
+        for(Usuario u: usuariosReg){
+//            valido que no sea enero para no tener problema con el anio, cuento usuarios nuevos
+            if(fechaActual.getMonth().getValue() > 1 && fechaActual.getMonth().getValue() == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear() == u.getFecha().getYear()){
+                resultadoMensual[1][1] += 1;
+            }
+            //valido que sea enero y descuento uno en el anio para poder comparar, cuento usuarios nuevos
+            if(fechaActual.getMonth().getValue() == 1 && u.getFecha().getMonth().getValue() == 12
+                    && fechaActual.getYear()-1 == u.getFecha().getYear()){
+                resultadoMensual[1][1] += 1;
+            }
+            //valido que no sea enero y descuento uno en el anio para poder comparar, cuento usuarios antiguos (mes anterior)
+            if(fechaActual.getMonth().getValue()-1 != 12 && fechaActual.getMonth().getValue()-1 == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear() == u.getFecha().getYear()){
+                resultadoMensual[0][1] += 1;
+            }
+            //valido que sea enero y descuento uno en el anio para poder comparar, cuento usuarios antiguos (mes anterior)
+            if(fechaActual.getMonth().getValue()-1 == 12 && fechaActual.getMonth().getValue()-1 == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear()-1 == u.getFecha().getYear()){
+                resultadoMensual[0][1] += 1;
+            }
+        }
+
+        PaqueteCantidad pp1 = new PaqueteCantidad();
+        PaqueteCantidad pp2 = new PaqueteCantidad();
+
+        pp1.setCantidad(resultadoMensual[0][1]);
+        pp1.setMes(meses[resultadoMensual[0][0]-1]);
+
+
+        pp2.setCantidad(resultadoMensual[1][1]);
+        pp2.setMes(meses[resultadoMensual[1][0]-1]);
+
+
+        List<PaqueteCantidad> paqueteCantidads = new ArrayList<>();
+        paqueteCantidads.add(pp1);
+        paqueteCantidads.add(pp2);
+        return ResponseEntity.ok(paqueteCantidads);
+    }
+
+
     //TODO Terminar este metodo, recordar que es necesario para el frontend en descuentos
     @GetMapping(path = "/{username}/cantidadViajes/")
     public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username) throws ParseException {
