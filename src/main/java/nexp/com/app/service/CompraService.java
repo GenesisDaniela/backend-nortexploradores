@@ -9,6 +9,7 @@ import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
 import org.hibernate.mapping.Array;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +26,10 @@ public interface CompraService {
     public Paquete paqueteDeReserva(Integer id);
     public void eliminar(Long id);
     public List<Compra> comprasPagadas(int id);
-    public Integer comprasAprobadasFecha(Date fecha1, Date fecha2);
-    public Integer devolucionesFecha(Date fecha1, Date fecha2);
-    public Integer comprasDePaquete(Date fecha1, Date fecha2, int idPaq);
-    public Integer devDePaquete(Date fecha1, Date fecha2, int idPaq);
-    public Integer comprasDeUsuarioFecha(Date fecha1, Date fecha2, int idUsuario);
+    public Integer comprasAprobadasFecha(LocalDate fecha1, LocalDate fecha2);
+    public Integer devolucionesFecha(LocalDate fecha1, LocalDate fecha2);
+    public Integer comprasDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq);
+    public Integer devDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq);
+    public Integer comprasDeUsuarioFecha(LocalDate fecha1, LocalDate fecha2, int idUsuario);
 
 }

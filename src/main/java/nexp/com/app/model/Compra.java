@@ -46,7 +46,7 @@ public class Compra implements Serializable {
     @Column(name = "estado")
     private String estado;
     @Column(name = "fecha")
-    private LocalDateTime fecha;
+    private LocalDate fecha;
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     @ManyToOne
     private Usuario usuario;
@@ -121,11 +121,11 @@ public class Compra implements Serializable {
         this.estado = estado;
     }
 
-    public LocalDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
