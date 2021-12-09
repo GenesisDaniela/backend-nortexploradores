@@ -344,5 +344,47 @@ public class CompraRest {
 
         return ResponseEntity.ok(total);
     }
+
+    @GetMapping(path = "/{mes}/totalPaquetesMes")
+    public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
+        int dia = 31;
+
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-"+dia+"";
+
+        List<Paquete> paquetes=paqueteService.listar();
+
+        List total = new ArrayList();
+
+        for(Paquete p:paquetes){
+            Integer totalC = compraservice.comprasDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+
+            Integer totalD = compraservice.devDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+
+            if(totalC!=null){
+                Object x[] = new Object[2];
+                x[0] = p.getNombre();
+                if(totalD!=null)
+                    x[1] = totalC-totalD;
+                else{
+                    x[1] = totalC;
+                }
+                total.add(x);
+            }
+        }
+
+        return ResponseEntity.ok(total);
+    }
     
 }
