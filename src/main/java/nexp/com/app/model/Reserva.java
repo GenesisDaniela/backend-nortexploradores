@@ -5,6 +5,7 @@
  */
 package nexp.com.app.model;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -43,8 +44,7 @@ public class Reserva implements Serializable {
     @Column(name = "id_reserva")
     private Integer idReserva;
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-        private Date fecha;
+    private LocalDate fecha;
     @Column(name = "estado")
     private String estado;
     @OneToMany(mappedBy = "reserva")
@@ -65,11 +65,11 @@ public class Reserva implements Serializable {
         this.idReserva = idReserva;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

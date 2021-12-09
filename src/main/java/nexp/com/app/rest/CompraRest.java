@@ -16,6 +16,7 @@ import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -117,10 +118,10 @@ public class CompraRest {
         }
 
         Reserva reserva = new Reserva();
-        reserva.setFecha(new Date());
+        reserva.setFecha(LocalDate.now());
         reserva.setEstado("PENDIENTE");
         reservaService.guardar(reserva);
-        compra.setFecha(new Date());
+        compra.setFecha(LocalDateTime.now());
         compra.setReserva(reserva);
         compra.setEstado("PENDIENTE");
         compraservice.guardar(compra);
@@ -300,10 +301,13 @@ public class CompraRest {
     public ResponseEntity<?> cantidadPaquetes() {
         List<Compra> compras = compraservice.listar();
         int cantidadPaq[] = new int[12];
-        LocalDate fechaActual =LocalDate.now();
+        LocalDate fechaActual = LocalDate.now();
         for (Compra c : compras) {
             if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
-                cantidadPaq[c.getFecha().getMonth()] += c.getCantidadPasajeros();
+                cantidadPaq[(c.getFecha().toLocalDate().getMonth().getValue())-1] += c.getCantidadPasajeros();
+            }
+            if((c.getFecha().toLocalDate().getMonth().getValue())-1 == 10){
+                log.info(c.getFecha().toLocalDate()+ " " + c.getIdCompra() + "******");
             }
         }
         return ResponseEntity.ok(cantidadPaq);

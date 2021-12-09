@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Slf4j
@@ -36,7 +37,7 @@ public class TareasSpring {
     public void revisarTiempoReserva() {
         log.info("Ejecutanto labores de tiempos de reserva...");
         for (Compra c : compraService.listar()) {
-            Date fechaReserva = c.getFecha();
+            LocalDate fechaReserva = c.getFecha().toLocalDate();
             Date fechaSalida = c.getTour().getFechaSalida();
             Date fechaHoy = new Date();
 

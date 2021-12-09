@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -188,7 +189,7 @@ class AppApplicationTests {
 	void guardarCompra(){
 		Compra compraEsperada = new Compra();
 		compraEsperada.setReserva(reservaDAO.findById(1).get());
-		compraEsperada.setFecha(new Date());
+		compraEsperada.setFecha(LocalDateTime.now());
 		compraEsperada.setTotalCompra(50000);
 		compraEsperada.setIdCompra((long)2245667);
 		compraEsperada.setCantidadPasajeros(2);
@@ -205,7 +206,7 @@ class AppApplicationTests {
 	void validarDetallesCompra(){
 		Compra compraEsperada = new Compra();
 		compraEsperada.setReserva(reservaDAO.findById(1).get());
-		compraEsperada.setFecha(new Date());
+		compraEsperada.setFecha(LocalDateTime.now());
 		compraEsperada.setTotalCompra(170000);
 		compraEsperada.setIdCompra((long)9931854);
 		compraEsperada.setCantidadPasajeros(2);
