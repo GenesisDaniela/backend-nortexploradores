@@ -248,6 +248,8 @@ public class CompraRest {
         return ResponseEntity.ok(reserva);
     }
 
+    //cantidad de tours vendidos(compras de cualquier tour?)
+    // en el mes exceptuando los que devolucion != null
 //    //cantidad de tours vendidos(compras de cualquier tour?)
 //    // en el mes exceptuando los que devolucion != null
 //    @GetMapping(path = "/cantidadToursVendidos")
@@ -389,6 +391,6 @@ public class CompraRest {
 
         return ResponseEntity.ok(total);
     }
-    
+
 
 }
