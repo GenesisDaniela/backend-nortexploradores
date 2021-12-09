@@ -8,7 +8,7 @@ package nexp.com.app.model;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -33,8 +33,7 @@ public class Devolucion implements Serializable {
     @Column(name = "cantidad")
     private Integer cantidad;
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private LocalDate fecha;
     @JoinColumn(name = "compra", referencedColumnName = "id_compra")
     @ManyToOne
     private Compra compra;
@@ -44,6 +43,12 @@ public class Devolucion implements Serializable {
 
     public Devolucion(Integer idDevolucion) {
         this.idDevolucion = idDevolucion;
+    }
+
+    public Devolucion(Integer cantidad, LocalDate fecha, Compra compra) {
+        this.cantidad = cantidad;
+        this.fecha = fecha;
+        this.compra = compra;
     }
 
     public Integer getIdDevolucion() {
@@ -62,11 +67,11 @@ public class Devolucion implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {this.fecha = fecha;}
+    public void setFecha(LocalDate fecha) {this.fecha = fecha;}
 
     public Compra getCompra() {return compra;}
 

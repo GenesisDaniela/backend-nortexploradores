@@ -15,6 +15,7 @@ import nexp.com.app.service.*;
 import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -133,9 +134,6 @@ public class CompraRest {
 
     @GetMapping(path = "/{id}/cancelarReserva")
     public ResponseEntity<?> cancelarReserva(@PathVariable int id) {
-
-
-
         Reserva reserva = reservaService.encontrar(id).get();
         if(reserva == null){
             return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
@@ -302,7 +300,7 @@ public class CompraRest {
     public ResponseEntity<?> cantidadPaquetes() {
         List<Compra> compras = compraservice.listar();
         int cantidadPaq[] = new int[12];
-        Date fechaActual = new Date();
+        LocalDate fechaActual =LocalDate.now();
         for (Compra c : compras) {
             if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
                 cantidadPaq[c.getFecha().getMonth()] += c.getCantidadPasajeros();
@@ -341,7 +339,6 @@ public class CompraRest {
                 total.add(x);
             }
         }
-
         return ResponseEntity.ok(total);
     }
 
@@ -387,4 +384,5 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
     
+
 }

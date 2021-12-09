@@ -11,10 +11,10 @@ package nexp.com.app.security.model;
  */
 import nexp.com.app.model.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.Size;
@@ -37,7 +37,7 @@ public class Usuario {
     @Column(name = "estado")
     private Boolean estado;
     @Column(name = "fecha")
-    private Date fecha;
+    private LocalDate fecha;
     @NotNull
     private String password;
     @OneToMany(mappedBy = "usuario")
@@ -183,11 +183,11 @@ public class Usuario {
         this.solicitudTourCollection = solicitudTourCollection;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
