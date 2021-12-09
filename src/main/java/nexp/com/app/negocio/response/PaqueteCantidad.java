@@ -6,6 +6,8 @@ public class PaqueteCantidad {
         this.cantidad = cantidad;
         this.mes = mes;
     }
+    public PaqueteCantidad(){}
+
     public int getCantidad() {
         return cantidad;
     }

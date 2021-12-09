@@ -8,6 +8,8 @@ package nexp.com.app.rest;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.EmailService;
+import nexp.com.app.negocio.response.PaqueteCantidad;
+import nexp.com.app.negocio.response.PaqueteTotal;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
@@ -302,6 +304,47 @@ public class CompraRest {
         return ResponseEntity.ok(totalMeses);
     }
 
+    @GetMapping(path = "/totalMesTabla")
+    public ResponseEntity<?> totalMesTabla() throws ParseException {
+        List<PaqueteCantidad> totalMeses = new ArrayList<>();
+        String[] meses = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "setiembre", "octubre", "noviembre", "diciembre"};
+        for (int i = 0; i < 12; i++) {
+            String mes = "" + (i+1);
+            if(i < 9)
+                mes = "0" + (i+1);
+            String fecha1="2021-"+(mes)+"-01";
+            String fecha2="2021-"+(mes)+"-31";
+
+            if(i==1)
+                fecha2="2021-"+(mes)+"-28";
+            if(i==3 || i==5 || i==10 || i==8)
+                fecha2="2021-"+(mes)+"-30";
+
+            Integer totalC = compraservice.comprasAprobadasFecha(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2));
+
+            Integer totalD = compraservice.devolucionesFecha(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2));
+
+            PaqueteCantidad response = new PaqueteCantidad();
+            response.setMes(meses[i]);
+            if(totalC ==null){
+                totalC=0;
+                response.setCantidad(0);
+            }
+            else{
+                if(totalD!=null){
+                    totalC-=totalD;
+                    response.setCantidad(totalC);
+                }
+            }
+            totalMeses.add(response);
+        }
+        return ResponseEntity.ok(totalMeses);
+    }
+
     @GetMapping(path = "/cantidadpaq")
     public ResponseEntity<?> cantidadPaquetes() {
         List<Compra> compras = compraservice.listar();
@@ -313,6 +356,29 @@ public class CompraRest {
             }
         }
         return ResponseEntity.ok(cantidadPaq);
+    }
+
+    @GetMapping(path = "/cantidadPaquetesTabla")
+    public ResponseEntity<?> cantidadPaquetesTabla() {
+        List<Compra> compras = compraservice.listar();
+        List<PaqueteCantidad> cantCompras = new ArrayList<>();
+        String[] meses = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "setiembre", "octubre", "noviembre", "diciembre"};
+        int cantidadPaq[] = new int[12];
+        LocalDate fechaActual = LocalDate.now();
+        for (Compra c : compras) {
+            if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
+                cantidadPaq[(c.getFecha().getMonth().getValue())-1] += c.getCantidadPasajeros();
+            }
+        }
+
+        for (int i = 0; i < cantidadPaq.length; i++) {
+            PaqueteCantidad paqueteCantidad = new PaqueteCantidad();
+            paqueteCantidad.setMes(meses[i]);
+            paqueteCantidad.setCantidad(cantidadPaq[i]);
+            cantCompras.add(paqueteCantidad);
+        }
+
+        return ResponseEntity.ok(cantCompras);
     }
 
     @GetMapping(path = "/totalPaquetes")
@@ -337,17 +403,60 @@ public class CompraRest {
 
             if(totalC!=null){
                 Object x[] = new Object[2];
-                x[0] = "paquete:"+p.getNombre();
+                x[0] =p.getNombre();
                 if(totalD!=null)
-                    x[1] ="total:"+(totalC-totalD);
+                    x[1] =(totalC-totalD);
                 else{
-                    x[1] ="total:"+ totalC;
+                    x[1] =totalC;
                 }
                 total.add(x);
             }
         }
         return ResponseEntity.ok(total);
     }
+
+    @GetMapping(path = "/totalPaquetesTabla")
+    public ResponseEntity<?> totalPaquetesTabla() throws ParseException {
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-01-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-12-31";
+        log.info(fecha1 + "*******" + fecha2);
+        List<Paquete> paquetes=paqueteService.listar();
+
+        List total = new ArrayList();
+
+        for(Paquete p:paquetes){
+            Integer totalC = compraservice.comprasDePaquete(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
+                    p.getIdPaq());
+
+            Integer totalD = compraservice.devDePaquete(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
+                    p.getIdPaq());
+
+            PaqueteTotal paqueteTotal = new PaqueteTotal();
+
+            if(totalC!=null){
+                Object x[] = new Object[2];
+                x[0] =p.getNombre();
+                paqueteTotal.setNombre(p.getNombre());
+                if(totalD!=null){
+                    x[1] =(totalC-totalD);
+                    paqueteTotal.setTotal(totalC-totalD);
+                }
+
+                else{
+                    x[1] =totalC;
+                    paqueteTotal.setTotal(totalC);
+
+                }
+                total.add(paqueteTotal);
+            }
+        }
+        return ResponseEntity.ok(total);
+    }
+
 
     @GetMapping(path = "/{mes}/totalPaquetesMes")
     public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
@@ -392,5 +501,55 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
+    @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
+    public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
+        int dia = 31;
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+        String mesT = "" + mes;
+        if(mes < 10)
+            mesT = "0" + mes;
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+
+        List<Paquete> paquetes=paqueteService.listar();
+
+        List total = new ArrayList();
+
+        for(Paquete p:paquetes){
+            Integer totalC = compraservice.comprasDePaquete(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
+                    p.getIdPaq());
+
+            Integer totalD = compraservice.devDePaquete(
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
+                    p.getIdPaq());
+
+            PaqueteTotal paqueteTotal = new PaqueteTotal();
+
+            if(totalC!=null){
+                Object x[] = new Object[2];
+                x[0] = p.getNombre();
+                paqueteTotal.setNombre(p.getNombre());
+                if(totalD!=null){
+                    x[1] = totalC-totalD;
+                    paqueteTotal.setTotal(totalC-totalD);
+                }
+
+
+                else{
+                    x[1] = totalC;
+                    paqueteTotal.setTotal(totalC);
+                }
+                total.add(paqueteTotal);
+            }
+        }
+
+        return ResponseEntity.ok(total);
+    }
 
 }
