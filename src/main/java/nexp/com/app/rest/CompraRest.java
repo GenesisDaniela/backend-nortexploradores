@@ -324,13 +324,13 @@ public class CompraRest {
 
         for(Paquete p:paquetes){
             Integer totalC = compraservice.comprasDePaquete(
-                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
                     p.getIdPaq());
 
             Integer totalD = compraservice.devDePaquete(
-                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
                     p.getIdPaq());
 
             if(totalC!=null){
@@ -350,14 +350,15 @@ public class CompraRest {
     @GetMapping(path = "/{mes}/totalPaquetesMes")
     public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
         int dia = 31;
-
         if(mes==2)
             dia=29;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
-
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-"+dia+"";
+        String mesT = "" + mes;
+        if(mes < 10)
+            mesT = "0" + mes;
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
 
         List<Paquete> paquetes=paqueteService.listar();
 
@@ -365,13 +366,13 @@ public class CompraRest {
 
         for(Paquete p:paquetes){
             Integer totalC = compraservice.comprasDePaquete(
-                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
                     p.getIdPaq());
 
             Integer totalD = compraservice.devDePaquete(
-                    LocalDate.parse(fecha1,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    LocalDate.parse(fecha2,DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    LocalDate.parse(fecha1),
+                    LocalDate.parse(fecha2),
                     p.getIdPaq());
 
             if(totalC!=null){
