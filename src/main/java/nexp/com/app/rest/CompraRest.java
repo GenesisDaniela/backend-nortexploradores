@@ -248,22 +248,22 @@ public class CompraRest {
         return ResponseEntity.ok(reserva);
     }
 
-    //cantidad de tours vendidos(compras de cualquier tour?)
-    // en el mes exceptuando los que devolucion != null
-    @GetMapping(path = "/cantidadToursVendidos")
-    public ResponseEntity<?> cantidadTours(){
-        int cantidadTours = 0;
-        List<Compra> compras = compraservice.listar();
-        Date fechaActual = new Date();
-        for (Compra c: compras){
-            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
-                    c.getFecha().getMonth() == fechaActual.getMonth() &&
-                    c.getFecha().getYear() == fechaActual.getYear()){
-                cantidadTours++;
-            }
-        }
-        return ResponseEntity.ok(cantidadTours);
-    }
+//    //cantidad de tours vendidos(compras de cualquier tour?)
+//    // en el mes exceptuando los que devolucion != null
+//    @GetMapping(path = "/cantidadToursVendidos")
+//    public ResponseEntity<?> cantidadTours(){
+//        int cantidadTours = 0;
+//        List<Compra> compras = compraservice.listar();
+//        Date fechaActual = new Date();
+//        for (Compra c: compras){
+//            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
+//                    c.getFecha().getMonth() == fechaActual.getMonth() &&
+//                    c.getFecha().getYear() == fechaActual.getYear()){
+//                cantidadTours++;
+//            }
+//        }
+//        return ResponseEntity.ok(cantidadTours);
+//    }
 
     @GetMapping(path = "/totalMeses")
     public ResponseEntity<?> totalMes() throws ParseException {
