@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author GenesisDanielaVJ
+ * @author santi
  */
 @Entity
 @Table(name = "transaccionp")
@@ -33,8 +33,18 @@ import javax.xml.bind.annotation.XmlRootElement;
         @NamedQuery(name = "Transaccionp.findAll", query = "SELECT t FROM Transaccionp t"),
         @NamedQuery(name = "Transaccionp.findByTransactionId", query = "SELECT t FROM Transaccionp t WHERE t.transactionId = :transactionId"),
         @NamedQuery(name = "Transaccionp.findByDate", query = "SELECT t FROM Transaccionp t WHERE t.date = :date"),
+        @NamedQuery(name = "Transaccionp.findByPaymentMethodType", query = "SELECT t FROM Transaccionp t WHERE t.paymentMethodType = :paymentMethodType"),
+        @NamedQuery(name = "Transaccionp.findByTransactionDate", query = "SELECT t FROM Transaccionp t WHERE t.transactionDate = :transactionDate"),
+        @NamedQuery(name = "Transaccionp.findByTax", query = "SELECT t FROM Transaccionp t WHERE t.tax = :tax"),
+        @NamedQuery(name = "Transaccionp.findByShippingCountry", query = "SELECT t FROM Transaccionp t WHERE t.shippingCountry = :shippingCountry"),
+        @NamedQuery(name = "Transaccionp.findByDescription", query = "SELECT t FROM Transaccionp t WHERE t.description = :description"),
+        @NamedQuery(name = "Transaccionp.findByCurrency", query = "SELECT t FROM Transaccionp t WHERE t.currency = :currency"),
         @NamedQuery(name = "Transaccionp.findByValue", query = "SELECT t FROM Transaccionp t WHERE t.value = :value"),
-        @NamedQuery(name = "Transaccionp.findByResponseMessagePol", query = "SELECT t FROM Transaccionp t WHERE t.responseMessagePol = :responseMessagePol")})
+        @NamedQuery(name = "Transaccionp.findByPaymentMethodName", query = "SELECT t FROM Transaccionp t WHERE t.paymentMethodName = :paymentMethodName"),
+        @NamedQuery(name = "Transaccionp.findByEmailBuyer", query = "SELECT t FROM Transaccionp t WHERE t.emailBuyer = :emailBuyer"),
+        @NamedQuery(name = "Transaccionp.findByPaymentMethodId", query = "SELECT t FROM Transaccionp t WHERE t.paymentMethodId = :paymentMethodId"),
+        @NamedQuery(name = "Transaccionp.findByResponseMessagePol", query = "SELECT t FROM Transaccionp t WHERE t.responseMessagePol = :responseMessagePol"),
+        @NamedQuery(name = "Transaccionp.findByAttempts", query = "SELECT t FROM Transaccionp t WHERE t.attempts = :attempts")})
 public class Transaccionp implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,14 +57,40 @@ public class Transaccionp implements Serializable {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-    @Column(name = "value")
-    private Long value;
-    @Size(max = 25)
-    @Column(name = "response_message_pol")
-    private String responseMessagePol;
+    @Column(name = "payment_method_type")
+    private Short paymentMethodType;
+    @Column(name = "transaction_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date transactionDate;
+    @Size(max = 5)
+    @Column(name = "tax")
+    private String tax;
+    @Size(max = 5)
+    @Column(name = "shipping_country")
+    private String shippingCountry;
     @Size(max = 150)
     @Column(name = "description")
     private String description;
+    @Size(max = 5)
+    @Column(name = "currency")
+    private String currency;
+    @Column(name = "value")
+    private Long value;
+    @Size(max = 50)
+    @Column(name = "payment_method_name")
+    private String paymentMethodName;
+    @Size(max = 25)
+    @Column(name = "email_buyer")
+    private String emailBuyer;
+    @Column(name = "payment_method_id")
+    private Short paymentMethodId;
+    @Size(max = 25)
+    @Column(name = "response_message_pol")
+    private String responseMessagePol;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "attempts")
+    private short attempts;
     @JoinColumn(name = "reference_sale", referencedColumnName = "id_compra")
     @ManyToOne
     private Compra referenceSale;
@@ -64,6 +100,11 @@ public class Transaccionp implements Serializable {
 
     public Transaccionp(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public Transaccionp(String transactionId, short attempts) {
+        this.transactionId = transactionId;
+        this.attempts = attempts;
     }
 
     public String getTransactionId() {
@@ -82,12 +123,84 @@ public class Transaccionp implements Serializable {
         this.date = date;
     }
 
+    public Short getPaymentMethodType() {
+        return paymentMethodType;
+    }
+
+    public void setPaymentMethodType(Short paymentMethodType) {
+        this.paymentMethodType = paymentMethodType;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public String getTax() {
+        return tax;
+    }
+
+    public void setTax(String tax) {
+        this.tax = tax;
+    }
+
+    public String getShippingCountry() {
+        return shippingCountry;
+    }
+
+    public void setShippingCountry(String shippingCountry) {
+        this.shippingCountry = shippingCountry;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public Long getValue() {
         return value;
     }
 
     public void setValue(Long value) {
         this.value = value;
+    }
+
+    public String getPaymentMethodName() {
+        return paymentMethodName;
+    }
+
+    public void setPaymentMethodName(String paymentMethodName) {
+        this.paymentMethodName = paymentMethodName;
+    }
+
+    public String getEmailBuyer() {
+        return emailBuyer;
+    }
+
+    public void setEmailBuyer(String emailBuyer) {
+        this.emailBuyer = emailBuyer;
+    }
+
+    public Short getPaymentMethodId() {
+        return paymentMethodId;
+    }
+
+    public void setPaymentMethodId(Short paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
     }
 
     public String getResponseMessagePol() {
@@ -98,20 +211,20 @@ public class Transaccionp implements Serializable {
         this.responseMessagePol = responseMessagePol;
     }
 
+    public short getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(short attempts) {
+        this.attempts = attempts;
+    }
+
     public Compra getReferenceSale() {
         return referenceSale;
     }
 
     public void setReferenceSale(Compra referenceSale) {
         this.referenceSale = referenceSale;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override

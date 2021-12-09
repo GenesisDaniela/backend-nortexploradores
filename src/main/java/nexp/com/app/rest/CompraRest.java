@@ -108,14 +108,14 @@ public class CompraRest {
             return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
         }
         Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
-        for(Compra c: usuario.compraCollection()){
-            if(c.getTour().getIdTour() == idtour){
-                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
-                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
-                }
-
-            }
-        }
+//        for(Compra c: usuario.compraCollection()){
+//            if(c.getTour().getIdTour() == idtour){
+//                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+//                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+//                }
+//
+//            }
+//        }
 
         Reserva reserva = new Reserva();
         reserva.setFecha(LocalDate.now());
@@ -248,22 +248,22 @@ public class CompraRest {
         return ResponseEntity.ok(reserva);
     }
 
-//    //cantidad de tours vendidos(compras de cualquier tour?)
-//    // en el mes exceptuando los que devolucion != null
-//    @GetMapping(path = "/cantidadToursVendidos")
-//    public ResponseEntity<?> cantidadTours(){
-//        int cantidadTours = 0;
-//        List<Compra> compras = compraservice.listar();
-//        LocalDate fechaActual = LocalDate.now();
-//        for (Compra c: compras){
-//            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
-//                    c.getFecha().getMonth() == fechaActual.getMonth().getValue() &&
-//                    c.getFecha().getYear() == fechaActual.getYear()){
-//                cantidadTours++;
-//            }
-//        }
-//        return ResponseEntity.ok(cantidadTours);
-//    }
+    //cantidad de tours vendidos(compras de cualquier tour?)
+    // en el mes exceptuando los que devolucion != null
+    @GetMapping(path = "/cantidadToursVendidos")
+    public ResponseEntity<?> cantidadTours(){
+        int cantidadTours = 0;
+        List<Compra> compras = compraservice.listar();
+        Date fechaActual = new Date();
+        for (Compra c: compras){
+            if( c.devolucionCollection().size() == 0 && c.getEstado().equals("PAGADO") &&
+                    c.getFecha().getMonth() == fechaActual.getMonth() &&
+                    c.getFecha().getYear() == fechaActual.getYear()){
+                cantidadTours++;
+            }
+        }
+        return ResponseEntity.ok(cantidadTours);
+    }
 
     @GetMapping(path = "/totalMeses")
     public ResponseEntity<?> totalMes() throws ParseException {
@@ -334,6 +334,47 @@ public class CompraRest {
 
             if(totalC!=null){
                 Object x[] = new Object[2];
+                x[0] = "paquete:"+p.getNombre();
+                if(totalD!=null)
+                    x[1] ="total:"+(totalC-totalD);
+                else{
+                    x[1] ="total:"+ totalC;
+                }
+                total.add(x);
+            }
+        }
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping(path = "/{mes}/totalPaquetesMes")
+    public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
+        int dia = 31;
+
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mes+"-"+dia+"";
+
+        List<Paquete> paquetes=paqueteService.listar();
+
+        List total = new ArrayList();
+
+        for(Paquete p:paquetes){
+            Integer totalC = compraservice.comprasDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+
+            Integer totalD = compraservice.devDePaquete(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha1),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(fecha2),
+                    p.getIdPaq());
+
+            if(totalC!=null){
+                Object x[] = new Object[2];
                 x[0] = p.getNombre();
                 if(totalD!=null)
                     x[1] = totalC-totalD;
@@ -343,7 +384,9 @@ public class CompraRest {
                 total.add(x);
             }
         }
+
         return ResponseEntity.ok(total);
     }
+    
 
 }
