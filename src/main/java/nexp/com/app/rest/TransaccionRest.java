@@ -130,17 +130,23 @@ public class TransaccionRest {
                     "                            <thead>\n" +
                     "                                <tr>\n" +
                     "                                    <th scope=\"col\">#Referencia</th>\n" +
-                    "                                    <th scope=\"col\">#Transacción</th>\n" +
-                    "                                    <th scope=\"col\">Total</th>\n" +
+                    "                                    <th scope=\"col\">#Transaccion</th>\n" +
+                    "                                    <th scope=\"col\">Medio de pago</th>\n" +
                     "                                    <th scope=\"col\">Estado</th>\n" +
+                    "                                    <th scope=\"col\">Descripcion</th>\n" +
+                    "                                    <th scope=\"col\">Total</th>\n" +
+                    "                                    <th scope=\"col\">Destino</th>\n" +
                     "                                </tr>\n" +
                     "                            </thead>\n" +
                     "                            <tbody>\n" +
                     "                                <tr>\n" +
                     "                                    <td>"+compra.getIdCompra()+"</td>\n" +
                     "                                    <td>"+pay.getTransactionId()+"</td>\n" +
-                    "                                    <td>"+pay.getValue()+"</td>\n" +
+                    "                                    <td>"+pay.getPaymentMethodName()+"</td>\n" +
                     "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
+                    "                                    <td>"+pay.getDescription()+"</td>\n" +
+                    "                                    <td>"+pay.getValue()+"</td>\n" +
+                    "                                    <td>"+compra.getTour().getPaquete().getMunicipio().getNombre()+"</td>\n" +
                     "                                </tr>\n" +
                     "                            </tbody>\n" +
                     "                        </table>\n" +
@@ -179,10 +185,7 @@ public class TransaccionRest {
                     "        </tr>\n" +
                     "      </table>";
 
-            email.enviarEmail(usuario.getEmail(), "Compra fallida", cuerpo);
-
-
-            pser.guardar(pay);
+            email.enviarEmail(usuario.getEmail(), "Compra fallida #"+compra.getIdCompra(), cuerpo);
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
@@ -190,6 +193,8 @@ public class TransaccionRest {
         if(pay.getResponseMessagePol().equals("APPROVED") && pay.getValue() == (long)compra.getTotalCompra()){ //Se pagó el total y fue aprobada
             if(!compra.getEstado().equals("PAGADO")){
                 EmailService email=new EmailService(emailUsuarioEmisor, clave);
+
+//                eyyyyy tambien tengo que mostrar el medio de pagooo en el correo pendiente
 
                 String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                         "        <tr>\n" +
@@ -219,18 +224,22 @@ public class TransaccionRest {
                         "                                <tr>\n" +
                         "                                    <th scope=\"col\">#Referencia</th>\n" +
                         "                                    <th scope=\"col\">#Transaccion</th>\n" +
+                        "                                    <th scope=\"col\">Medio de pago</th>\n" +
+                        "                                    <th scope=\"col\">Estado</th>\n" +
+                        "                                    <th scope=\"col\">Descripcion</th>\n" +
                         "                                    <th scope=\"col\">Total</th>\n" +
                         "                                    <th scope=\"col\">Destino</th>\n" +
-                        "                                    <th scope=\"col\">Estado</th>\n" +
                         "                                </tr>\n" +
                         "                            </thead>\n" +
                         "                            <tbody>\n" +
                         "                                <tr>\n" +
                         "                                    <td>"+compra.getIdCompra()+"</td>\n" +
                         "                                    <td>"+pay.getTransactionId()+"</td>\n" +
+                        "                                    <td>"+pay.getPaymentMethodName()+"</td>\n" +
+                        "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
+                        "                                    <td>"+pay.getDescription()+"</td>\n" +
                         "                                    <td>"+pay.getValue()+"</td>\n" +
                         "                                    <td>"+compra.getTour().getPaquete().getMunicipio().getNombre()+"</td>\n" +
-                        "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
                         "                                </tr>\n" +
                         "                            </tbody>\n" +
                         "                        </table>\n" +
@@ -268,19 +277,23 @@ public class TransaccionRest {
                         "          </td>\n" +
                         "        </tr>\n" +
                         "      </table>";
-                email.enviarEmail(usuario.getEmail(), "Pago total registrado", cuerpo);
+                email.enviarEmail(usuario.getEmail(), "Pago total registrado #"+compra.getIdCompra(), cuerpo);
+                compra.setEstado("PAGADO");
+                Tour t = compra.getTour();
+                t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
 
+                if(t.getCantCupos()<10){
+                    Notificacion notificacion = new Notificacion();
+                    notificacion.setFecha(new Date());
+                    notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
+                    tourService.guardar(t);
+                    notificacionService.guardar(notificacion);
+                }
+
+                pser.guardar(pay);
             }
 
-            compra.setEstado("PAGADO");
-            Tour t = compra.getTour();
-            t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
-            Notificacion notificacion = new Notificacion();
-            notificacion.setFecha(new Date());
-            notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
-            tourService.guardar(t);
-            notificacionService.guardar(notificacion);
-            pser.guardar(pay);
+
 
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
@@ -330,18 +343,22 @@ public class TransaccionRest {
                             "                                <tr>\n" +
                             "                                    <th scope=\"col\">#Referencia</th>\n" +
                             "                                    <th scope=\"col\">#Transaccion</th>\n" +
+                            "                                    <th scope=\"col\">Medio de pago</th>\n" +
+                            "                                    <th scope=\"col\">Estado</th>\n" +
+                            "                                    <th scope=\"col\">Descripcion</th>\n" +
                             "                                    <th scope=\"col\">Total</th>\n" +
                             "                                    <th scope=\"col\">Destino</th>\n" +
-                            "                                    <th scope=\"col\">Estado</th>\n" +
                             "                                </tr>\n" +
                             "                            </thead>\n" +
                             "                            <tbody>\n" +
                             "                                <tr>\n" +
                             "                                    <td>"+compra.getIdCompra()+"</td>\n" +
                             "                                    <td>"+pay.getTransactionId()+"</td>\n" +
+                            "                                    <td>"+pay.getPaymentMethodName()+"</td>\n" +
+                            "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
+                            "                                    <td>"+pay.getDescription()+"</td>\n" +
                             "                                    <td>"+pay.getValue()+"</td>\n" +
                             "                                    <td>"+compra.getTour().getPaquete().getMunicipio().getNombre()+"</td>\n" +
-                            "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
                             "                                </tr>\n" +
                             "                            </tbody>\n" +
                             "                        </table>\n" +
@@ -380,15 +397,19 @@ public class TransaccionRest {
                             "        </tr>\n" +
                             "      </table>";
 
-                    email.enviarEmail(usuario.getEmail(), "Segundo pago registrado", cuerpo);
+                    email.enviarEmail(usuario.getEmail(), "Segundo pago registrado #"+compra.getIdCompra(), cuerpo);
+                    compra.setEstado("PAGADO");
+                    t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
+
+                    if(t.getCantCupos()<10){
+                        Notificacion notificacion = new Notificacion();
+                        notificacion.setFecha(new Date());
+                        notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
+                        tourService.guardar(t);
+                        notificacionService.guardar(notificacion);
+                    }
                 }
-                compra.setEstado("PAGADO");
-                t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
-                Notificacion notificacion = new Notificacion();
-                notificacion.setFecha(new Date());
-                notificacion.setDescripcion("Actualmente quedan "+t.getCantCupos()+" disponibles del Tour destino "+t.getPaquete().getMunicipio().getNombre());
-                tourService.guardar(t);
-                notificacionService.guardar(notificacion);
+
             }
 
             pser.guardar(pay);
@@ -427,18 +448,22 @@ public class TransaccionRest {
                         "                                <tr>\n" +
                         "                                    <th scope=\"col\">#Referencia</th>\n" +
                         "                                    <th scope=\"col\">#Transaccion</th>\n" +
+                        "                                    <th scope=\"col\">Medio de pago</th>\n" +
+                        "                                    <th scope=\"col\">Estado</th>\n" +
+                        "                                    <th scope=\"col\">Descripcion</th>\n" +
                         "                                    <th scope=\"col\">Total</th>\n" +
                         "                                    <th scope=\"col\">Destino</th>\n" +
-                        "                                    <th scope=\"col\">Estado</th>\n" +
                         "                                </tr>\n" +
                         "                            </thead>\n" +
                         "                            <tbody>\n" +
                         "                                <tr>\n" +
                         "                                    <td>"+compra.getIdCompra()+"</td>\n" +
                         "                                    <td>"+pay.getTransactionId()+"</td>\n" +
-                        "                                    <td>"+pay.getValue()+"</td>\n" +
-                        "                                    <td>"+compra.getTour().getPaquete().getNombre()+"</td>\n" +
+                        "                                    <td>"+pay.getPaymentMethodName()+"</td>\n" +
                         "                                    <td>"+pay.getResponseMessagePol()+"</td>\n" +
+                        "                                    <td>"+pay.getDescription()+"</td>\n" +
+                        "                                    <td>"+pay.getValue()+"</td>\n" +
+                        "                                    <td>"+compra.getTour().getPaquete().getMunicipio().getNombre()+"</td>\n" +
                         "                                </tr>\n" +
                         "                            </tbody>\n" +
                         "                        </table>\n" +
@@ -477,17 +502,19 @@ public class TransaccionRest {
                         "        </tr>\n" +
                         "      </table>";
 
-                email.enviarEmail(usuario.getEmail(), "Pago pendiente", cuerpo);
+                email.enviarEmail(usuario.getEmail(), "Pago pendiente #"+compra.getIdCompra(), cuerpo);
+                t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
+                compra.setEstado("PAGO_PARCIAL");
+                Reserva reserva = compra.getReserva();
+                reserva.setEstado("PAGO_PARCIAL");
+                reservaService.guardar(reserva);
+                tourService.guardar(t);
+                pser.guardar(pay);
+                return new ResponseEntity<>(body, HttpStatus.OK);
             }
-            t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
-            compra.setEstado("PAGO_PARCIAL");
-            Reserva reserva = compra.getReserva();
-            reserva.setEstado("PAGO_PARCIAL");
-            reservaService.guardar(reserva);
-            tourService.guardar(t);
+
         }
 
-        pser.guardar(pay);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
