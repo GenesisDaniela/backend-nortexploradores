@@ -69,6 +69,16 @@ public class Compra implements Serializable {
     public Compra() {
     }
 
+    public Compra(Long idCompra,Integer cantidadPasajeros, Integer totalCompra, String estado, LocalDate fecha, Usuario usuario, Tour tour) {
+        this.idCompra = idCompra;
+        this.cantidadPasajeros = cantidadPasajeros;
+        this.totalCompra = totalCompra;
+        this.estado = estado;
+        this.fecha = fecha;
+        this.usuario = usuario;
+        this.tour = tour;
+    }
+
     public Tour getTour() {
         return tour;
     }

@@ -27,8 +27,9 @@ public class DevolucionServiceImp implements DevolucionService {
 
     @Override
     @Transactional
-    public void guardar(Devolucion devolucion) {
-        dDAO.save(devolucion);
+    public Devolucion guardar(Devolucion devolucion) {
+        Devolucion dev = dDAO.save(devolucion);
+        return dev;
     }
 
     @Override

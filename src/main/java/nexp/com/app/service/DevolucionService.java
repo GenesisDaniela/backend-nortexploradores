@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public interface DevolucionService {
     
-    public void guardar(Devolucion devolucion);
+    public Devolucion guardar(Devolucion devolucion);
     public Optional<Devolucion> encontrar(int id);
     public List<Devolucion> listar();
     public void eliminar(int id);
