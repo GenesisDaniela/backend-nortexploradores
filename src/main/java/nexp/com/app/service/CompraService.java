@@ -31,5 +31,6 @@ public interface CompraService {
     public Integer comprasDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq);
     public Integer devDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq);
     public Integer comprasDeUsuarioFecha(LocalDate fecha1, LocalDate fecha2, int idUsuario);
+    public int[] cantidadCompras();
 
 }

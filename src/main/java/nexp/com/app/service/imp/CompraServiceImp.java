@@ -89,4 +89,17 @@ public class CompraServiceImp implements CompraService {
     public Integer comprasDeUsuarioFecha(LocalDate fecha1, LocalDate fecha2, int idUsuario) {
         return cDAO.comprasAprobadasFechaUsuario(fecha1,fecha2,idUsuario);
     }
+
+    @Override
+    public int[] cantidadCompras() {
+        List<Compra> compras = cDAO.findAll();
+        int cantidadPaq[] = new int[12];
+        LocalDate fechaActual = LocalDate.now();
+        for (Compra c : compras) {
+            if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
+                cantidadPaq[(c.getFecha().getMonth().getValue())-1] += c.getCantidadPasajeros();
+            }
+        }
+        return cantidadPaq;
+    }
 }

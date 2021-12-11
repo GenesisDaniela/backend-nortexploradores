@@ -70,10 +70,22 @@ class AppApplicationTestsIT1 {
 	// a partir de la cantidad de paquetes vendidos mensualmente.
 	@Test
 	void paquetesVendidos() {
-		int arrayEsperado[] = {1,0,0,0,0,0,0,0,0,0,11,21};
-		NorteXploradores nxs = new NorteXploradores();
-		assertArrayEquals(arrayEsperado, nxs.cantidadPaquetes());
+		int arrayEsperado[] = {1,0,0,0,0,0,0,0,0,0,6,38};
+		int arrayObtenido[] = compraService.cantidadCompras();
+		assertArrayEquals(arrayEsperado,arrayObtenido);
 	}
+
+	@Test
+	void diferenciaClientes() {
+		int mes1[]= {11,2};
+		int mes2[] = {12,10};
+
+		int arrayEsperado[][] = {mes1,mes2};
+		int arrayObtenido[][] = usuarioService.resultadoMensual();
+		assertArrayEquals(arrayEsperado,arrayObtenido);
+	}
+
+
 
 	@Test
 	void obtenerReservas() {
@@ -85,7 +97,7 @@ class AppApplicationTestsIT1 {
 				reservasM.add(r);
 			}
 		}
-		assertEquals(57, reservasM.size());
+		assertEquals(59, reservasM.size());
 	}
 
 	@Test

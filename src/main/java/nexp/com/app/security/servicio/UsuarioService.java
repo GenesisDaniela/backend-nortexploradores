@@ -11,10 +11,14 @@ package nexp.com.app.security.servicio;
  */
 
 import nexp.com.app.model.Pasajero;
+import nexp.com.app.negocio.response.PaqueteCantidad;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.dao.UsuarioRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +35,39 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(nombreUsuario);
     }
 
+    public int[][] resultadoMensual(){
+        List<Usuario> usuariosReg = usuarioRepository.findAll();
+        LocalDate fechaActual = LocalDate.now();
+        int resultadoMensual [][] = new int[2][2];
+        resultadoMensual[0][0] = fechaActual.getMonth().getValue()-1;
+        resultadoMensual[1][0] = fechaActual.getMonth().getValue();
 
+        for(Usuario u: usuariosReg){
+//            valido que no sea enero para no tener problema con el anio, cuento usuarios nuevos
+            if(fechaActual.getMonth().getValue() > 1 && fechaActual.getMonth().getValue() == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear() == u.getFecha().getYear()){
+                resultadoMensual[1][1] += 1;
+            }
+            //valido que sea enero y descuento uno en el anio para poder comparar, cuento usuarios nuevos
+            if(fechaActual.getMonth().getValue() == 1 && u.getFecha().getMonth().getValue() == 12
+                    && fechaActual.getYear()-1 == u.getFecha().getYear()){
+                resultadoMensual[1][1] += 1;
+            }
+            //valido que no sea enero y descuento uno en el anio para poder comparar, cuento usuarios antiguos (mes anterior)
+            if(fechaActual.getMonth().getValue()-1 != 12 && fechaActual.getMonth().getValue()-1 == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear() == u.getFecha().getYear()){
+                resultadoMensual[0][1] += 1;
+            }
+            //valido que sea enero y descuento uno en el anio para poder comparar, cuento usuarios antiguos (mes anterior)
+            if(fechaActual.getMonth().getValue()-1 == 12 && fechaActual.getMonth().getValue()-1 == u.getFecha().getMonth().getValue()
+                    && fechaActual.getYear()-1 == u.getFecha().getYear()){
+                resultadoMensual[0][1] += 1;
+            }
+        }
+
+
+        return (resultadoMensual);
+    }
 
     public Optional<Usuario> getByEmail(String email){
         return usuarioRepository.findByEmail(email);
