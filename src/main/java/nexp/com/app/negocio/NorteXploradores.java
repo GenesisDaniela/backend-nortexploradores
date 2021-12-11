@@ -1,19 +1,27 @@
 package nexp.com.app.negocio;
 
 import lombok.extern.slf4j.Slf4j;
+import nexp.com.app.dao.CompraDAO;
 import nexp.com.app.model.*;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
-
+@RestController
 public class NorteXploradores {
 
     @Autowired
     CompraService compraService;
+
+    @Autowired
+    CompraDAO compraDAO;
 
 
     public List<Compra> paquetesComprados(List<Compra> compras){
@@ -34,6 +42,18 @@ public class NorteXploradores {
             }
         }
         return reservados;
+    }
+
+    public int[] cantidadPaquetes() {
+        List<Compra> compras = compraService.listar();
+        int cantidadPaq[] = new int[12];
+        LocalDate fechaActual = LocalDate.now();
+        for (Compra c : compras) {
+            if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear()) {
+                cantidadPaq[(c.getFecha().getMonth().getValue())-1] += c.getCantidadPasajeros();
+            }
+        }
+        return cantidadPaq;
     }
 
     public List<Tour> tourComprados(List<Compra> compras){
