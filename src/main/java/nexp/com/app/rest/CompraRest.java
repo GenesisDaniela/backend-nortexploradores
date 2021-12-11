@@ -304,10 +304,11 @@ public class CompraRest {
         return ResponseEntity.ok(totalMeses);
     }
 
-    @GetMapping(path = "/totalMesTabla")
+    @GetMapping(path = "/totalMesTabla") // corregir
     public ResponseEntity<?> totalMesTabla() throws ParseException {
         List<PaqueteCantidad> totalMeses = new ArrayList<>();
         String[] meses = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "setiembre", "octubre", "noviembre", "diciembre"};
+
         for (int i = 0; i < 12; i++) {
             String mes = "" + (i+1);
             if(i < 9)
@@ -337,6 +338,8 @@ public class CompraRest {
             else{
                 if(totalD!=null){
                     totalC-=totalD;
+                    response.setCantidad(totalC);
+                }else{
                     response.setCantidad(totalC);
                 }
             }
