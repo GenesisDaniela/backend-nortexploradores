@@ -7,6 +7,7 @@ package nexp.com.app.dao;
 
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
+import nexp.com.app.model.Tour;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,4 +51,12 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
 
     @Query ("SELECT count(c) FROM Compra c WHERE c.estado='PAGADO' and c.usuario.id_Usuario=:idUsuario and c.fecha between :fecha and :fecha2")
     Integer comprasAprobadasFechaUsuario(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2, @Param("idUsuario") int idUsuario);
+
+
+    @Query ("SELECT count(c.tour) FROM Compra c WHERE c.estado='PAGADO' and c.fecha between :fecha and :fecha2")
+    Integer totalToursVendidos(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
+
+    @Query ("SELECT c.tour.paquete FROM Compra c WHERE c.estado ='PAGADO' and c.fecha between :fecha and :fecha2 GROUP by c.tour.paquete ORDER by sum(c.totalCompra)")
+    List<Paquete> toursVendidos(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
+
 }

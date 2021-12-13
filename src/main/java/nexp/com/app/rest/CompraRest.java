@@ -5,13 +5,11 @@
  */
 package nexp.com.app.rest;
 
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.EmailService;
-import nexp.com.app.negocio.response.PaqueteCantidad;
-import nexp.com.app.negocio.response.PaqueteCantidadInfo;
-import nexp.com.app.negocio.response.PaqueteTotal;
-import nexp.com.app.negocio.response.TotalPaquete;
+import nexp.com.app.negocio.response.*;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
@@ -528,7 +526,64 @@ public class CompraRest {
         return ResponseEntity.ok(paqueteCantidad);
     }
 
-    @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
+
+    @GetMapping(path = "/{mes}/resumenTotal")
+    public ResponseEntity<?> resumenTotal(@PathVariable int mes) throws ParseException {
+        ResumenTotal resumenTotal = new ResumenTotal();
+
+        int dia = 31;
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+        String mesT = "" + mes;
+        if(mes < 10)
+            mesT = "0" + mes;
+
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+
+        LocalDate fechaLD1 = LocalDate.parse(fecha1);
+        LocalDate fechaLD2 = LocalDate.parse(fecha2);
+
+        List<Paquete> paqueteVendidos = compraservice.tourMasVendido(fechaLD1,fechaLD2);
+
+        Integer totalDev = compraservice.devolucionesFecha(fechaLD1,fechaLD2);
+        Integer totalCompra = compraservice.comprasAprobadasFecha(fechaLD1,fechaLD2);
+        Integer totalTours = compraservice.totalTours(fechaLD1,fechaLD2);
+        Paquete paqueteMasV;
+        Paquete paqueteMenosV;
+
+        if(totalCompra==null){
+            totalCompra = 0;
+        }
+        if(totalDev==null){
+            totalDev=0;
+        }
+        if(totalTours==null){
+            totalTours=0;
+        }
+
+        if(paqueteVendidos.size()>0){
+            paqueteMasV= paqueteVendidos.get(paqueteVendidos.size()-1);
+            paqueteMenosV= paqueteVendidos.get(0);
+            resumenTotal.setPaqueteMenosVendido(paqueteMenosV.getNombre());
+            resumenTotal.setPaqueteMasVendido(paqueteMasV.getNombre());
+            Integer devPaquete = compraservice.devDePaquete(fechaLD1,fechaLD2,paqueteMasV.getIdPaq());
+            if(devPaquete==null) devPaquete=0;
+            Integer vendidoPaquete = compraservice.comprasDePaquete(fechaLD1,fechaLD2,paqueteMasV.getIdPaq())-devPaquete;
+            resumenTotal.setPorcentajeMasVendido((vendidoPaquete/(double)totalCompra)*100);
+        }
+
+        resumenTotal.setTotalDevoluciones(totalDev);
+        resumenTotal.setTotalVentas(totalCompra);
+        resumenTotal.setTotalTours(totalTours);
+
+        return ResponseEntity.ok(resumenTotal);
+
+    }
+
+        @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
     public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
         int dia = 31;
         if(mes==2)
