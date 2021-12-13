@@ -81,6 +81,21 @@ public class CompraServiceImp implements CompraService {
     }
 
     @Override
+    public Integer pasajerosDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq) {
+        return cDAO.pasajerosPorPaquete(fecha1,fecha2,idPaq);
+    }
+
+    @Override
+    public Integer totalPaquetes(LocalDate fecha1, LocalDate fecha2) {
+        return cDAO.comprasPorPaquetesMes(fecha1,fecha2);
+    }
+
+    @Override
+    public Integer totalPaquetesDev(LocalDate fecha1, LocalDate fecha2) {
+        return cDAO.devPorPaquetesMes(fecha1,fecha2);
+    }
+
+    @Override
     public Integer devDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq) {
         return cDAO.devPorPaquete(fecha1,fecha2,idPaq);
     }

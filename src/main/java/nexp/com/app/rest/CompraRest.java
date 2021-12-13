@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.EmailService;
 import nexp.com.app.negocio.response.PaqueteCantidad;
+import nexp.com.app.negocio.response.PaqueteCantidadInfo;
 import nexp.com.app.negocio.response.PaqueteTotal;
+import nexp.com.app.negocio.response.TotalPaquete;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
@@ -504,6 +506,28 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
+    @GetMapping(path = "/{mes}/totalVendidoMes")
+    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes){
+        int dia = 31;
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+        String mesT = "" + mes;
+        if(mes < 10)
+            mesT = "0" + mes;
+
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+
+        LocalDate fechaLD1 = LocalDate.parse(fecha1);
+        LocalDate fechaLD2 = LocalDate.parse(fecha2);
+
+        TotalPaquete paqueteCantidad = new TotalPaquete();
+        paqueteCantidad.setVentaMes(compraservice.totalPaquetes(fechaLD1,fechaLD2) - compraservice.totalPaquetesDev(fechaLD1,fechaLD2));
+        return ResponseEntity.ok(paqueteCantidad);
+    }
+
     @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
     public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
         int dia = 31;
@@ -519,25 +543,37 @@ public class CompraRest {
 
         List<Paquete> paquetes=paqueteService.listar();
 
+        LocalDate fechaLD1 = LocalDate.parse(fecha1);
+        LocalDate fechaLD2 = LocalDate.parse(fecha2);
+
         List total = new ArrayList();
 
+        Integer totalValorPaquetes = compraservice.totalPaquetes(fechaLD1,fechaLD2) - compraservice.totalPaquetesDev(fechaLD1,fechaLD2);
+
         for(Paquete p:paquetes){
-            Integer totalC = compraservice.comprasDePaquete(
-                    LocalDate.parse(fecha1),
-                    LocalDate.parse(fecha2),
-                    p.getIdPaq());
+            Integer totalC = compraservice.comprasDePaquete( fechaLD1,fechaLD2,p.getIdPaq());
+            Integer totalD = compraservice.devDePaquete(fechaLD1,fechaLD2,p.getIdPaq());
+            Integer totalPasajeros = compraservice.pasajerosDePaquete(fechaLD1,fechaLD2,p.getIdPaq());
 
-            Integer totalD = compraservice.devDePaquete(
-                    LocalDate.parse(fecha1),
-                    LocalDate.parse(fecha2),
-                    p.getIdPaq());
-
-            PaqueteTotal paqueteTotal = new PaqueteTotal();
+            PaqueteCantidadInfo paqueteTotal = new PaqueteCantidadInfo();
+            if (totalPasajeros ==null) totalPasajeros = 0;
+            paqueteTotal.setTotalPasajeros(totalPasajeros);
+            if(totalC!=null){
+                Tour t = p.tourCollection().iterator().next();
+                String tipoTour = "";
+                if(t.getEstado().equals("ACTIVO") && t.getPaquete().getEstado().equals("ACTIVO") && t.getFechaLlegada().getDay() != t.getFechaSalida().getDay())
+                {
+                    tipoTour="Estadia";
+                }else{
+                    tipoTour="Pasadia";
+                }
+                paqueteTotal.setTipoTour(tipoTour);
+            }
 
             if(totalC!=null){
                 Object x[] = new Object[2];
                 x[0] = p.getNombre();
-                paqueteTotal.setNombre(p.getNombre());
+                paqueteTotal.setNombreTour(p.getNombre());
                 if(totalD!=null){
                     x[1] = totalC-totalD;
                     paqueteTotal.setTotal(totalC-totalD);
@@ -548,6 +584,7 @@ public class CompraRest {
                     x[1] = totalC;
                     paqueteTotal.setTotal(totalC);
                 }
+                paqueteTotal.setPorcentajeVentas(((paqueteTotal.getTotal()/(double)totalValorPaquetes)*100));
                 total.add(paqueteTotal);
             }
         }
