@@ -693,6 +693,8 @@ public class CompraRest {
             reservaTabla.setEmail(c.getUsuario().getEmail());
             reservaTabla.setTotalCompra(c.getTotalCompra());
             reservaTabla.setFecha(c.getReserva().getFecha());
+            reservaTabla.setCantidadPasajeros(c.getCantidadPasajeros());
+            reservaTabla.setEstado(c.getReserva().getEstado());
             reservaTablas.add(reservaTabla);
         }
 
