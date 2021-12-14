@@ -35,6 +35,7 @@ public class EmpresaRest {
     @Autowired
     CategoriaService cser;
 
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Empresa e, BindingResult br) {
         if (br.hasErrors()) {
@@ -50,9 +51,34 @@ public class EmpresaRest {
     }
 
     @GetMapping
-    public ResponseEntity<List<Empresa>> getEmpresa() {
-        return ResponseEntity.ok(eser.listar());
+    public ResponseEntity<List<Empresa>> getEmpresa() { return ResponseEntity.ok(eser.listar());}
+
+    @GetMapping(path = "/seguroE")
+    public ResponseEntity<List<Empresa>> getEmpresaSeguros() {
+        List<Empresa> empresas = eser.listar();
+        List<Empresa> empresaSeguros = new ArrayList<>();
+        for(Empresa e: empresas){
+            if(e.getCategoria().getIdCategoria() == 2){
+                empresaSeguros.add(e);
+            }
+        }
+        return ResponseEntity.ok(empresaSeguros);
     }
+
+    @GetMapping(path = "/transporteE")
+    public ResponseEntity<List<Empresa>> getEmpresaTransportes() {
+        List<Empresa> empresas = eser.listar();
+        List<Empresa> empresaTransportes = new ArrayList<>();
+        for(Empresa e: empresas){
+            if(e.getCategoria().getIdCategoria() == 3){
+                empresaTransportes.add(e);
+            }
+        }
+        return ResponseEntity.ok(empresaTransportes);
+    }
+
+    @GetMapping(path = "/categoria")
+    public ResponseEntity<List<Categoria>> getCategoria() { return ResponseEntity.ok(cser.listar());}
 
     @PutMapping
     public ResponseEntity<?> editar(@RequestBody @Valid Empresa e, BindingResult br) {
@@ -134,7 +160,6 @@ public class EmpresaRest {
                 empresasTransportes.add(e);
             }
         }
-
         return ResponseEntity.ok(empresasTransportes);
     }
 
