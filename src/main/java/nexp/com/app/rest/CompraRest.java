@@ -463,8 +463,8 @@ public class CompraRest {
     }
 
 
-    @GetMapping(path = "/{mes}/{anio}/totalPaquetesMes")
-    public ResponseEntity<?> totalPaquetes(@PathVariable int mes, @PathVariable int anio) throws ParseException {
+    @GetMapping(path = "/{mes}/totalPaquetesMes")
+    public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
         int dia = 31;
         if(mes==2)
             dia=28;
@@ -473,8 +473,8 @@ public class CompraRest {
         String mesT = "" + mes;
         if(mes < 10)
             mesT = "0" + mes;
-        String fecha1=""+ anio+"-"+mesT+"-01";
-        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
 
         List<Paquete> paquetes=paqueteService.listar();
 
@@ -506,8 +506,8 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
-    @GetMapping(path = "/{mes}/{anio}/totalVendidoMes")
-    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes, @PathVariable int anio){
+    @GetMapping(path = "/{mes}/totalVendidoMes")
+    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes){
         int dia = 31;
         if(mes==2)
             dia=28;
@@ -517,8 +517,8 @@ public class CompraRest {
         if(mes < 10)
             mesT = "0" + mes;
 
-        String fecha1=""+ anio+"-"+mesT+"-01";
-        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
 
         LocalDate fechaLD1 = LocalDate.parse(fecha1);
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
