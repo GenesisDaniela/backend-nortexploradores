@@ -66,6 +66,9 @@ public class CompraRest {
     @Autowired
     PaqueteService paqueteService;
 
+    @Autowired
+    DevolucionService devolucionService;
+
     @Value("${spring.mail.username}")
     String emailUsuarioEmisor;
 
@@ -595,7 +598,7 @@ public class CompraRest {
 
     }
 
-        @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
+    @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
     public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
         int dia = 31;
         if(mes==2)
@@ -701,4 +704,19 @@ public class CompraRest {
         return ResponseEntity.ok(reservaTablas);
     }
 
+    //hacer uri del total de ventas en todo el año para la card de ventas (la verde)
+    @GetMapping(path = "/totalVentasAnuales")
+    public ResponseEntity<?> totalVentasAnuales(){
+        LocalDate fechaActual = LocalDate.now();
+        int totalVentas = 0;
+        for(Compra c: compraservice.listar()) {
+            if (c.getEstado().equals("PAGADO") && c.getFecha().getYear() == fechaActual.getYear())
+                totalVentas += c.getTotalCompra();
+        }
+        for(Devolucion d: devolucionService.listar()){
+            if(d.getFecha().getYear() == fechaActual.getYear())
+                totalVentas -= d.getCantidad();
+        }
+        return ResponseEntity.ok(totalVentas);
+    }
 }
