@@ -103,6 +103,9 @@ public class CompraRest {
     public ResponseEntity<?> compraPagada(@PathVariable int idUsuario){
         return ResponseEntity.ok(compraservice.comprasPagadas(idUsuario));
     }
+
+
+
     @PostMapping(path = "/compraReservada/{idtour}")
     public ResponseEntity<Compra> crearCompraReservada(@RequestBody @Valid Compra compra, @PathVariable int idtour){
         Tour t = tourService.encontrar(idtour).get();
@@ -134,6 +137,35 @@ public class CompraRest {
         compraservice.guardar(compra);
         return ResponseEntity.ok(compra);
     }
+
+
+    @PostMapping(path = "/compraTotalPago/{idtour}")
+    public ResponseEntity<Compra> compraTotal(@RequestBody @Valid Compra compra, @PathVariable int idtour){
+        Tour t = tourService.encontrar(idtour).get();
+        Date fechaSalida = t.getFechaSalida();
+        Date fechaReserva = new Date();
+        int milisegundospordia= 86400000;
+        int dias = (int) ((fechaSalida.getTime()-fechaReserva.getTime()) / milisegundospordia);
+
+        if(dias<3){
+            return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
+        }
+        Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
+        for(Compra c: usuario.compraCollection()){
+            if(c.getTour().getIdTour() == idtour){
+                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        compra.setFecha(LocalDate.now());
+        compra.setEstado("PENDIENTE");
+        compraservice.guardar(compra);
+        return ResponseEntity.ok(compra);
+    }
+
 
     @GetMapping(path = "/{id}/transacciones")
     public ResponseEntity<List<Transaccionp>> transaccionPorCompra(@PathVariable Long id) {
@@ -356,33 +388,28 @@ public class CompraRest {
             email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
             return ResponseEntity.ok(compra); // La reserva no fue pagada ni en su 50%
         }
-//
-//
-//
-//        int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
-//        Tour tour = compra.getTour();
-//        tour.setCantCupos(cuposDisponibles);
-//        Notificacion notificacion = new Notificacion();
-//        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-//        email.enviarEmail(compra.getUsuario().getEmail(), "Reserva cancelada",cuerpo);
-//
-//        notificacion.setDescripcion("La reserva del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
-//        notificacion.setUsuario(compra.getUsuario());
-//        notificacion.setFecha(new Date());
-//        notificacionService.guardar(notificacion);
-//
-//        Devolucion devolucion = new Devolucion();
-//        devolucion.setCantidad(0);
-//        devolucion.setCompra(reserva.compraCollection().iterator().next());
-//        devolucion.setFecha(LocalDate.now());
-//
-//        devolucionService.guardar(devolucion);
-//
-//        reserva.setEstado("CANCELADA");
-//        compra.setEstado("CANCELADO");
-//        compraservice.guardar(compra);
-//        tourService.guardar(tour);
-//        reservaService.guardar(reserva);
+
+        int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
+        Tour tour = compra.getTour();
+        tour.setCantCupos(cuposDisponibles);
+        Notificacion notificacion = new Notificacion();
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+        email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
+
+        notificacion.setDescripcion("La compra del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
+        notificacion.setUsuario(compra.getUsuario());
+        notificacion.setFecha(new Date());
+        notificacionService.guardar(notificacion);
+
+        Devolucion devolucion = new Devolucion();
+        devolucion.setCantidad(0);
+        devolucion.setCompra(compra);
+        devolucion.setFecha(LocalDate.now());
+
+        devolucionService.guardar(devolucion);
+        compra.setEstado("CANCELADO");
+        compraservice.guardar(compra);
+        tourService.guardar(tour);
         return ResponseEntity.ok(compra);
     }
 

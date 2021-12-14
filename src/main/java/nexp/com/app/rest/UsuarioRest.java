@@ -234,6 +234,16 @@ public class UsuarioRest {
         return ResponseEntity.ok(paquetesReservado);
     }
 
+    @GetMapping(path = "/{idUsuario}/comprasTotales")
+    public ResponseEntity<?> comprasTotales(@PathVariable int idUsuario){
+        Usuario u = user.encontrar(idUsuario).get();
+        List<Compra> paquetesReservado = nexp.paquetesTotales((List)u.compraCollection());
+        if(paquetesReservado==null || paquetesReservado.size()==0){
+            return new ResponseEntity("No tiene reservas",HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(paquetesReservado);
+    }
+
     @GetMapping(path = "/{idUsuario}/tourscomprados")
     public ResponseEntity<?> tourComprado(@PathVariable int idUsuario){
         Usuario u = user.encontrar(idUsuario).get();
