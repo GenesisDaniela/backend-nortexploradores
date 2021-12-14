@@ -74,6 +74,8 @@ public class CompraRest {
 
     @Value("${spring.mail.password}")
     String clave;
+
+
     
     @GetMapping
     public ResponseEntity<List<Compra>> getCompra() {
@@ -113,14 +115,14 @@ public class CompraRest {
             return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
         }
         Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
-//        for(Compra c: usuario.compraCollection()){
-//            if(c.getTour().getIdTour() == idtour){
-//                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
-//                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
-//                }
-//
-//            }
-//        }
+        for(Compra c: usuario.compraCollection()){
+            if(c.getTour().getIdTour() == idtour){
+                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
 
         Reserva reserva = new Reserva();
         reserva.setFecha(LocalDate.now());
@@ -144,6 +146,11 @@ public class CompraRest {
         if(reserva == null){
             return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
         }
+
+        Devolucion devolucion = new Devolucion();
+        devolucion.setCantidad(0);
+        devolucion.setCompra(reserva.compraCollection().iterator().next());
+        devolucion.setFecha(LocalDate.now());
 
         Compra compra = ((List<Compra>)reserva.compraCollection()).get(0);
 
@@ -506,8 +513,8 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
-    @GetMapping(path = "/{mes}/totalVendidoMes")
-    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes){
+    @GetMapping(path = "/{mes}/{anio}/totalVendidoMes")
+    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes, @PathVariable int anio){
         int dia = 31;
         if(mes==2)
             dia=28;
@@ -517,8 +524,8 @@ public class CompraRest {
         if(mes < 10)
             mesT = "0" + mes;
 
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ anio+"-"+mesT+"-01";
+        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
 
         LocalDate fechaLD1 = LocalDate.parse(fecha1);
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
