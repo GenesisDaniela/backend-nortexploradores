@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import nexp.com.app.dao.CompraDAO;
 import nexp.com.app.model.Tour;
+import nexp.com.app.negocio.response.ReservaTabla;
 import nexp.com.app.service.CompraService;
 import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,5 +128,10 @@ public class CompraServiceImp implements CompraService {
             }
         }
         return cantidadPaq;
+    }
+
+    @Override
+    public List<Compra> reservasFecha(LocalDate fecha1, LocalDate fecha2) {
+        return cDAO.reservasFecha(fecha1,fecha2);
     }
 }

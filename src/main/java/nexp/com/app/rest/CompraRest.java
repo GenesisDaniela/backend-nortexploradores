@@ -668,4 +668,35 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
+    @GetMapping(path = "/{mes}/totalReservasMesTabla")
+    public ResponseEntity<?> totalReservasMesTabla(@PathVariable int mes){
+
+        int dia = 31;
+        if(mes==2)
+            dia=29;
+        if(mes==4 || mes==6 || mes==11 || mes==9)
+            dia=30;
+        String mesT = "" + mes;
+        if(mes < 10)
+            mesT = "0" + mes;
+
+        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
+        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+
+        LocalDate fechaLD1 = LocalDate.parse(fecha1);
+        LocalDate fechaLD2 = LocalDate.parse(fecha2);
+        List<ReservaTabla> reservaTablas = new ArrayList<>();
+
+        for(Compra c: compraservice.reservasFecha(fechaLD1,fechaLD2)){
+            ReservaTabla reservaTabla = new ReservaTabla();
+            reservaTabla.setIdReserva(c.getReserva().getIdReserva());
+            reservaTabla.setEmail(c.getUsuario().getEmail());
+            reservaTabla.setTotalCompra(c.getTotalCompra());
+            reservaTabla.setFecha(c.getReserva().getFecha());
+            reservaTablas.add(reservaTabla);
+        }
+
+        return ResponseEntity.ok(reservaTablas);
+    }
+
 }

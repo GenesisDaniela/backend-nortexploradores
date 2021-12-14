@@ -8,6 +8,7 @@ package nexp.com.app.service;
 import nexp.com.app.model.Compra;
 import nexp.com.app.model.Paquete;
 import nexp.com.app.model.Tour;
+import nexp.com.app.negocio.response.ReservaTabla;
 import org.hibernate.mapping.Array;
 
 import java.time.LocalDate;
@@ -41,5 +42,7 @@ public interface CompraService {
     public Integer devDePaquete(LocalDate fecha1, LocalDate fecha2, int idPaq);
     public Integer comprasDeUsuarioFecha(LocalDate fecha1, LocalDate fecha2, int idUsuario);
     public int[] cantidadCompras();
+
+    public List<Compra> reservasFecha(LocalDate fecha1, LocalDate fecha2);
 
 }
