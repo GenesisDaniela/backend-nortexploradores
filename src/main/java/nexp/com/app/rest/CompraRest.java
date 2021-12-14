@@ -464,7 +464,7 @@ public class CompraRest {
     public ResponseEntity<?> totalPaquetes(@PathVariable int mes) throws ParseException {
         int dia = 31;
         if(mes==2)
-            dia=29;
+            dia=28;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
         String mesT = "" + mes;
@@ -507,7 +507,7 @@ public class CompraRest {
     public ResponseEntity<?> totalVendidoMes(@PathVariable int mes){
         int dia = 31;
         if(mes==2)
-            dia=29;
+            dia=28;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
         String mesT = "" + mes;
@@ -545,7 +545,7 @@ public class CompraRest {
 
         int dia = 31;
         if(mes==2)
-            dia=29;
+            dia=28;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
         String mesT = "" + mes;
@@ -599,7 +599,7 @@ public class CompraRest {
     public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
         int dia = 31;
         if(mes==2)
-            dia=29;
+            dia=28;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
         String mesT = "" + mes;
@@ -673,7 +673,7 @@ public class CompraRest {
 
         int dia = 31;
         if(mes==2)
-            dia=29;
+            dia=28;
         if(mes==4 || mes==6 || mes==11 || mes==9)
             dia=30;
         String mesT = "" + mes;

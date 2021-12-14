@@ -60,7 +60,7 @@ public interface CompraDAO extends JpaRepository<Compra, Long> {
     @Query ("SELECT c.tour.paquete FROM Compra c WHERE c.estado ='PAGADO' and c.fecha between :fecha and :fecha2 GROUP by c.tour.paquete ORDER by sum(c.totalCompra)")
     List<Paquete> toursVendidos(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
 
-    @Query ("SELECT c FROM Compra c WHERE c.reserva IS NOT NULL and c.fecha between :fecha and :fecha2")
+    @Query ("SELECT c FROM Compra c WHERE c.reserva IS NOT NULL and c.reserva.fecha between :fecha and :fecha2")
     List<Compra> reservasFecha(@Param("fecha") LocalDate fecha, @Param("fecha2") LocalDate fecha2);
 
 }
