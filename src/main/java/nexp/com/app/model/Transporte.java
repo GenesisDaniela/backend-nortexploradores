@@ -62,6 +62,9 @@ public class Transporte implements Serializable {
     private Empresa empresa;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transporte")
     private Collection<TransporteTour> transporteTourCollection;
+    @JoinColumn(name = "categoria", referencedColumnName = "id_categoria")
+    @ManyToOne(optional = false)
+    private Categoria categoria;
 
     public Transporte() {}
 
@@ -136,6 +139,10 @@ public class Transporte implements Serializable {
     public void setRutaTransporteCollection(Collection<TransporteTour> transporteTourCollection) {
         this.transporteTourCollection = transporteTourCollection;
     }
+
+    public Categoria getCategoria() {return categoria;}
+
+    public void setCategoria(Categoria categoria) {this.categoria = categoria;}
 
     @Override
     public int hashCode() {

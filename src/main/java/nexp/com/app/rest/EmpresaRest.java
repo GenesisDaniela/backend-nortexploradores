@@ -6,6 +6,7 @@
 package nexp.com.app.rest;
 
 import nexp.com.app.model.*;
+import nexp.com.app.service.CategoriaService;
 import nexp.com.app.service.EmpresaService;
 
 import java.util.ArrayList;
@@ -31,11 +32,19 @@ public class EmpresaRest {
     @Autowired
     EmpresaService eser;
 
+    @Autowired
+    CategoriaService cser;
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Empresa e, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        Categoria categoria = cser.encontrar(e.getCategoria().getIdCategoria()).orElse(null);
+        if(categoria == null){
+            return new ResponseEntity<>("La categoria no fue encontrada", HttpStatus.NOT_FOUND);
+        }
+        e.setCategoria(categoria);
         eser.guardar(e);
         return ResponseEntity.ok(e);
     }
