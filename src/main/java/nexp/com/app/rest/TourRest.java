@@ -6,6 +6,7 @@
 package nexp.com.app.rest;
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.NorteXploradores;
+import nexp.com.app.negocio.response.PasajerosTour;
 import nexp.com.app.service.*;
 
 import java.util.ArrayList;
@@ -231,6 +232,28 @@ public class TourRest {
         transporteTour.setTour(tour);
         transporteTourService.guardar(transporteTour);
         return ResponseEntity.ok(transporteTourService.listar());
+    }
+
+    @GetMapping(path="/{idTour}/pasajerosTour")
+    public ResponseEntity<?> pasajerosTour(@PathVariable int idTour) {
+        List pasajerosTours = new ArrayList<>();
+        Tour tour = tourService.encontrar(idTour).orElse(null);
+        if (tour == null) {
+            return new ResponseEntity<ObjectError>(new ObjectError("id", "El tour no existe"), HttpStatus.NOT_FOUND);
+        }
+        for(Compra c:  tour.compraCollection()){
+               for(DetalleCompra d: c.detalleCompraCollection()){
+                   Persona persona = d.getPasajero().getPersona();
+                   PasajerosTour pasajeroTour = new PasajerosTour();
+                   pasajeroTour.setIdentificacion(persona.getIdPersona());
+                   pasajeroTour.setCorreo(persona.getCorreo());
+                   pasajeroTour.setNombre(persona.getNombre());
+                   pasajeroTour.setFechaNac(persona.getFechaNac());
+                   pasajeroTour.setUsername(c.getUsuario().getUsername());
+                   pasajerosTours.add(pasajeroTour);
+               }
+        }
+        return ResponseEntity.ok(pasajerosTours);
     }
 
 
