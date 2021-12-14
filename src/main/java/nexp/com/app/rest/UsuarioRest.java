@@ -8,6 +8,7 @@ package nexp.com.app.rest;
 import nexp.com.app.model.*;
 import nexp.com.app.negocio.NorteXploradores;
 import nexp.com.app.negocio.response.PaqueteCantidad;
+import nexp.com.app.negocio.response.TotalClientes;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 
@@ -256,7 +257,15 @@ public class UsuarioRest {
 //        return ResponseEntity.ok(cantidad);
 //    }
 
-    @GetMapping(path = "/usuariosMensuales")
+    @GetMapping(path = "/totalClientes")
+    public ResponseEntity<?> totalClientes(){
+        TotalClientes totalClientes = new TotalClientes();
+        totalClientes.setTotalClientes(user.listar().size()-1);
+        return ResponseEntity.ok(totalClientes);
+    }
+
+
+        @GetMapping(path = "/usuariosMensuales")
     public ResponseEntity<?> cantidadUsuariosM(){
         List<Usuario> usuariosReg = user.listar();
         LocalDate fechaActual = LocalDate.now();
@@ -342,7 +351,6 @@ public class UsuarioRest {
     }
 
 
-    //TODO Terminar este metodo, recordar que es necesario para el frontend en descuentos
     @GetMapping(path = "/{username}/cantidadViajes/")
     public ResponseEntity<?> cantidadViajesPorUsuario(@PathVariable String username) throws ParseException {
         Usuario u = user.getByNombreUsuario(username).get();
