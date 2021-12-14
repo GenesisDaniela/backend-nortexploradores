@@ -53,7 +53,6 @@ public class DetalleCompra implements Serializable {
     @JoinColumn(name = "compra", referencedColumnName = "id_compra")
     @ManyToOne
     private Compra compra;
-
     @JoinColumn(name = "pasajero", referencedColumnName = "id_pasajero")
     @ManyToOne
     private Pasajero pasajero;
