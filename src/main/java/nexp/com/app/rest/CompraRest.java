@@ -422,7 +422,6 @@ public class CompraRest {
     public ResponseEntity<?> totalPaquetesTabla() throws ParseException {
         String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-01-01";
         String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-12-31";
-        log.info(fecha1 + "*******" + fecha2);
         List<Paquete> paquetes=paqueteService.listar();
 
         List total = new ArrayList();
@@ -522,7 +521,20 @@ public class CompraRest {
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
 
         TotalPaquete paqueteCantidad = new TotalPaquete();
-        paqueteCantidad.setVentaMes(compraservice.totalPaquetes(fechaLD1,fechaLD2) - compraservice.totalPaquetesDev(fechaLD1,fechaLD2));
+
+        Integer totalDev = compraservice.totalPaquetesDev(fechaLD1,fechaLD2);
+        Integer totalCompra = compraservice.totalPaquetes(fechaLD1,fechaLD2);
+        if(totalDev== null){
+            totalDev=0;
+        }
+
+        if(totalCompra== null){
+            totalCompra=0;
+        }
+
+
+        paqueteCantidad.setTotal("total");
+        paqueteCantidad.setVentaMes(totalCompra-totalDev);
         return ResponseEntity.ok(paqueteCantidad);
     }
 
@@ -602,8 +614,17 @@ public class CompraRest {
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
 
         List total = new ArrayList();
+        Integer totalDev = compraservice.totalPaquetesDev(fechaLD1,fechaLD2);
+        Integer totalCompra = compraservice.totalPaquetes(fechaLD1,fechaLD2);
+        if(totalDev== null){
+            totalDev=0;
+        }
 
-        Integer totalValorPaquetes = compraservice.totalPaquetes(fechaLD1,fechaLD2) - compraservice.totalPaquetesDev(fechaLD1,fechaLD2);
+        if(totalCompra== null){
+            totalCompra=0;
+        }
+
+            Integer totalValorPaquetes =  totalCompra- totalDev;
 
         for(Paquete p:paquetes){
             Integer totalC = compraservice.comprasDePaquete( fechaLD1,fechaLD2,p.getIdPaq());
