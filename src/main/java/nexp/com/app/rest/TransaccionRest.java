@@ -194,8 +194,6 @@ public class TransaccionRest {
             if(!compra.getEstado().equals("PAGADO")){
                 EmailService email=new EmailService(emailUsuarioEmisor, clave);
 
-//                eyyyyy tambien tengo que mostrar el medio de pagooo en el correo pendiente
-
                 String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                         "        <tr>\n" +
                         "          <td align=\"center\" style=\"padding:0;\">\n" +
