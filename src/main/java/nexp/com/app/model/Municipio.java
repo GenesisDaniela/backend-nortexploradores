@@ -61,6 +61,8 @@ public class Municipio implements Serializable {
     @JoinColumn(name = "id_depto", referencedColumnName = "id_depto")
     @ManyToOne
     private Departamento idDepto;
+    @OneToMany(mappedBy = "municipio")
+    private Collection<Alojamiento> alojamientoCollection;
 
     public Municipio() {
     }
@@ -125,6 +127,10 @@ public class Municipio implements Serializable {
     public void setUrlUbicacion(String urlUbicacion) {
         this.urlUbicacion = urlUbicacion;
     }
+
+    public Collection<Alojamiento> alojamientoCollection() {return alojamientoCollection;}
+
+    public void setAlojamientoCollection(Collection<Alojamiento> alojamientoCollection) {this.alojamientoCollection = alojamientoCollection;}
 
     @Override
     public int hashCode() {

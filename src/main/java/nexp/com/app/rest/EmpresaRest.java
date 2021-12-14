@@ -6,6 +6,7 @@
 package nexp.com.app.rest;
 
 import nexp.com.app.model.*;
+import nexp.com.app.service.CategoriaService;
 import nexp.com.app.service.EmpresaService;
 
 import java.util.ArrayList;
@@ -31,19 +32,53 @@ public class EmpresaRest {
     @Autowired
     EmpresaService eser;
 
+    @Autowired
+    CategoriaService cser;
+
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Empresa e, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        Categoria categoria = cser.encontrar(e.getCategoria().getIdCategoria()).orElse(null);
+        if(categoria == null){
+            return new ResponseEntity<>("La categoria no fue encontrada", HttpStatus.NOT_FOUND);
+        }
+        e.setCategoria(categoria);
         eser.guardar(e);
         return ResponseEntity.ok(e);
     }
 
     @GetMapping
-    public ResponseEntity<List<Empresa>> getEmpresa() {
-        return ResponseEntity.ok(eser.listar());
+    public ResponseEntity<List<Empresa>> getEmpresa() { return ResponseEntity.ok(eser.listar());}
+
+    @GetMapping(path = "/seguroE")
+    public ResponseEntity<List<Empresa>> getEmpresaSeguros() {
+        List<Empresa> empresas = eser.listar();
+        List<Empresa> empresaSeguros = new ArrayList<>();
+        for(Empresa e: empresas){
+            if(e.getCategoria().getIdCategoria() == 2){
+                empresaSeguros.add(e);
+            }
+        }
+        return ResponseEntity.ok(empresaSeguros);
     }
+
+    @GetMapping(path = "/transporteE")
+    public ResponseEntity<List<Empresa>> getEmpresaTransportes() {
+        List<Empresa> empresas = eser.listar();
+        List<Empresa> empresaTransportes = new ArrayList<>();
+        for(Empresa e: empresas){
+            if(e.getCategoria().getIdCategoria() == 3){
+                empresaTransportes.add(e);
+            }
+        }
+        return ResponseEntity.ok(empresaTransportes);
+    }
+
+    @GetMapping(path = "/categoria")
+    public ResponseEntity<List<Categoria>> getCategoria() { return ResponseEntity.ok(cser.listar());}
 
     @PutMapping
     public ResponseEntity<?> editar(@RequestBody @Valid Empresa e, BindingResult br) {
@@ -125,7 +160,6 @@ public class EmpresaRest {
                 empresasTransportes.add(e);
             }
         }
-
         return ResponseEntity.ok(empresasTransportes);
     }
 

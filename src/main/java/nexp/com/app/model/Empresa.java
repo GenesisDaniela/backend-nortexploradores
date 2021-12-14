@@ -8,17 +8,7 @@ package nexp.com.app.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -54,13 +44,9 @@ public class Empresa implements Serializable {
     @Size(max = 25)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "mision")
     private String mision;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "vision")
     private String vision;
@@ -90,6 +76,9 @@ public class Empresa implements Serializable {
     private Collection<Seguro> seguroCollection;
     @OneToMany(mappedBy = "empresa")
     private Collection<Transporte> transporteCollection;
+    @JoinColumn(name = "categoria", referencedColumnName = "id_categoria")
+    @ManyToOne(optional = false)
+    private Categoria categoria;
 
     public Empresa() {
     }
@@ -200,6 +189,10 @@ public class Empresa implements Serializable {
     public void setTransporteCollection(Collection<Transporte> transporteCollection) {
         this.transporteCollection = transporteCollection;
     }
+
+    public Categoria getCategoria() {return categoria;}
+
+    public void setCategoria(Categoria categoria) {this.categoria = categoria;}
 
     public Boolean getEstado() {
         return estado;

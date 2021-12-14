@@ -15,6 +15,7 @@ import nexp.com.app.model.Actividad;
 import nexp.com.app.model.Alojamiento;
 import nexp.com.app.model.Municipio;
 import nexp.com.app.service.AlojamientoService;
+import nexp.com.app.service.MunicipioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,19 @@ public class AlojamientoRest {
     @Autowired
     AlojamientoService aser;
 
+    @Autowired
+    MunicipioService mser;
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Alojamiento a, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        Municipio municipio = mser.encontrar(a.getMunicipio().getIdMuni()).orElse(null);
+        if(municipio == null){
+            return new ResponseEntity<>("El municipio no fue encontrado", HttpStatus.NOT_FOUND);
+        }
+        a.setMunicipio(municipio);
         aser.guardar(a);
         return ResponseEntity.ok(a);
     }
