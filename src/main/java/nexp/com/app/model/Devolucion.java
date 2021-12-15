@@ -34,6 +34,8 @@ public class Devolucion implements Serializable {
     private Integer cantidad;
     @Column(name = "fecha")
     private LocalDate fecha;
+    @Column(name = "estado")
+    private boolean estado;
     @JoinColumn(name = "compra", referencedColumnName = "id_compra")
     @ManyToOne
     private Compra compra;
@@ -49,6 +51,14 @@ public class Devolucion implements Serializable {
         this.cantidad = cantidad;
         this.fecha = fecha;
         this.compra = compra;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public Integer getIdDevolucion() {

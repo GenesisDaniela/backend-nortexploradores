@@ -103,6 +103,10 @@ public class TransaccionRest {
 //      Compra Fallida
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
 
+            if(pser.encontrar((body.get("transaction_id"))) !=null){
+                return ResponseEntity.ok(pay);
+            }
+
             EmailService email=new EmailService(emailUsuarioEmisor, clave);
             String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                     "        <tr>\n" +
@@ -184,7 +188,7 @@ public class TransaccionRest {
                     "          </td>\n" +
                     "        </tr>\n" +
                     "      </table>";
-
+            pser.guardar(pay);
             email.enviarEmail(usuario.getEmail(), "Compra fallida #"+compra.getIdCompra(), cuerpo);
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
@@ -212,7 +216,7 @@ public class TransaccionRest {
                         "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">\n" +
                         "                              ¡Hola "+usuario.getUsername()+
                         ", has realizado el pago total del paquete turistico destino " +
-                        ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", gracias por viajar con nosotros!"+compra.getTotalCompra()+", esta es la informacion de tu compra:" +
+                        ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", gracias por viajar con nosotros!, esta es la informacion de tu compra:" +
                         "                    </td>\n" +
                         "                    </tr>\n" +
                         "                    <tr>\n" +
@@ -331,7 +335,7 @@ public class TransaccionRest {
                             "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">\n" +
                             "                              ¡Hola "+usuario.getUsername()+
                             ", has realizado el pago total del paquete turistico destino " +
-                            ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", gracias por viajar con nosotros!"+compra.getTotalCompra()+", esta es la informacion de tu compra:" +
+                            ""+compra.getTour().getPaquete().getMunicipio().getNombre()+", gracias por viajar con nosotros!, esta es la informacion de tu compra:" +
                             "                    </td>\n" +
                             "                    </tr>\n" +
                             "                    <tr>\n" +
