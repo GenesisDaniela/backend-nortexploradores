@@ -154,6 +154,7 @@ public class DevolucionRest {
         if(dev == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id","la devolucion no existe"), HttpStatus.NOT_FOUND);
         }
+        dev.setEstado(false);
         Compra compra = dev.getCompra();
         String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                 "        <tr>\n" +
