@@ -79,6 +79,14 @@ public class Compra implements Serializable {
         this.tour = tour;
     }
 
+    public Descuento getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Descuento descuento) {
+        this.descuento = descuento;
+    }
+
     public Tour getTour() {
         return tour;
     }

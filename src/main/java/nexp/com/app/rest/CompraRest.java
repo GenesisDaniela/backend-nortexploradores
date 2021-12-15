@@ -74,6 +74,8 @@ public class CompraRest {
 
     @Value("${spring.mail.password}")
     String clave;
+
+
     
     @GetMapping
     public ResponseEntity<List<Compra>> getCompra() {
@@ -101,6 +103,9 @@ public class CompraRest {
     public ResponseEntity<?> compraPagada(@PathVariable int idUsuario){
         return ResponseEntity.ok(compraservice.comprasPagadas(idUsuario));
     }
+
+
+
     @PostMapping(path = "/compraReservada/{idtour}")
     public ResponseEntity<Compra> crearCompraReservada(@RequestBody @Valid Compra compra, @PathVariable int idtour){
         Tour t = tourService.encontrar(idtour).get();
@@ -113,14 +118,14 @@ public class CompraRest {
             return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
         }
         Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
-//        for(Compra c: usuario.compraCollection()){
-//            if(c.getTour().getIdTour() == idtour){
-//                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
-//                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
-//                }
-//
-//            }
-//        }
+        for(Compra c: usuario.compraCollection()){
+            if(c.getTour().getIdTour() == idtour){
+                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
 
         Reserva reserva = new Reserva();
         reserva.setFecha(LocalDate.now());
@@ -133,6 +138,35 @@ public class CompraRest {
         return ResponseEntity.ok(compra);
     }
 
+
+    @PostMapping(path = "/compraTotalPago/{idtour}")
+    public ResponseEntity<Compra> compraTotal(@RequestBody @Valid Compra compra, @PathVariable int idtour){
+        Tour t = tourService.encontrar(idtour).get();
+        Date fechaSalida = t.getFechaSalida();
+        Date fechaReserva = new Date();
+        int milisegundospordia= 86400000;
+        int dias = (int) ((fechaSalida.getTime()-fechaReserva.getTime()) / milisegundospordia);
+
+        if(dias<3){
+            return new ResponseEntity("No se puede reservar menos de 3 días antes de la salida del paquete", HttpStatus.BAD_REQUEST);
+        }
+        Usuario usuario = usuarioService.encontrar(compra.getUsuario().getId_Usuario()).get();
+        for(Compra c: usuario.compraCollection()){
+            if(c.getTour().getIdTour() == idtour){
+                if(c.getEstado().equals("PAGADO")|| c.getEstado().equals("PAGO_PARCIAL")){
+                    return new ResponseEntity("No puedes comprar un mismo tour dos veces", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        compra.setFecha(LocalDate.now());
+        compra.setEstado("PENDIENTE");
+        compraservice.guardar(compra);
+        return ResponseEntity.ok(compra);
+    }
+
+
     @GetMapping(path = "/{id}/transacciones")
     public ResponseEntity<List<Transaccionp>> transaccionPorCompra(@PathVariable Long id) {
         return ResponseEntity.ok((List)compraservice.encontrar(id).get().transaccionpCollection());
@@ -144,7 +178,6 @@ public class CompraRest {
         if(reserva == null){
             return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
         }
-
         Compra compra = ((List<Compra>)reserva.compraCollection()).get(0);
 
         String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
@@ -233,17 +266,100 @@ public class CompraRest {
             return ResponseEntity.ok(reserva); // La reserva no fue pagada ni en su 50%
         }
 
+
         int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
         Tour tour = compra.getTour();
         tour.setCantCupos(cuposDisponibles);
         Notificacion notificacion = new Notificacion();
         EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(compra.getUsuario().getEmail(), "Reserva cancelada",cuerpo);
 
         notificacion.setDescripcion("La reserva del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
         notificacion.setUsuario(compra.getUsuario());
         notificacion.setFecha(new Date());
         notificacionService.guardar(notificacion);
+
+        Devolucion devolucion = new Devolucion();
+        devolucion.setCantidad(0);
+        devolucion.setCompra(reserva.compraCollection().iterator().next());
+        devolucion.setFecha(LocalDate.now());
+        devolucion.setEstado(true);
+        Devolucion dev = devolucionService.guardar(devolucion);
+
+        cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Cancelación de compra</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Cancelaste la compra del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+", con fecha de salida de "+compra.getTour().getFechaSalida()+" y fecha de llegada: "+compra.getTour().getFechaLlegada()+"," +
+                "                         debes comunicarte con el Administrador y presentar el siguiente numero de devolución:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                "                                    <th scope=\"col\">#Devolucion</th>\n" +
+                "                                    <th scope=\"col\">#Referencia</th>\n" +
+                "                                    <th scope=\"col\">Total</th>\n" +
+                "                                    <th scope=\"col\">Estado</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                "                                    <td>"+dev.getIdDevolucion()+"</td>\n" +
+                "                                    <td>"+compra.getIdCompra()+"</td>\n" +
+                "                                    <td>"+compra.getTotalCompra()+"</td>\n" +
+                "                                    <td>CANCELADO</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+
+        email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
 
         reserva.setEstado("CANCELADA");
         compra.setEstado("CANCELADO");
@@ -253,6 +369,212 @@ public class CompraRest {
         return ResponseEntity.ok(reserva);
     }
 
+
+    @GetMapping(path = "/{id}/cancelarCompra")
+    public ResponseEntity<?> cancelarCompra(@PathVariable Long id) {
+        Compra compra = compraservice.encontrar(id).get();
+        if(compra == null){
+            return new ResponseEntity("COMPRA NO ENCONTRADA", HttpStatus.NOT_FOUND);
+        }
+
+        String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Cancelación de compra</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Cancelaste la compra del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+", con fecha de salida de "+compra.getTour().getFechaSalida()+" y fecha de llegada: "+compra.getTour().getFechaLlegada()+", información:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                "                                    <th scope=\"col\">#Referencia</th>\n" +
+                "                                    <th scope=\"col\">Total</th>\n" +
+                "                                    <th scope=\"col\">Estado</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                "                                    <td>"+compra.getIdCompra()+"</td>\n" +
+                "                                    <td>"+compra.getTotalCompra()+"</td>\n" +
+                "                                    <td>CANCELADO</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+
+        if(compra.getEstado().equals("PENDIENTE")){
+            for(DetalleCompra det: compra.detalleCompraCollection()) {
+                detalleCompraService.eliminar(det.getIdDetalle());
+            }
+            for(Transaccionp t: compra.transaccionpCollection()){
+                transaccionService.eliminar(t.getTransactionId());
+            }
+            compraservice.eliminar(compra.getIdCompra());
+
+
+            EmailService email=new EmailService(emailUsuarioEmisor, clave);
+            email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
+            return ResponseEntity.ok(compra); // La reserva no fue pagada ni en su 50%
+        }
+
+        int cuposDisponibles = compra.getTour().getCantCupos() + compra.getCantidadPasajeros();
+        Tour tour = compra.getTour();
+        tour.setCantCupos(cuposDisponibles);
+        Notificacion notificacion = new Notificacion();
+        EmailService email=new EmailService(emailUsuarioEmisor, clave);
+
+        notificacion.setDescripcion("La compra del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
+        notificacion.setUsuario(compra.getUsuario());
+        notificacion.setFecha(new Date());
+        notificacionService.guardar(notificacion);
+
+        Devolucion devolucion = new Devolucion();
+        devolucion.setCantidad(0);
+        devolucion.setCompra(compra);
+        devolucion.setFecha(LocalDate.now());
+        devolucion.setEstado(true);
+        Devolucion dev = devolucionService.guardar(devolucion);
+
+         cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Cancelación de compra</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Cancelaste la compra del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+", con fecha de salida de "+compra.getTour().getFechaSalida()+" y fecha de llegada: "+compra.getTour().getFechaLlegada()+"," +
+                "                         debes comunicarte con el Administrador y presentar el siguiente numero de devolución:</p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                    <td style=\"padding:0;\">\n" +
+                "                        <table class=\"simple-style\" border='1'>\n" +
+                "                            <thead>\n" +
+                "                                <tr>\n" +
+                 "                                    <th scope=\"col\">#Devolucion</th>\n" +
+                 "                                    <th scope=\"col\">#Referencia</th>\n" +
+                "                                    <th scope=\"col\">Total</th>\n" +
+                "                                    <th scope=\"col\">Estado</th>\n" +
+                "                                </tr>\n" +
+                "                            </thead>\n" +
+                "                            <tbody>\n" +
+                "                                <tr>\n" +
+                 "                                    <td>"+dev.getIdDevolucion()+"</td>\n" +
+                 "                                    <td>"+compra.getIdCompra()+"</td>\n" +
+                "                                    <td>"+compra.getTotalCompra()+"</td>\n" +
+                "                                    <td>CANCELADO</td>\n" +
+                "                                </tr>\n" +
+                "                            </tbody>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.twitter.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/tw_1.png\" alt=\"Twitter\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"http://www.facebook.com/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
+
+        email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
+        compra.setEstado("CANCELADO");
+        compraservice.guardar(compra);
+        tourService.guardar(tour);
+        return ResponseEntity.ok(compra);
+    }
+
+    @GetMapping(path = "/{id}/transaccionesApp")
+    public ResponseEntity<?> transaccionesDeCompra(@PathVariable Long id){
+        Compra c = compraservice.encontrar(id).get();
+
+        Transaccionp t = new Transaccionp();
+        for(Transaccionp transaccionp: c.transaccionpCollection()){
+            if(transaccionp.getResponseMessagePol().equals("APPROVED")){
+                t = transaccionp;
+                break;
+            }
+        }
+        return ResponseEntity.ok(t);
+    }
     //cantidad de tours vendidos(compras de cualquier tour?)
     // en el mes exceptuando los que devolucion != null
 //    //cantidad de tours vendidos(compras de cualquier tour?)
@@ -506,8 +828,8 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
-    @GetMapping(path = "/{mes}/totalVendidoMes")
-    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes){
+    @GetMapping(path = "/{mes}/{anio}/totalVendidoMes")
+    public ResponseEntity<?> totalVendidoMes(@PathVariable int mes, @PathVariable int anio){
         int dia = 31;
         if(mes==2)
             dia=28;
@@ -517,8 +839,8 @@ public class CompraRest {
         if(mes < 10)
             mesT = "0" + mes;
 
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ anio+"-"+mesT+"-01";
+        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
 
         LocalDate fechaLD1 = LocalDate.parse(fecha1);
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
@@ -542,8 +864,8 @@ public class CompraRest {
     }
 
 
-    @GetMapping(path = "/{mes}/resumenTotal")
-    public ResponseEntity<?> resumenTotal(@PathVariable int mes) throws ParseException {
+    @GetMapping(path = "/{mes}/{anio}/resumenTotal")
+    public ResponseEntity<?> resumenTotal(@PathVariable int mes, @PathVariable int anio) throws ParseException {
         ResumenTotal resumenTotal = new ResumenTotal();
 
         int dia = 31;
@@ -555,8 +877,8 @@ public class CompraRest {
         if(mes < 10)
             mesT = "0" + mes;
 
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ anio+"-"+mesT+"-01";
+        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
 
         LocalDate fechaLD1 = LocalDate.parse(fecha1);
         LocalDate fechaLD2 = LocalDate.parse(fecha2);
@@ -598,8 +920,8 @@ public class CompraRest {
 
     }
 
-    @GetMapping(path = "/{mes}/totalPaquetesMesTabla")
-    public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes) throws ParseException {
+    @GetMapping(path = "/{mes}/{anio}/totalPaquetesMesTabla")
+    public ResponseEntity<?> totalPaquetesMesTabla(@PathVariable int mes, @PathVariable int anio) throws ParseException {
         int dia = 31;
         if(mes==2)
             dia=28;
@@ -608,8 +930,8 @@ public class CompraRest {
         String mesT = "" + mes;
         if(mes < 10)
             mesT = "0" + mes;
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ anio+"-"+mesT+"-01";
+        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
 
         List<Paquete> paquetes=paqueteService.listar();
 
@@ -671,8 +993,8 @@ public class CompraRest {
         return ResponseEntity.ok(total);
     }
 
-    @GetMapping(path = "/{mes}/totalReservasMesTabla")
-    public ResponseEntity<?> totalReservasMesTabla(@PathVariable int mes){
+    @GetMapping(path = "/{mes}/{anio}/totalReservasMesTabla")
+    public ResponseEntity<?> totalReservasMesTabla(@PathVariable int mes, @PathVariable int anio){
 
         int dia = 31;
         if(mes==2)
@@ -683,8 +1005,8 @@ public class CompraRest {
         if(mes < 10)
             mesT = "0" + mes;
 
-        String fecha1=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-01";
-        String fecha2=""+ Calendar.getInstance().get(Calendar.YEAR)+"-"+mesT+"-"+dia+"";
+        String fecha1=""+ anio+"-"+mesT+"-01";
+        String fecha2=""+ anio+"-"+mesT+"-"+dia+"";
 
         LocalDate fechaLD1 = LocalDate.parse(fecha1);
         LocalDate fechaLD2 = LocalDate.parse(fecha2);

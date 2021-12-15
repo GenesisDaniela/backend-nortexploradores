@@ -43,6 +43,15 @@ public class NorteXploradores {
         }
         return reservados;
     }
+    public List<Compra> paquetesTotales(List<Compra> compras){
+        List<Compra> reservados = new ArrayList<>();
+        for(Compra c: compras){
+            if(c.getReserva() == null){
+                reservados.add(c);
+            }
+        }
+        return reservados;
+    }
 
     public int[] cantidadPaquetes() {
         List<Compra> compras = compraService.listar();
