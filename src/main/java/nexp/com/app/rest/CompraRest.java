@@ -1026,7 +1026,6 @@ public class CompraRest {
         return ResponseEntity.ok(reservaTablas);
     }
 
-    //hacer uri del total de ventas en todo el año para la card de ventas (la verde)
     @GetMapping(path = "/totalVentasAnuales")
     public ResponseEntity<?> totalVentasAnuales(){
         LocalDate fechaActual = LocalDate.now();
