@@ -104,10 +104,9 @@ public class TransaccionRest {
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
 
             if(pser.encontrar((body.get("transaction_id"))) !=null){
-                pser.guardar(pay);
                 return ResponseEntity.ok(pay);
             }
-
+            pser.guardar(pay);
             EmailService email=new EmailService(emailUsuarioEmisor, clave);
             String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                     "        <tr>\n" +
