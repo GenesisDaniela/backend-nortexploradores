@@ -104,6 +104,7 @@ public class TransaccionRest {
         if(!pay.getResponseMessagePol().equals("APPROVED") && !pay.getResponseMessagePol().equals("PENDING")){
 
             if(pser.encontrar((body.get("transaction_id"))) !=null){
+                pser.guardar(pay);
                 return ResponseEntity.ok(pay);
             }
 
