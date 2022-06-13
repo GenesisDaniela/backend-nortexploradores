@@ -10,9 +10,9 @@ import nexp.com.app.model.Compra;
 import nexp.com.app.model.Descuento;
 import nexp.com.app.model.Devolucion;
 import nexp.com.app.model.Empresa;
-import nexp.com.app.negocio.EmailService;
 import nexp.com.app.service.DescuentoService;
 import nexp.com.app.service.DevolucionService;
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -43,8 +44,10 @@ public class DevolucionRest {
     @Value("${spring.mail.password}")
     String clave;
 
+    @Autowired
+    EmailServiceImp emailServiceImp;
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody @Valid Devolucion d, BindingResult br) {
+    public ResponseEntity<?> guardar(@RequestBody @Valid Devolucion d, BindingResult br) throws MessagingException {
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -127,8 +130,7 @@ public class DevolucionRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(compra.getUsuario().getEmail(), "Devolución NorteXploradores", cuerpo);
+        emailServiceImp.enviarEmail("Devolución NorteXploradores", cuerpo,compra.getUsuario().getEmail());
 
         d.setCompra(compra);
         dser.guardar(d);
@@ -146,7 +148,7 @@ public class DevolucionRest {
     }
 
     @PutMapping
-    public ResponseEntity<?> editar(@RequestBody @Valid Devolucion d, BindingResult br){
+    public ResponseEntity<?> editar(@RequestBody @Valid Devolucion d, BindingResult br) throws MessagingException {
         if(br.hasErrors()){
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -230,8 +232,7 @@ public class DevolucionRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(compra.getUsuario().getEmail(), "Devolución NorteXploradores compra #"+compra.getIdCompra(), cuerpo);
+        emailServiceImp.enviarEmail("Devolución NorteXploradores compra #"+compra.getIdCompra(), cuerpo, compra.getUsuario().getEmail());
 
         dser.guardar(d);
         return ResponseEntity.ok(dser.encontrar(d.getIdDevolucion()));

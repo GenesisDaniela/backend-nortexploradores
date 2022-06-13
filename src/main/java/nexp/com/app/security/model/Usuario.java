@@ -57,6 +57,14 @@ public class Usuario {
     private Collection<Sugerencia> sugerenciaCollection;
     @OneToMany(mappedBy = "usuario")
     private Collection<SolicitudTour> solicitudTourCollection;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 16777215)
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Collection<PasswordResetToken> passwordResetTokenCollection;
     public Usuario() {
     }
 
@@ -189,6 +197,21 @@ public class Usuario {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public Collection<PasswordResetToken> passwordResetTokenCollection() {
+        return passwordResetTokenCollection;
+    }
+
+    public void setPasswordResetTokenCollection(Collection<PasswordResetToken> passwordResetTokenCollection) {
+        this.passwordResetTokenCollection = passwordResetTokenCollection;
+    }
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
     @Override

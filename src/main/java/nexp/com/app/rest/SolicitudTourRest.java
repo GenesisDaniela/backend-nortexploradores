@@ -2,10 +2,10 @@ package nexp.com.app.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
-import nexp.com.app.negocio.EmailService;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.*;
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,9 @@ public class SolicitudTourRest {
     @Value("${spring.mail.password}")
     String clave;
 
+    @Autowired
+    EmailServiceImp emailServiceImp;
+
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> cantidadSolicitudes() {
         int total = 0;
@@ -71,7 +75,7 @@ public class SolicitudTourRest {
 
 
     @PostMapping()
-    public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br){
+    public ResponseEntity<?> guardar(@RequestBody @Valid SolicitudTour solicitudTour, BindingResult br) throws MessagingException {
 
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
@@ -175,8 +179,8 @@ public class SolicitudTourRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(solicitudTour.getUsuario().getEmail(), "Solicitud de viaje", cuerpo);
+
+        emailServiceImp.enviarEmail("Solicitud de viaje", cuerpo,solicitudTour.getUsuario().getEmail());
 
 
         Notificacion notificacion = new Notificacion();
@@ -196,7 +200,7 @@ public class SolicitudTourRest {
     }
 
     @GetMapping(path = "/{id}/rechazar")
-    public ResponseEntity<?> rechazarSolicitud(@PathVariable int id) {
+    public ResponseEntity<?> rechazarSolicitud(@PathVariable int id) throws MessagingException {
         SolicitudTour s = spaqser.encontrar(id).orElse(null);
         Tour t = s.getTour();
         List<Notificacion> notificacions =(List) s.notificacionCollection();
@@ -278,8 +282,7 @@ public class SolicitudTourRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(s.getUsuario().getEmail(), "Solicitud rechazada", cuerpo);
+        emailServiceImp.enviarEmail("Solicitud rechazada", cuerpo,s.getUsuario().getEmail());
         return ResponseEntity.ok("Solicitud eliminada");
 
     }
@@ -298,7 +301,7 @@ public class SolicitudTourRest {
     }
 
     @PostMapping(path = "/aceptar")
-    public ResponseEntity<?> aceptarSolicitudTour(@RequestBody SolicitudTour solicitudTour) { // aqui deberia enviar la solicitud completa guardarla y aceptarla aqui mismo
+    public ResponseEntity<?> aceptarSolicitudTour(@RequestBody SolicitudTour solicitudTour) throws MessagingException { // aqui deberia enviar la solicitud completa guardarla y aceptarla aqui mismo
 
         Tour tour = solicitudTour.getTour();
 
@@ -386,8 +389,8 @@ public class SolicitudTourRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(solicitudTour.getUsuario().getEmail(), "Solicitud aceptada", cuerpo);
+        emailServiceImp.enviarEmail("Solicitud aceptada", cuerpo,solicitudTour.getUsuario().getEmail());
+
         solicitudTour.setEstado("ACEPTADO");
         spaqser.guardar(solicitudTour);
     return ResponseEntity.ok(solicitudTour);
