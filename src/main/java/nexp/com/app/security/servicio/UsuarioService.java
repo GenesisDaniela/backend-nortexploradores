@@ -35,6 +35,9 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(nombreUsuario);
     }
 
+    public Usuario findByConfirmationToken(String token){ return usuarioRepository.findUsuarioByConfirmationToken(token);}
+    public Usuario findByResetPassword(String token){ return usuarioRepository.encontrarUsuarioPorToken(token);}
+
     public int[][] resultadoMensual(){
         List<Usuario> usuariosReg = usuarioRepository.findAll();
         LocalDate fechaActual = LocalDate.now();

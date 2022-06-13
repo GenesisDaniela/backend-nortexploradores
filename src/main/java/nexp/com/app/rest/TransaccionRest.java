@@ -7,7 +7,6 @@ package nexp.com.app.rest;
 
 
 import nexp.com.app.model.*;
-import nexp.com.app.negocio.EmailService;
 import nexp.com.app.negocio.NorteXploradores;
 
 import java.sql.Time;
@@ -16,6 +15,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.service.*;
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.mail.MessagingException;
 
 /**
  *
@@ -59,8 +61,13 @@ public class TransaccionRest {
 
     @Autowired
     public ReservaService reservaService;
+
+    @Autowired
+    EmailServiceImp emailServiceImp;
 //    @Autowired
 //    public UsuarioService user;
+
+
 
     @Value("${spring.mail.username}")
     String emailUsuarioEmisor;
@@ -77,7 +84,7 @@ public class TransaccionRest {
 
 
     @PostMapping(path = "/confirmacion")
-    public ResponseEntity<?> pago(@RequestParam Map<String, String> body) {
+    public ResponseEntity<?> pago(@RequestParam Map<String, String> body) throws MessagingException {
 
         Transaccionp pay = new Transaccionp();
         log.info(body.toString());
@@ -107,7 +114,6 @@ public class TransaccionRest {
                 return ResponseEntity.ok(pay);
             }
             pser.guardar(pay);
-            EmailService email=new EmailService(emailUsuarioEmisor, clave);
             String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                     "        <tr>\n" +
                     "          <td align=\"center\" style=\"padding:0;\">\n" +
@@ -189,14 +195,14 @@ public class TransaccionRest {
                     "        </tr>\n" +
                     "      </table>";
             pser.guardar(pay);
-            email.enviarEmail(usuario.getEmail(), "Compra fallida #"+compra.getIdCompra(), cuerpo);
+            emailServiceImp.enviarEmail("Compra fallida #"+compra.getIdCompra(), cuerpo,usuario.getEmail());
+
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
 //      Es una compra o pago total 100%
         if(pay.getResponseMessagePol().equals("APPROVED") && pay.getValue() == (long)compra.getTotalCompra()){ //Se pagó el total y fue aprobada
             if(!compra.getEstado().equals("PAGADO")){
-                EmailService email=new EmailService(emailUsuarioEmisor, clave);
 
                 String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                         "        <tr>\n" +
@@ -279,7 +285,8 @@ public class TransaccionRest {
                         "          </td>\n" +
                         "        </tr>\n" +
                         "      </table>";
-                email.enviarEmail(usuario.getEmail(), "Pago total registrado #"+compra.getIdCompra(), cuerpo);
+                emailServiceImp.enviarEmail("Pago total registrado #"+compra.getIdCompra(), cuerpo,usuario.getEmail());
+
                 compra.setEstado("PAGADO");
                 Tour t = compra.getTour();
                 t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
@@ -315,7 +322,6 @@ public class TransaccionRest {
             }
 
             if(estaAprobada){
-                EmailService email=new EmailService(emailUsuarioEmisor, clave);
                 if(!compra.getEstado().equals("PAGADO")){
                     String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                             "        <tr>\n" +
@@ -399,8 +405,8 @@ public class TransaccionRest {
                             "        </tr>\n" +
                             "      </table>";
 
-                    email.enviarEmail(usuario.getEmail(), "Segundo pago registrado #"+compra.getIdCompra(), cuerpo);
                     compra.setEstado("PAGADO");
+                    emailServiceImp.enviarEmail("Segundo pago registrado #"+compra.getIdCompra(), cuerpo,usuario.getEmail());
                     t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
 
                     if(t.getCantCupos()<10){
@@ -418,8 +424,6 @@ public class TransaccionRest {
             return new ResponseEntity<>(body, HttpStatus.OK);
         }
         else{
-            EmailService email=new EmailService(emailUsuarioEmisor, clave);
-
             if(!compra.getEstado().equals("PAGO_PARCIAL")){
                 String cuerpo=" <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                         "        <tr>\n" +
@@ -504,7 +508,8 @@ public class TransaccionRest {
                         "        </tr>\n" +
                         "      </table>";
 
-                email.enviarEmail(usuario.getEmail(), "Pago pendiente #"+compra.getIdCompra(), cuerpo);
+                emailServiceImp.enviarEmail("Pago pendiente #"+compra.getIdCompra(), cuerpo,usuario.getEmail());
+
                 t.setCantCupos(t.getCantCupos()-compra.getCantidadPasajeros());
                 compra.setEstado("PAGO_PARCIAL");
                 Reserva reserva = compra.getReserva();

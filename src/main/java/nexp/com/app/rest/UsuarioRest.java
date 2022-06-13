@@ -19,12 +19,14 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.service.ClientePasajeroService;
 import nexp.com.app.service.CompraService;
 import nexp.com.app.service.PasajeroService;
 import nexp.com.app.service.PersonaService;
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +61,16 @@ public class UsuarioRest {
 
     NorteXploradores nexp = new NorteXploradores();
 
+    @Autowired
+    EmailServiceImp emailServiceImp;
+
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuario() {
         return ResponseEntity.ok(user.listar());
     }
 
     //revisar
+
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Usuario> eliminarUsuario(@PathVariable int id) {
 
@@ -274,6 +280,12 @@ public class UsuarioRest {
         return ResponseEntity.ok(totalClientes);
     }
 
+    @GetMapping(path = "/enviarcorreo/{correo}")
+    public ResponseEntity<?> enviarCorreo(@PathVariable String correo) throws MessagingException {
+        emailServiceImp.enviarEmail("Devolución NorteXploradores", "Mensaje",correo);
+
+        return ResponseEntity.ok("");
+    }
 
         @GetMapping(path = "/usuariosMensuales")
     public ResponseEntity<?> cantidadUsuariosM(){

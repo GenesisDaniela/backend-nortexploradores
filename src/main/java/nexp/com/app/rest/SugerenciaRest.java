@@ -6,12 +6,12 @@
 package nexp.com.app.rest;
 
 import nexp.com.app.model.*;
-import nexp.com.app.negocio.EmailService;
 import nexp.com.app.negocio.response.CorreoSugerencia;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
 import nexp.com.app.service.NotificacionService;
 import nexp.com.app.service.SugerenciaService;
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,9 @@ public class SugerenciaRest {
     @Value("${spring.mail.password}")
     String clave;
 
+    @Autowired
+    EmailServiceImp emailServiceImp;
+
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Sugerencia s, BindingResult br) {
         if (br.hasErrors()) {
@@ -78,7 +82,7 @@ public class SugerenciaRest {
     }
 
     @PostMapping(path = "/responder")
-    public ResponseEntity<?> responderSugerencia(@RequestBody CorreoSugerencia correoSugerencia) {
+    public ResponseEntity<?> responderSugerencia(@RequestBody CorreoSugerencia correoSugerencia) throws MessagingException {
         Sugerencia sugerencia =sugerenciaService.encontrar(correoSugerencia.getIdSugerencia()).get();
 
         String cuerpo = "<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
@@ -152,8 +156,7 @@ public class SugerenciaRest {
                 "          </td>\n" +
                 "        </tr>\n" +
                 "      </table>";
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
-        email.enviarEmail(correoSugerencia.getCorreo(), "Respuesta a sugerencia", cuerpo);
+        emailServiceImp.enviarEmail("Respuesta a sugerencia", cuerpo,correoSugerencia.getCorreo());
 
         return ResponseEntity.ok(sser.listar());
     }

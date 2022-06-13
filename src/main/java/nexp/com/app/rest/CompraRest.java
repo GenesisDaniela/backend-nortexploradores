@@ -8,7 +8,6 @@ package nexp.com.app.rest;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import nexp.com.app.model.*;
-import nexp.com.app.negocio.EmailService;
 import nexp.com.app.negocio.response.*;
 import nexp.com.app.security.model.Usuario;
 import nexp.com.app.security.servicio.UsuarioService;
@@ -24,12 +23,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import nexp.com.app.service.imp.EmailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 /**
@@ -68,6 +69,9 @@ public class CompraRest {
 
     @Autowired
     DevolucionService devolucionService;
+
+    @Autowired
+    EmailServiceImp emailServiceImp;
 
     @Value("${spring.mail.username}")
     String emailUsuarioEmisor;
@@ -173,7 +177,7 @@ public class CompraRest {
     }
 
     @GetMapping(path = "/{id}/cancelarReserva")
-    public ResponseEntity<?> cancelarReserva(@PathVariable int id) {
+    public ResponseEntity<?> cancelarReserva(@PathVariable int id) throws MessagingException {
         Reserva reserva = reservaService.encontrar(id).get();
         if(reserva == null){
             return new ResponseEntity("RESERVA NO ENCONTRADA", HttpStatus.NOT_FOUND);
@@ -259,10 +263,7 @@ public class CompraRest {
                         transaccionService.eliminar(t.getTransactionId());
                 }
                 compraservice.eliminar(compra.getIdCompra());
-
-
-            EmailService email=new EmailService(emailUsuarioEmisor, clave);
-            email.enviarEmail(compra.getUsuario().getEmail(), "Reserva cancelada",cuerpo);
+            emailServiceImp.enviarEmail("Reserva cancelada", cuerpo,compra.getUsuario().getEmail());
             return ResponseEntity.ok(reserva); // La reserva no fue pagada ni en su 50%
         }
 
@@ -271,7 +272,6 @@ public class CompraRest {
         Tour tour = compra.getTour();
         tour.setCantCupos(cuposDisponibles);
         Notificacion notificacion = new Notificacion();
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
 
         notificacion.setDescripcion("La reserva del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
         notificacion.setUsuario(compra.getUsuario());
@@ -359,7 +359,7 @@ public class CompraRest {
                 "        </tr>\n" +
                 "      </table>";
 
-        email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
+        emailServiceImp.enviarEmail("Compra cancelada", cuerpo,compra.getUsuario().getEmail());
 
         reserva.setEstado("CANCELADA");
         compra.setEstado("CANCELADO");
@@ -371,7 +371,7 @@ public class CompraRest {
 
 
     @GetMapping(path = "/{id}/cancelarCompra")
-    public ResponseEntity<?> cancelarCompra(@PathVariable Long id) {
+    public ResponseEntity<?> cancelarCompra(@PathVariable Long id) throws MessagingException {
         Compra compra = compraservice.encontrar(id).get();
         if(compra == null){
             return new ResponseEntity("COMPRA NO ENCONTRADA", HttpStatus.NOT_FOUND);
@@ -456,10 +456,8 @@ public class CompraRest {
                 transaccionService.eliminar(t.getTransactionId());
             }
             compraservice.eliminar(compra.getIdCompra());
+            emailServiceImp.enviarEmail("Compra cancelada", cuerpo,compra.getUsuario().getEmail());
 
-
-            EmailService email=new EmailService(emailUsuarioEmisor, clave);
-            email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
             return ResponseEntity.ok(compra); // La reserva no fue pagada ni en su 50%
         }
 
@@ -467,7 +465,6 @@ public class CompraRest {
         Tour tour = compra.getTour();
         tour.setCantCupos(cuposDisponibles);
         Notificacion notificacion = new Notificacion();
-        EmailService email=new EmailService(emailUsuarioEmisor, clave);
 
         notificacion.setDescripcion("La compra del usuario "+compra.getUsuario().getUsername()+" al viaje del paquete destino "+compra.getTour().getPaquete().getMunicipio().getNombre()+" con fecha de salida "+compra.getTour().getFechaSalida()+" ha sido cancelada");
         notificacion.setUsuario(compra.getUsuario());
@@ -555,7 +552,8 @@ public class CompraRest {
                 "        </tr>\n" +
                 "      </table>";
 
-        email.enviarEmail(compra.getUsuario().getEmail(), "Compra cancelada",cuerpo);
+        emailServiceImp.enviarEmail("Compra cancelada", cuerpo,compra.getUsuario().getEmail());
+
         compra.setEstado("CANCELADO");
         compraservice.guardar(compra);
         tourService.guardar(tour);
