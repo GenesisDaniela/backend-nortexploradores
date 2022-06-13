@@ -38,6 +38,7 @@ public class EmpresaRest {
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody @Valid Empresa e, BindingResult br) {
+
         if (br.hasErrors()) {
             return new ResponseEntity<List<ObjectError>>(br.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -89,6 +90,7 @@ public class EmpresaRest {
         if(empresa == null){
             return new ResponseEntity<ObjectError>(new ObjectError("id", "La empresa no existe"), HttpStatus.NOT_FOUND);
         }
+
         eser.guardar(e);
         return ResponseEntity.ok(eser.encontrar(e.getIdEmpresa()));
     }
