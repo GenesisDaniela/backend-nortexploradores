@@ -341,36 +341,64 @@ public class AuthController {
         u.setPassword(passwordEncoder.encode(loginUsuario.getPassword()));
         usuarioService.guardar(u);
 
-        emailServiceImp.enviarEmail("Contraseña actualizada",
-                "<!DOCTYPE html>\n" +
-                        "<html lang=\"en\">\n" +
-                        "\n" +
-                        "<head>\n" +
-                        "    <meta charset=\"UTF-8\">\n" +
-                        "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                        "    <title>Document</title>\n" +
-                        "</head>\n" +
-                        "\n" +
-                        "<body style=\"width: 800px\">\n" +
-                        "    <div style=\"background-color: #a5b4fc; width: 100%; padding: 3rem 0;\">\n" +
-                        "        <div style=\"text-align: center; background-color: #ffffff; margin: 0 auto; width: 80%; border-radius: 8px;\">\n" +
-                        "            <img style=\"margin-top: 3rem; width: 190px\"\n" +
-                        "                src=\"https://master.d1oc2nyuhwk984.amplifyapp.com/assets/images/logo.png\" alt=\"logo\">\n" +
-                        "            <p style=\"margin: 1rem 0; font-size: 25px;\">Cambio de contraseña</p>\n" +
-                        "            <p style=\"color: #424242;\">Hola, <b>"+u.getUsername()+"</b>, se ha cambiado tu contraseña en el sistema.  \n" +
-                        "            </p>\n" +
-                        "            <div style=\"width: 100%; border-top: 2px solid #a5b4fc; padding: 1rem 0\">\n" +
-                        "                <p>Copyright © 2022 Analytic Hierarchy Process <br> Todos los derechos reservados.</p>\n" +
-                        "            </div>\n" +
-                        "        </div>\n" +
-                        "    </div>\n" +
-                        "</body>\n" +
-                        "\n" +
-                        "</html>"
+        String cuerpo2="<table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
+                "        <tr>\n" +
+                "          <td align=\"center\" style=\"padding:0;\">\n" +
+                "            <table role=\"presentation\" style=\"width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;\">\n" +
+                "              <tr>\n" +
+                "                <td align=\"center\" style=\"padding:40px 0 30px 0;background:#153643;\">\n" +
+                "                  <img src=\"https://raw.githubusercontent.com/SantiagoAndresSerrano/img-soka/master/LOGO-01.png\" alt=\"\" width=\"300\" style=\"height:auto;display:block;\" />\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:36px 30px 42px 30px;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0 0 36px 0;color:#153643;\">\n" +
+                "                        <h1 style=\"font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;\">Cambio de contraseña</h1>\n" +
+                "                        <p style=\"margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;\">Hola, <b>"+u.getUsername()+"</b>, se ha cambiado tu contraseña en el sistema. </p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;\">\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "              <tr>\n" +
+                "                <td style=\"padding:30px;background:#009045;\">\n" +
+                "                  <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;\">\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">Bienvenido</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"right\">\n" +
+                "                        <table role=\"presentation\" style=\"border-collapse:collapse;border:0;border-spacing:0;\">\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"padding:0 0 0 10px;width:38px;\">\n" +
+                "                              <a href=\"https://www.facebook.com/nortexploradores/\" style=\"color:#ffffff;\"><img src=\"https://assets.codepen.io/210284/fb_1.png\" alt=\"Facebook\" width=\"38\" style=\"height:auto;display:block;border:0;\" /></a>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </td>\n" +
+                "                      <td style=\"padding:0;width:50%;\" align=\"left\">\n" +
+                "                        <p style=\"margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;\">\n" +
+                "                          &reg; NorteXploradores, 2021<br/><a href=\"https://front-nort-exploradores-2.vercel.app/inicio\" style=\"color:#ffffff;text-decoration:underline;\">!Gracias por elegirnos!</a>\n" +
+                "                        </p>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </table>\n" +
+                "                </td>\n" +
+                "              </tr>\n" +
+                "            </table>\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </table>";
 
-                ,
-                u.getEmail());
+        emailServiceImp.enviarEmail("Contraseña actualizada", cuerpo2, u.getEmail());
         passwordResetTokenService.eliminarByToken(passwordResetToken.getToken());
 
 
