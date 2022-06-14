@@ -244,7 +244,7 @@ public class AuthController {
                 "                          <tr>\n" +
                 "                            <td style=\"width:260px;padding:0;vertical-align:top;color:#153643;\">\n" +
                 "            <div style=\"margin: 2rem auto; width: 120px; background-color: #009045; padding: 8px; border-radius: 6px; \">\n" +
-                "                <a style=\"color: #ffffff; text-align:center; text-decoration: none\" href=\""+urlFrontend+"login/confirmation/"+passwordResetToken.getToken()+"\">Continuar</a>\n" +
+                "                <a style=\"color: #ffffff; text-align:center; text-decoration: none\" href=\""+urlFrontend+"password-reset/confirmation/"+passwordResetToken.getToken()+"\">Continuar</a>\n" +
                 "            </div>\n" +
                 "                            </td>\n" +
                 "                          </tr>\n" +
