@@ -98,7 +98,7 @@ public class AuthController {
         usuario.setRoles(roles);
         usuario.setFecha(LocalDate.now());
         usuario.setImgUrl("https://yorktonrentals.com/wp-content/uploads/2017/06/usericon.png");
-        usuario.setEstado(true);
+        usuario.setEstado(false);
         usuario.setConfirmationToken(UUID.randomUUID().toString());
 
         usuarioService.guardar(usuario);
